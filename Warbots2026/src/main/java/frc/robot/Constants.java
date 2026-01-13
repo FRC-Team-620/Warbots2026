@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.units.measure.Distance;
+import static edu.wpi.first.units.Units.*;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,7 +16,18 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+
+    public static final class LEDConstants {
+    public static final int kPWMHeader = 5;
+    // led length in pixels
+    public static final int kLength = 150;
+    // Density of the LED Strip - currently set at 120 LEDs per meter
+    public static final Distance kSpacing = Meters.of(1.0 / 60);
+    // number of times the flashcommand will change color per second
+    public static final double kFlashFrequency = 10;
   }
 }
