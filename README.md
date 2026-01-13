@@ -1,2 +1,32 @@
-# Warbots2026
-Code for 2026 Season
+# Warbots2026 Competition code
+
+
+[![Build](http://localhost:3000)
+
+
+
+
+# Electronics Diagrams
+
+[Port Assignments Spreadsheet](http://localhost:3000)
+
+
+# CAD
+[CAD](http://localhost:3000)
+
+# Dashboards
+[Dashboard configuration Files](http://localhost:3000)
+# Ascope Configurations
+TODO: Ascope Custom Assets configurations
+
+# Logs:
+[Google Drive Logs Folder](https://drive.google.com/drive/u/1/folders/1UfrwtwiEGuxSDN9EB9VWn1Sh0J5j0SBa)
+
+# Thrifty Module Azimuth Encoder Zeroing Procedure
+[Google Drive Programming Folder](https://docs.google.com/document/d/1wnJfbLzpVgwjBBD8k-uFfK8kBwKNOHNH9EUZB00zbIM/edit?tab=t.0)
+
+# Driver and Operator Competition Controls
+[Controls Document](https://docs.google.com/document/d/15Jkrab26Lnp2WN2_DIrBzKSFo-tVKhKQ2jnwQdINcyA/edit?tab=t.0)
+
+# Preflight Procedure
+[Preflight Document](https://docs.google.com/document/d/1y8YTlZKGIjjIhhPViNVR2rbAraMHBm-Do5bom_juSBM/edit?tab=t.0)
