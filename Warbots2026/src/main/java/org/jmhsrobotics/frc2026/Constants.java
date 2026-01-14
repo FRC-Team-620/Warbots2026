@@ -2,9 +2,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package org.jmhsrobotics.frc2026;
 
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.RobotBase;
+
 import static edu.wpi.first.units.Units.*;
 
 /**
@@ -16,6 +18,10 @@ import static edu.wpi.first.units.Units.*;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final Mode simMode = Mode.SIM;
+  public static final double ksimTimestep = 0.02;
+  public static final double krealTimeStep = ksimTimestep;
+  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -29,5 +35,20 @@ public final class Constants {
     public static final Distance kSpacing = Meters.of(1.0 / 60);
     // number of times the flashcommand will change color per second
     public static final double kFlashFrequency = 10;
+  }
+
+  public static class CAN {
+    public static final int kCanAndGyroID = 60;
+  }
+
+  public static enum Mode {
+    /** Running on a real robot. */
+    REAL,
+
+    /** Running a physics simulator. */
+    SIM,
+
+    /** Replaying from a log file. */
+    REPLAY
   }
 }

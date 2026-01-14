@@ -1,4 +1,6 @@
-package frc.robot.subsystems.led;
+package org.jmhsrobotics.frc2026.subsystems.led;
+
+import org.jmhsrobotics.frc2026.Constants;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -8,7 +10,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class LED extends SubsystemBase {
   private AddressableLED led;
