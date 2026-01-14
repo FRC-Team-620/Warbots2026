@@ -17,6 +17,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private final GameState m_GameState = new GameState();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,6 +43,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    m_GameState.updateGameState();
+    System.out.println("Current Alliance: " + m_GameState.getState());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -54,6 +57,14 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+    if (m_GameState.getState() == GameState.AllianceColor.RED) {
+      // You could tell your RobotContainer to return a specific Red auto here
+      System.out.println("Running RED Autonomous Logic");
+    }
+
+
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
