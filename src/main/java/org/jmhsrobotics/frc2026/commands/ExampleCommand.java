@@ -4,9 +4,8 @@
 
 package org.jmhsrobotics.frc2026.commands;
 
-import org.jmhsrobotics.frc2026.subsystems.ExampleSubsystem;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import org.jmhsrobotics.frc2026.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ExampleCommand extends Command {

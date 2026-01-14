@@ -4,10 +4,9 @@
 
 package org.jmhsrobotics.frc2026.commands;
 
-import org.jmhsrobotics.frc2026.subsystems.ExampleSubsystem;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.jmhsrobotics.frc2026.subsystems.ExampleSubsystem;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */

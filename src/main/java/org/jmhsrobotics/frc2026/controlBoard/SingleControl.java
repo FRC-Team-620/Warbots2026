@@ -3,9 +3,9 @@ package org.jmhsrobotics.frc2026.controlBoard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class SingleControl implements ControlBoard {
-    CommandXboxController driver = new CommandXboxController(0);
-    
-    // ========Driver Controls========
+  CommandXboxController driver = new CommandXboxController(0);
+
+  // ========Driver Controls========
 
   @Override
   public double rotation() {
@@ -21,5 +21,4 @@ public class SingleControl implements ControlBoard {
   public double translationY() {
     return driver.getLeftY();
   }
-
 }
