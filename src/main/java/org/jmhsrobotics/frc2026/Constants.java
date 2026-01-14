@@ -4,10 +4,10 @@
 
 package org.jmhsrobotics.frc2026;
 
+import static edu.wpi.first.units.Units.*;
+
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
-
-import static edu.wpi.first.units.Units.*;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -27,7 +27,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
-    public static final class LEDConstants {
+  public static final class LEDConstants {
     public static final int kPWMHeader = 5;
     // led length in pixels
     public static final int kLength = 150;

@@ -4,14 +4,13 @@
 
 package org.jmhsrobotics.frc2026;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.Constants.OperatorConstants;
 import org.jmhsrobotics.frc2026.commands.Autos;
 import org.jmhsrobotics.frc2026.commands.ExampleCommand;
 import org.jmhsrobotics.frc2026.subsystems.ExampleSubsystem;
-
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
