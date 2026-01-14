@@ -8,7 +8,7 @@
 
 # Electronics Diagrams
 
-[Port Assignments Spreadsheet](http://localhost:3000)
+[Port Assignments Spreadsheet](https://docs.google.com/spreadsheets/d/1oZZpyuhDHRx0WnoAK5YHv9pn3zPsPpOBA42hK48nj-0/edit?pli=1&gid=123885701#gid=123885701)
 
 
 # CAD
