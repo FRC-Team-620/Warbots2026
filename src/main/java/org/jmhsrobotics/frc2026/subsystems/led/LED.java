@@ -1,0 +1,43 @@
+package org.jmhsrobotics.frc2026.subsystems.led;
+
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.jmhsrobotics.frc2026.Constants;
+
+public class LED extends SubsystemBase {
+  private AddressableLED led;
+  private AddressableLEDBuffer ledBuffer;
+  private LEDPattern pattern = LEDPattern.solid(Color.kRed);
+
+  public LED() {
+    led = new AddressableLED(Constants.LEDConstants.kPWMHeader);
+    ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.kLength);
+    led.setLength(ledBuffer.getLength());
+    led.setData(ledBuffer);
+    led.start();
+  }
+
+  @Override
+  public void periodic() {
+    pattern.applyTo(ledBuffer);
+    led.setData(ledBuffer);
+  }
+
+  public LEDPattern getCurrentPattern() {
+    return this.pattern;
+  }
+
+  public void setPattern(LEDPattern pattern) {
+    if (DriverStation.isAutonomousEnabled() || DriverStation.isDisabled()) {
+      this.pattern = pattern.atBrightness(Dimensionless.ofRelativeUnits(15, Units.Percent));
+    } else {
+      this.pattern = pattern.atBrightness(Dimensionless.ofRelativeUnits(60, Units.Percent));
+    }
+  }
+}
