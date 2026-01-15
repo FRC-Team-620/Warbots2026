@@ -1,7 +1,7 @@
 # Warbots2026 Competition code
 
 
-[![Build](http://localhost:3000)
+[![Build](https://github.com/FRC-Team-620/Warbots2026/actions/workflows/build.yml/badge.svg)](https://github.com/FRC-Team-620/Warbot2026/actions/workflows/build.yml/badge.svg)
 
 
 
