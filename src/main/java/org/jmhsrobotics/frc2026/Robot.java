@@ -4,6 +4,10 @@
 
 package org.jmhsrobotics.frc2026;
 
+import org.jmhsrobotics.warcore.util.BuildDataLogger;
+
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -26,6 +30,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    //Get Default Log and Log Git Data into it.
+    DataLog dataLog = DataLogManager.getLog();
+    BuildDataLogger.LogToWpiLib(dataLog, BuildConstants.class);
+    BuildDataLogger.LogToNetworkTables(BuildConstants.class);
   }
 
   /**
