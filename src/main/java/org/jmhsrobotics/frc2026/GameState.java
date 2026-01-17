@@ -2,6 +2,7 @@ package org.jmhsrobotics.frc2026;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Optional;
 
@@ -19,11 +20,19 @@ public class GameState {
     double time = DriverStation.getMatchTime();
     boolean isAuto = DriverStation.isAutonomous();
     Alliance alliance = getAlliance(DriverStation.getAlliance());
-    // Optional<Alliance> ally =
     boolean wonAuto = getWonAuto(DriverStation.getGameSpecificMessage(), alliance);
+
     //determine which quarter we are in
-    int quarter = (TELEOP_SEC-TRANS_LENGTH_SEC-ENDGAME_SEC) / 25;
+    int quarter = (int)((time-ENDGAME_SEC) / 25.0);
     
+    // SmartDashboard.putNumber("Actual Switch Time", TELEOP_SEC-TRANS_LENGTH_SEC-ENDGAME_SEC);
+    SmartDashboard.putNumber("Switch Time", time-ENDGAME_SEC);
+    SmartDashboard.putNumber("Quarter", quarter);
+    SmartDashboard.putBoolean("TransitionReturnsActive", time >= TELEOP_SEC-TRANS_LENGTH_SEC);
+    SmartDashboard.putBoolean("FirstShiftActivity", quarter%2 == (wonAuto?1:0));
+    SmartDashboard.putBoolean("WonAuto", wonAuto);
+    SmartDashboard.putNumber("Time ", DriverStation.getMatchTime());
+    SmartDashboard.putBoolean("In Auto ", DriverStation.isAutonomous());
 
     if(isAuto){ // auto
         return Hub.ACTIVE;
@@ -34,13 +43,12 @@ public class GameState {
     if(time >= TELEOP_SEC - TRANS_LENGTH_SEC){ // transition
         return Hub.ACTIVE;
     }
-    if(quarter % 2 == (wonAuto?0:1) ){ // first and third quarter and we won, or second and fourth quarter and we lost
+    if(quarter % 2 == (wonAuto?1:0) ){ // first and third quarter and we won, or second and fourth quarter and we lost
         return Hub.INACTIVE;
     }
     else{ // first and third quarter and we lost, or second and fourth quarter and we won
         return Hub.ACTIVE;
     }
-    // return Hub.UNKNOWN;
   }
 
   private static Alliance getAlliance(Optional<Alliance> ally){
