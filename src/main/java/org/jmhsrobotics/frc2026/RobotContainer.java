@@ -46,7 +46,8 @@ public class RobotContainer {
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    //TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values (current values 2.2 and 0.3 are from 2025 season)
+    // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
+    // (current values 2.2 and 0.3 are from 2025 season)
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
   }
 
