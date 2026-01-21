@@ -38,7 +38,7 @@ public final class Constants {
   }
 
   public static class CAN {
-    //TODO update CANIds
+    // TODO update CANIds
     public static final int kCanAndGyroID = 60;
     public static final int kFlywheelMotorID = 0;
   }

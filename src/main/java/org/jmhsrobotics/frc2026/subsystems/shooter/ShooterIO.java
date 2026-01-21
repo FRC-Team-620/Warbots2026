@@ -17,4 +17,6 @@ public interface ShooterIO {
   public default void setRPM(double theRPM) {}
 
   public default void setPIDF(double F) {}
+
+  public default void setBrakeMode(boolean enable) {}
 }

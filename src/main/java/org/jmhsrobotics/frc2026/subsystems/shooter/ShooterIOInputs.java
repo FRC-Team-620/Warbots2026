@@ -1,3 +1,3 @@
-package main.org.jmhsrobotics.frc2026.subsystems.shooter;
+package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 public class ShooterIOInputs {}
