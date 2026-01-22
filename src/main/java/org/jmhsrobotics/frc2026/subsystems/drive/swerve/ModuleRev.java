@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.revConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO.ModuleIOInputs;
 
+import org.littletonrobotics.junction.Logger;
+
 public class ModuleRev {
   private final ModuleIO io;
-  private final ModuleIOInputs inputs = new ModuleIOInputs();
+  private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputs();
   private final int index;
 
   private final Alert driveDisconnectedAlert;
