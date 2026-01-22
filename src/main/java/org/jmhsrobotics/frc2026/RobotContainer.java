@@ -4,10 +4,16 @@
 
 package org.jmhsrobotics.frc2026;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.Constants.OperatorConstants;
+import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
+import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
+import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,14 +23,32 @@ import org.jmhsrobotics.frc2026.Constants.OperatorConstants;
  */
 public class RobotContainer {
 
+  public final Drive drive;
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    drive =
+        new Drive(
+            new GyroIOBoron(),
+            new ModuleIOThrifty(0),
+            new ModuleIOThrifty(1),
+            new ModuleIOThrifty(2),
+            new ModuleIOThrifty(3));
+
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
+    // (current values 2.2 and 0.3 are from 2025 season)
+    autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
   }
 
   /**
