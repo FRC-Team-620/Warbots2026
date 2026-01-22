@@ -110,12 +110,16 @@ public class ModuleIORev implements ModuleIO {
         .velocityConversionFactor(revConstants.driveEncoderVelocityFactor)
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
-    driveConfig
-        .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(
-            revConstants.driveKp, 0.0,
-            revConstants.driveKd, 0.0);
+    driveConfig.closedLoop.pid(0,0,0).feedForward.kS(revConstants.driveKs).kV(revConstants.driveKv);
+        // .closedLoop
+        //     .pid(0,0,0);
+        //     .feedForward
+        //         .kS(s);
+        //         .kS(v);
+        // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // .pidf(
+        //     revConstants.driveKp, 0.0,
+        //     revConstants.driveKd, 0.0);
     driveConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)
@@ -151,7 +155,7 @@ public class ModuleIORev implements ModuleIO {
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(revConstants.turnPIDMinInput, revConstants.turnPIDMaxInput)
-        .pidf(revConstants.turnKp, 0.0, revConstants.turnKd, 0.0);
+        .pid(0,0,0);
     turnConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
