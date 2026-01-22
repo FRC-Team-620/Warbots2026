@@ -1,9 +1,15 @@
 package org.jmhsrobotics.frc2026.controlBoard;
 
+import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class SingleControl implements ControlBoard {
   CommandXboxController driver = new CommandXboxController(0);
+
+  // TODO: also need to add controller monitor to double control when that gets made
+  public SingleControl() {
+    ControllerMonitor.addController(driver.getHID(), "Driver");
+  }
 
   // ========Driver Controls========
 
