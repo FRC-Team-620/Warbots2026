@@ -1,4 +1,4 @@
-package org.jmhsrobotics.frc2026;
+package org.jmhsrobotics.frc2026.util;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -47,7 +47,7 @@ public class GameState {
 
   private static Alliance getAlliance(Optional<Alliance> ally) {
     if (!ally.isPresent()) {
-      // add some sort of alert/behavior change if we can not get are Alliance Color
+      // FIXME: add some sort of alert/behavior change if we can not get are Alliance Color
       return Alliance.Red;
     }
     return ally.get();
@@ -59,7 +59,7 @@ public class GameState {
     }
     if ((gameData.charAt(0) == 'R' && (ally == Alliance.Red))
         || (gameData.charAt(0) == 'B' && (ally == Alliance.Blue))) {
-      // add some sort of alert/behavior change if we can not able to get Game data.
+      // FIXME: add some sort of alert/behavior change if we can not able to get Game data.
       return true; // we won auto
     } else {
       return false; // we didn't win auto
