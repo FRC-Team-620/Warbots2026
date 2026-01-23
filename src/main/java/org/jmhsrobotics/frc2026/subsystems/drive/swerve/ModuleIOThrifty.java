@@ -14,13 +14,13 @@
 package org.jmhsrobotics.frc2026.subsystems.drive.swerve;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -112,11 +112,10 @@ public class ModuleIOThrifty implements ModuleIO {
         .velocityConversionFactor(thriftyConstants.driveEncoderVelocityFactor)
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
-    driveConfig
-        .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(thriftyConstants.driveKp, 0, thriftyConstants.driveKd, 0, ClosedLoopSlot.kSlot0)
-        .pidf(0, 0, 0, 0.114, ClosedLoopSlot.kSlot1);
+    driveConfig.closedLoop.pid(0, 0, 0);
+    // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    // .pidf(thriftyConstants.driveKp, 0, thriftyConstants.driveKd, 0, ClosedLoopSlot.kSlot0)
+    // .pidf(0, 0, 0, 0.114, ClosedLoopSlot.kSlot1);
     driveConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)
@@ -153,7 +152,8 @@ public class ModuleIOThrifty implements ModuleIO {
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(
             thriftyConstants.turnPIDMinInput, thriftyConstants.turnPIDMaxInput)
-        .pidf(thriftyConstants.turnKp, 0.0, thriftyConstants.turnKd, 0.0);
+        // .pid(0,0,0).kP(thriftyConstants.turnKp).kD(thriftyConstants.turnKd);
+        .pid(0, 0, 0);
     turnConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
@@ -239,7 +239,7 @@ public class ModuleIOThrifty implements ModuleIO {
     double ffVolts =
         thriftyConstants.driveKs * Math.signum(velocityRadPerSec)
             + thriftyConstants.driveKv * velocityRadPerSec;
-    driveController.setReference(
+    driveController.setSetpoint(
         velocityRadPerSec,
         ControlType.kVelocity,
         this.stopped ? ClosedLoopSlot.kSlot1 : ClosedLoopSlot.kSlot0,
@@ -254,7 +254,7 @@ public class ModuleIOThrifty implements ModuleIO {
             rotation.plus(zeroRotation).getRadians(),
             thriftyConstants.turnPIDMinInput,
             thriftyConstants.turnPIDMaxInput);
-    turnController.setReference(setpoint, ControlType.kPosition);
+    turnController.setSetpoint(setpoint, ControlType.kPosition);
   }
 
   @Override
