@@ -19,8 +19,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.thriftyConstants;
-import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO.ModuleIOInputs;
-
 import org.littletonrobotics.junction.Logger;
 
 // import frc.robot.subsystems.drive.ModuleIOInputsAutoLogged;
