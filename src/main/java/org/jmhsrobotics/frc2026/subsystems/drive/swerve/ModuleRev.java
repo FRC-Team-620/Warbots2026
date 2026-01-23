@@ -19,11 +19,12 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.revConstants;
-import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO.ModuleIOInputs;
+// import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO.ModuleIOInputs;
+import org.littletonrobotics.junction.Logger;
 
 public class ModuleRev {
   private final ModuleIO io;
-  private final ModuleIOInputs inputs = new ModuleIOInputs();
+  private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;
 
   private final Alert driveDisconnectedAlert;
@@ -44,7 +45,7 @@ public class ModuleRev {
 
   public void periodic() {
     io.updateInputs(inputs);
-    // TODO: Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
+    Logger.processInputs("Drive/Module" + Integer.toString(index), inputs);
 
     // Calculate positions for odometry
     int sampleCount = inputs.odometryTimestamps.length; // All signals are sampled together

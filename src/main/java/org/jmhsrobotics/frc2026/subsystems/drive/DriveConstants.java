@@ -127,9 +127,8 @@ public class DriveConstants {
   }
 
   public static class thriftyConstants {
-    public static final DCMotor driveGearbox = DCMotor.getNeoVortex(1);
+    public static final DCMotor driveGearbox = DCMotor.getNEO(1);
     public static final DCMotor turnGearbox = DCMotor.getNEO(1);
-
     public static final double trackWidth = Units.inchesToMeters(22.5); // make this a variable?
     public static final double wheelBase = Units.inchesToMeters(22.5); // this too?
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
