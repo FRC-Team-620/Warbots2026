@@ -4,9 +4,13 @@
 
 package org.jmhsrobotics.frc2026;
 
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.jmhsrobotics.frc2026.util.ControllerMonitor;
+import org.jmhsrobotics.warcore.util.BuildDataLogger;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -26,6 +30,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    // Get Default Log and Log Git Data into it.
+    DataLog dataLog = DataLogManager.getLog();
+    BuildDataLogger.LogToWpiLib(dataLog, BuildConstants.class);
+    BuildDataLogger.LogToNetworkTables(BuildConstants.class);
   }
 
   /**
@@ -49,7 +57,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    ControllerMonitor.checkController();
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
