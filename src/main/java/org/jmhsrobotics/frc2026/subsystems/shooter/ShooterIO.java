@@ -5,18 +5,21 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ShooterIO {
   @AutoLog
   public static class ShooterIOInputs {
-    public double RPM;
-    public double GoalRPM;
-    public double Voltage;
-    public double CurrentAMPS;
-    public double TEMP;
+    public double velocityRPM;
+    public double goalRPM;
+    public double voltage;
+    public double currentAMPS;
+    public double tempC;
   }
 
   public default void updateInputs(ShooterIOInputs inputs) {}
 
-  public default void setRPM(double theRPM) {}
+  public default void setRPM(double rpm) {}
 
-  public default void setPIDF(double F) {}
+  public default void setPIDF(double p, double i, double d, double f) {}
 
   public default void setBrakeMode(boolean enable) {}
+
+  public default void stop() {}
+  ;
 }

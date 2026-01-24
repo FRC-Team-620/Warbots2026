@@ -5,9 +5,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
   private ShooterIO shooterIO;
-  private ShooterIO.ShooterIOInputs shooterInputs = new ShooterIO.ShooterIOInputs();
-
-  // TODO makeAutoLogged
+  private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
@@ -16,15 +14,15 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
-    Logger.recordOutput("Shooter/Shooter Current Amps", shooterInputs.CurrentAMPS);
-    Logger.recordOutput("Shooter/Shooter Voltage", shooterInputs.Voltage);
-    Logger.recordOutput("Shooter/Shooter Goal RPM", shooterInputs.GoalRPM);
-    Logger.recordOutput("Shooter/Shooter RPM", shooterInputs.RPM);
-    Logger.recordOutput("Shooter/Shooter Motor Temperature", shooterInputs.TEMP);
+    Logger.recordOutput("Shooter/Shooter Current Amps", shooterInputs.currentAMPS);
+    Logger.recordOutput("Shooter/Shooter Voltage", shooterInputs.voltage);
+    Logger.recordOutput("Shooter/Shooter Goal RPM", shooterInputs.goalRPM);
+    Logger.recordOutput("Shooter/Shooter RPM", shooterInputs.velocityRPM);
+    Logger.recordOutput("Shooter/Shooter Motor Temperature", shooterInputs.tempC);
   }
 
-  public void set(double speedDutyCycle) {
-    shooterIO.setRPM(speedDutyCycle);
+  public void setVelocity(double velocityRPM) {
+    shooterIO.setRPM(velocityRPM);
   }
 
   public void setBrakeMode(boolean enable) {

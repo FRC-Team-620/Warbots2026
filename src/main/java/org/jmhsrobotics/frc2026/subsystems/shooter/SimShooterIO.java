@@ -6,10 +6,10 @@ public class SimShooterIO implements ShooterIO {
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    inputs.CurrentAMPS = 0;
-    inputs.RPM = 0;
-    inputs.Voltage = 0;
-    inputs.TEMP = 0;
+    inputs.currentAMPS = 0;
+    inputs.velocityRPM = 0;
+    inputs.voltage = 0;
+    inputs.tempC = 0;
   }
 
   public void setRPM(double speedDutyCycle) {
