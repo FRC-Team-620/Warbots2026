@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.Constants.OperatorConstants;
+import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
+import org.jmhsrobotics.frc2026.controlBoard.SingleControl;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
@@ -23,7 +26,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
 
-  public final Drive drive;
+  private final ControlBoard control;
+
+  private final Drive drive;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -31,9 +36,12 @@ public class RobotContainer {
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
+  private final DriveCommand driveCommand;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    this.control = new SingleControl();
     configureBindings();
 
     drive =
@@ -43,6 +51,9 @@ public class RobotContainer {
             new ModuleIOThrifty(1),
             new ModuleIOThrifty(2),
             new ModuleIOThrifty(3));
+
+    this.driveCommand = new DriveCommand(this.drive, this.control);
+    this.drive.setDefaultCommand(driveCommand);
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
