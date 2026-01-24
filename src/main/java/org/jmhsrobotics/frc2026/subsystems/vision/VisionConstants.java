@@ -28,8 +28,8 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   // TODO: Confirm and Identify which camera is on which side, update camera names
-  public static String camera0Name = "Blackbird";
-  public static String camera1Name = "Overture";
+  public static String camera0Name = "Camera0";
+  public static String camera1Name = "Camera1";
   public static String camera2Name = "Camera2";
   public static String camera3Name = "Camera3";
 
@@ -108,7 +108,9 @@ public class VisionConstants {
   public static double[] cameraStdDevFactors =
       new double[] {
         1.0, // Camera 0
-        1.0 // Camera 1
+        1.0, // Camera 1
+        1.0, // Camera 2
+        1.0
       };
 
   // Multipliers to apply for MegaTag 2 observations
