@@ -25,6 +25,10 @@ public class Shooter extends SubsystemBase {
     shooterIO.setRPM(velocityRPM);
   }
 
+  public void stop() {
+    shooterIO.stop();
+  }
+
   public void setBrakeMode(boolean enable) {
     shooterIO.setBrakeMode(enable);
   }

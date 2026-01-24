@@ -56,7 +56,8 @@ public class NeoShooterIO implements ShooterIO {
 
   @Override
   public void setPIDF(double p, double i, double d, double f) {
-    // TODO Auto-generated method stub
+    // TODO: Implement ff term
+    // FIXME:
     var setPIDF = new SparkMaxConfig();
     setPIDF.closedLoop.pid(p, i, d);
     SparkUtil.tryUntilOk(
@@ -65,6 +66,11 @@ public class NeoShooterIO implements ShooterIO {
         () ->
             motor.configure(
                 setPIDF, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+  }
+
+  @Override
+  public void stop() {
+    motor.set(0);
   }
 
   @Override
