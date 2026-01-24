@@ -38,7 +38,9 @@ public final class Constants {
   }
 
   public static class CAN {
+    // TODO update CANIds
     public static final int kCanAndGyroID = 60;
+    public static final int kFlywheelMotorID = 0;
   }
 
   public static enum Mode {
@@ -50,5 +52,12 @@ public final class Constants {
 
     /** Replaying from a log file. */
     REPLAY
+  }
+
+  public static class Shooter {
+
+    public static final double kP = 0.2;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
   }
 }
