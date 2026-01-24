@@ -1,5 +1,9 @@
 # docs-README
-**How to use these documents**
+**Purpose:** Navigating the docs and best practices
+## Doc navigation
 
 
-**How to contribute to these documents**
+## How to use these documents
+
+
+## How to contribute to these documents
