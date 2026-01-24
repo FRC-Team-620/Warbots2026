@@ -14,13 +14,13 @@
 package org.jmhsrobotics.frc2026.subsystems.drive.swerve;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -112,10 +112,10 @@ public class ModuleIORev implements ModuleIO {
         .uvwAverageDepth(2);
     driveConfig
         .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(
-            revConstants.driveKp, 0.0,
-            revConstants.driveKd, 0.0);
+        .pid(0, 0, 0)
+        .feedForward
+        .kS(revConstants.driveKs)
+        .kV(revConstants.driveKv);
     driveConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)
@@ -151,7 +151,7 @@ public class ModuleIORev implements ModuleIO {
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(revConstants.turnPIDMinInput, revConstants.turnPIDMaxInput)
-        .pidf(revConstants.turnKp, 0.0, revConstants.turnKd, 0.0);
+        .pid(0, 0, 0);
     turnConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
