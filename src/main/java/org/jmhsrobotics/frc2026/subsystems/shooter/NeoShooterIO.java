@@ -24,7 +24,7 @@ public class NeoShooterIO implements ShooterIO {
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(25)
         .voltageCompensation(12)
-        .inverted(false)
+        .inverted(true)
         .closedLoop
         .pid(Constants.Shooter.kP, Constants.Shooter.kI, Constants.Shooter.kD);
     // TODO set motorConfig values
