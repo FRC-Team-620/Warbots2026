@@ -54,10 +54,12 @@ public final class Constants {
     REPLAY
   }
 
-  public static class Shooter {
+  public static class ShooterConstants {
 
-    public static final double kP = 0.2;
+    public static final double kP = 0.0003;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
+
+    public static final double kBaseRPM = 5000;
   }
 }

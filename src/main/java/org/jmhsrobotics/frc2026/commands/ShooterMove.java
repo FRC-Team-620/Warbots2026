@@ -2,6 +2,7 @@ package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
+import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 
 public class ShooterMove extends Command {
@@ -18,16 +19,16 @@ public class ShooterMove extends Command {
   @Override
   public void execute() {
     double rightTrigger = rightTriggerAxis.getAsDouble();
-    this.shooter.setVelocity(rightTrigger * 0.3);
+    this.shooter.set(Constants.ShooterConstants.kBaseRPM * rightTrigger);
 
     if (rightTrigger == 0) {
-      this.shooter.setVelocity(0.1);
+      this.shooter.set(0.0);
     }
   }
 
   @Override
   public void initialize() {
-    this.shooter.setVelocity(0);
+    this.shooter.set(0);
   }
 
   @Override
@@ -37,6 +38,6 @@ public class ShooterMove extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    this.shooter.setVelocity(0);
+    this.shooter.set(0);
   }
 }
