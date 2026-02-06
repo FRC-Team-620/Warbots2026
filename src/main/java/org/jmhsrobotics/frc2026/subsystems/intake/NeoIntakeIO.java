@@ -9,8 +9,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-
 import com.revrobotics.spark.config.SparkMaxConfig;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
@@ -23,7 +21,7 @@ public class NeoIntakeIO implements IntakeIO {
   private SparkMaxConfig slapDownMotorConfig;
   private RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
   private RelativeEncoder slapDownEncoder = slapDownMotor.getEncoder();
-   private AbsoluteEncoderConfig slapDownEncoderConfig = new AbsoluteEncoderConfig();
+  private AbsoluteEncoderConfig slapDownEncoderConfig = new AbsoluteEncoderConfig();
   private SparkClosedLoopController intakePIDController;
   private SparkClosedLoopController slapDownPIDController;
   private double speedRPM;
@@ -33,7 +31,9 @@ public class NeoIntakeIO implements IntakeIO {
 
   public NeoIntakeIO() {
 
-    slapDownEncoderConfig.positionConversionFactor(360).velocityConversionFactor(6); //TODO update these values
+    slapDownEncoderConfig
+        .positionConversionFactor(360)
+        .velocityConversionFactor(6); // TODO update these values
     // intakeMotor
 
     intakeMotorConfig = new SparkMaxConfig();
@@ -74,11 +74,11 @@ public class NeoIntakeIO implements IntakeIO {
         .appliedOutputPeriodMs(20)
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
-        
+
     slapDownMotorConfig
         .closedLoop
         .pid(Constants.Intake.kSlapdownP, Constants.Intake.kSlapdownI, Constants.Intake.kSlapdownD)
-        .outputRange(-180, 180) //TODO update to real values
+        .outputRange(-180, 180) // TODO update to real values
         .maxMotion
         .cruiseVelocity(2)
         .maxAcceleration(12);
@@ -98,34 +98,42 @@ public class NeoIntakeIO implements IntakeIO {
 
   public void updateInputs(IntakeIOInputs inputs) {
     SparkUtil.sparkStickyFault = false;
-      //slapdown
+    // slapdown
     SparkUtil.ifOk(
         slapDownMotor,
         slapDownEncoder::getVelocity,
         (value) -> inputs.slapDownAccelerationRPMPerSec = (value - previousRPM) / 0.02);
 
-    SparkUtil.ifOk(slapDownMotor, slapDownEncoder::getPosition, (value) -> inputs.slapDownPositionDegrees = value);
-    SparkUtil.ifOk(slapDownMotor, slapDownMotor::getOutputCurrent, (value) -> inputs.slapDownCurrentAmps = value);
+    SparkUtil.ifOk(
+        slapDownMotor,
+        slapDownEncoder::getPosition,
+        (value) -> inputs.slapDownPositionDegrees = value);
+    SparkUtil.ifOk(
+        slapDownMotor,
+        slapDownMotor::getOutputCurrent,
+        (value) -> inputs.slapDownCurrentAmps = value);
 
     inputs.slapDownSpeedDegPerSec = previousRPM;
 
-
     // intake
-    SparkUtil.ifOk(intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeCurrentAmps = value);
+    SparkUtil.ifOk(
+        intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeCurrentAmps = value);
     SparkUtil.ifOk(intakeMotor, intakeEncoder::getVelocity, (value) -> inputs.RPM = value);
-    SparkUtil.ifOk(intakeMotor, intakeMotor::getMotorTemperature, (value) -> inputs.motorTemperatureCelcius = value);
-    
+    SparkUtil.ifOk(
+        intakeMotor,
+        intakeMotor::getMotorTemperature,
+        (value) -> inputs.motorTemperatureCelcius = value);
 
     intakePIDController.setSetpoint(this.speedRPM, ControlType.kMAXMotionVelocityControl);
     slapDownPIDController.setSetpoint(setPointDegrees, ControlType.kPosition);
   }
 
   @Override
-  public void set(double RPM){
+  public void set(double RPM) {
     this.speedRPM = RPM;
   }
 
-  public void setPositionDegrees(double degrees){
+  public void setPositionDegrees(double degrees) {
     this.setPointDegrees = degrees;
   }
 

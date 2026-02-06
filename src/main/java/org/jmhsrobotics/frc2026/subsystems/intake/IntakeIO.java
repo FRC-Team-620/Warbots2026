@@ -1,8 +1,7 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import com.revrobotics.spark.SparkMax;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakeIO {
   @AutoLog
