@@ -5,10 +5,12 @@ import org.littletonrobotics.junction.AutoLog;
 public interface IntakeIO {
   @AutoLog
   public static class IntakeIOInputs {
-    public double currentAMPS;
-    public double positionDEGREES;
+    public double intakeCurrentAmps;
     public double motorTemperatureCelcius;
     public double RPM;
+
+    public double slapDownPositionDegrees;
+    public double slapDownCurrentAmps;
   }
 
   public default void setPIDF(double p, double i, double d, double f) {}
@@ -21,5 +23,6 @@ public interface IntakeIO {
 
   public default void updateInputs(IntakeIOInputs inputs) {}
 
-  public default void setBrakeMode(boolean enable) {};
+  public default void setBrakeMode(boolean enable) {}
+  ;
 }

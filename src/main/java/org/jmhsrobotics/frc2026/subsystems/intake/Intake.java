@@ -1,8 +1,7 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   private IntakeIO intakeIO;
@@ -12,23 +11,26 @@ public class Intake extends SubsystemBase {
     this.intakeIO = intakeIO;
   }
 
-
   @Override
-  public void periodic(){
+  public void periodic() {
     intakeIO.updateInputs(inputs);
-  
 
-    Logger.recordOutput("Intake/Current Amps", inputs.currentAMPS);
-    Logger.recordOutput("Intake/Speed RPM", inputs.RPM);
-    Logger.recordOutput("Intake/Position Degrees", inputs.positionDEGREES);
-    Logger.recordOutput("Intake/Temperature Celcius", inputs.motorTemperatureCelcius);
+    Logger.recordOutput("Intake/Intake Current Amps", inputs.intakeCurrentAmps);
+    Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);
+    Logger.recordOutput("Intake/Slap Down Position Degrees", inputs.slapDownPositionDegrees);
+    Logger.recordOutput("Intake/Slap Down Current Amps", inputs.slapDownCurrentAmps);
+    Logger.recordOutput("Intake/Intake Temperature Celcius", inputs.motorTemperatureCelcius);
   }
 
-  public void set(double speedRPM){
+  public void set(double speedRPM) {
     intakeIO.set(speedRPM);
   }
 
-  public void setBrakeMode(boolean enable){
+  public void setPosition(double degrees) {
+    intakeIO.setPosition(degrees);
+  }
+
+  public void setBrakeMode(boolean enable) {
     intakeIO.setBrakeMode(enable);
   }
 }
