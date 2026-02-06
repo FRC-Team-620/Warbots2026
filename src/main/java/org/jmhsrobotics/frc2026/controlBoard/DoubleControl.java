@@ -4,12 +4,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import java.util.function.DoubleSupplier;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 
-public class SingleControl implements ControlBoard {
+public class DoubleControl implements ControlBoard {
   CommandXboxController driver = new CommandXboxController(0);
+  CommandXboxController operator = new CommandXboxController(1);
 
-  // TODO: also need to add controller monitor to double control when that gets made
-  public SingleControl() {
+  public DoubleControl() {
     ControllerMonitor.addController(driver.getHID(), "Driver");
+    ControllerMonitor.addController(operator.getHID(), "Operator");
   }
 
   // ========Driver Controls========
