@@ -40,7 +40,7 @@ public final class Constants {
   public static class CAN {
     // TODO update CANIds
     public static final int kCanAndGyroID = 60;
-    public static final int kFlywheelMotorID = 50;
+    public static final int kFlywheelMotorID = 55;
     public static final int kIntakeMotorID = 0;
     public static final int kSlapDownMotorID = 0;
   }
@@ -62,7 +62,7 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kBaseRPM = 5000;
+    public static final double kBaseRPM = 9000;
   }
 
   public static class Intake {

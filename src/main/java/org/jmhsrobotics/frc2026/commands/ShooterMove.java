@@ -17,18 +17,18 @@ public class ShooterMove extends Command {
   }
 
   @Override
+  public void initialize() {
+    this.shooter.set(0);
+  }
+
+  @Override
   public void execute() {
     double rightTrigger = rightTriggerAxis.getAsDouble();
-    this.shooter.set(Constants.ShooterConstants.kBaseRPM * rightTrigger);
+    if (rightTrigger > 0) this.shooter.set(Constants.ShooterConstants.kBaseRPM);
 
     if (rightTrigger == 0) {
       this.shooter.set(0.0);
     }
-  }
-
-  @Override
-  public void initialize() {
-    this.shooter.set(0);
   }
 
   @Override

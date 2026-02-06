@@ -3,6 +3,7 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -22,7 +23,7 @@ public class NeoShooterIO implements ShooterIO {
   public NeoShooterIO() {
     motorConfig = new SparkMaxConfig();
     motorConfig
-        .idleMode(IdleMode.kBrake)
+        .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(25)
         .voltageCompensation(12)
         .inverted(true)
@@ -31,6 +32,9 @@ public class NeoShooterIO implements ShooterIO {
             Constants.ShooterConstants.kP,
             Constants.ShooterConstants.kI,
             Constants.ShooterConstants.kD)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .maxOutput(1)
+        .minOutput(0)
         .maxMotion
         .cruiseVelocity(9800)
         .maxAcceleration(20000);
