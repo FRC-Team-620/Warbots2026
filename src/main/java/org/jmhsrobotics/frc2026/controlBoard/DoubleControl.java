@@ -6,6 +6,7 @@ import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 
 public class DoubleControl implements ControlBoard {
   CommandXboxController driver = new CommandXboxController(0);
+  CommandXboxController operator = new CommandXboxController(1);
 
   public DoubleControl() {
     ControllerMonitor.addController(driver.getHID(), "Driver");
