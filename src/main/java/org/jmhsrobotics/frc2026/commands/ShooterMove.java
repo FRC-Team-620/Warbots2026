@@ -16,6 +16,11 @@ public class ShooterMove extends Command {
     addRequirements(this.shooter);
   }
 
+    @Override
+  public void initialize() {
+    this.shooter.set(0);
+  }
+
   @Override
   public void execute() {
     double rightTrigger = rightTriggerAxis.getAsDouble();
@@ -24,11 +29,6 @@ public class ShooterMove extends Command {
     if (rightTrigger == 0) {
       this.shooter.set(0.0);
     }
-  }
-
-  @Override
-  public void initialize() {
-    this.shooter.set(0);
   }
 
   @Override

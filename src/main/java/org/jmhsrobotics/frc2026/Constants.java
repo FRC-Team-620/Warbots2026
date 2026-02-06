@@ -40,7 +40,7 @@ public final class Constants {
   public static class CAN {
     // TODO update CANIds
     public static final int kCanAndGyroID = 60;
-    public static final int kFlywheelMotorID = 50;
+    public static final int kFlywheelMotorID = 55;
   }
 
   public static enum Mode {
@@ -60,6 +60,6 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kBaseRPM = 5000;
+    public static final double kBaseRPM = 7000;
   }
 }
