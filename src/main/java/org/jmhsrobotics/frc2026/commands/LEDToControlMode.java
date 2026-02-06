@@ -39,9 +39,11 @@ public class LEDToControlMode extends Command {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
 
-      if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE)) || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)) )
+      if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
+          || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)))
         led.setPattern(blueHubActivePattern);
-      else if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE)) || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE)))
+      else if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE))
+          || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE)))
         led.setPattern(redHubActivePattern);
       else led.setPattern(scrollingRainbow);
     }
