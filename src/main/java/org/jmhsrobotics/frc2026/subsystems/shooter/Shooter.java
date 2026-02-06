@@ -21,8 +21,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/Shooter Motor Temperature", shooterInputs.tempC);
   }
 
-  public void setVelocity(double velocityRPM) {
-    shooterIO.setRPM(velocityRPM);
+  public void set(double velocityRPM) {
+    shooterIO.set(velocityRPM);
   }
 
   public void stop() {
