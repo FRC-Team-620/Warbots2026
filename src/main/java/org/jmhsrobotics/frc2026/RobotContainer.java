@@ -59,7 +59,8 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
-  }
+    configureDriverFeedback();
+    }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -75,7 +76,7 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to change LED's on Robot based on things happening during the match I know, I'm
+   * Use this method to change LED's on Robot based on things happening during the match. I know, I'm
    * great at documentation :)
    */
   // TODO: Actually test this to make sure it works correctly
