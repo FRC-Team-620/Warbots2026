@@ -2,6 +2,8 @@ package org.jmhsrobotics.frc2026.subsystems.intake;
 
 import org.littletonrobotics.junction.AutoLog;
 
+import com.revrobotics.spark.SparkMax;
+
 public interface IntakeIO {
   @AutoLog
   public static class IntakeIOInputs {
@@ -11,6 +13,8 @@ public interface IntakeIO {
 
     public double slapDownPositionDegrees;
     public double slapDownCurrentAmps;
+    public double slapDownAccelerationRPMPerSec;
+    public double slapDownSpeedDegPerSec;
   }
 
   public default void setPIDF(double p, double i, double d, double f) {}
@@ -23,6 +27,6 @@ public interface IntakeIO {
 
   public default void updateInputs(IntakeIOInputs inputs) {}
 
-  public default void setBrakeMode(boolean enable) {}
+  public default void setBrakeMode(boolean enable, SparkMax motor) {}
   ;
 }
