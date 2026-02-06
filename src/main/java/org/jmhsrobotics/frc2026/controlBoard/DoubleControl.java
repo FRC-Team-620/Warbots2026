@@ -10,6 +10,8 @@ public class DoubleControl implements ControlBoard {
 
   public DoubleControl() {
     ControllerMonitor.addController(driver.getHID(), "Driver");
+    ControllerMonitor.addController(operator.getHID(), "Operator");
+
   }
 
   // ========Driver Controls========
