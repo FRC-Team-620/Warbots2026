@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.SingleControl;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -29,6 +31,7 @@ public class RobotContainer {
   // Subsystems
   public final Drive drive;
   public final Shooter shooter;
+  private final LED led;
   private final ControlBoard control;
 
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -47,6 +50,8 @@ public class RobotContainer {
 
     this.control = new SingleControl();
 
+    led = new LED();
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
     // (current values 2.2 and 0.3 are from 2025 season)
@@ -54,6 +59,7 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+    configureDriverFeedback();
   }
 
   /**
@@ -67,6 +73,15 @@ public class RobotContainer {
    */
   private void configureBindings() {
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
+  }
+
+  /**
+   * Use this method to change LED's on Robot based on things happening during the match. I know,
+   * I'm great at documentation :)
+   */
+  // TODO: Actually test this to make sure it works correctly
+  private void configureDriverFeedback() {
+    led.setDefaultCommand(new LEDToControlMode(this.led));
   }
 
   /**
