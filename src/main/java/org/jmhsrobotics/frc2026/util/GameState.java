@@ -59,22 +59,21 @@ public class GameState {
 
   public static double getRemainingTimeInPeriod() {
     double time = DriverStation.getMatchTime();
-    
-    if(time < TRANS_LENGTH_SEC) {
+
+    if (time < TRANS_LENGTH_SEC) {
       return TRANS_LENGTH_SEC - time;
-    } else if(time < Q1_END_SEC) {
+    } else if (time < Q1_END_SEC) {
       return Q1_END_SEC - time;
-    } else if(time < Q2_END_SEC) {
+    } else if (time < Q2_END_SEC) {
       return Q2_END_SEC - time;
-    } else if(time < Q3_END_SEC) {
+    } else if (time < Q3_END_SEC) {
       return Q3_END_SEC - time;
-    } else if(time < Q4_END_SEC) {
+    } else if (time < Q4_END_SEC) {
       return Q4_END_SEC - time;
     } else {
       return 0;
     }
   }
-
 
   private static boolean getWonAuto(String gameData, Alliance ally) {
     if (gameData.length() < 1 || gameData == null) {
