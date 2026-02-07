@@ -5,9 +5,12 @@
 package org.jmhsrobotics.frc2026;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.DriveCommands;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
@@ -46,7 +49,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
+    SmartDashboard.putString("/CurrentSimMode", Constants.currentMode.toString());
+    SmartDashboard.putData(CommandScheduler.getInstance());
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -117,6 +121,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
+    drive.setDefaultCommand(
+        DriveCommands.joystickDriveAtAngle(
+            drive, control::translationX, control::translationY, control::rotationABS));
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
   }
