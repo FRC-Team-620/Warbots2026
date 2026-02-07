@@ -9,10 +9,6 @@ public class GameState {
   public static final int ENDGAME_SEC = 30;
   public static final int AUTO_SEC = 20;
   public static final int TRANS_LENGTH_SEC = 10;
-  public static final int Q1_END_SEC = 35;
-  public static final int Q2_END_SEC = 60;
-  public static final int Q3_END_SEC = 85;
-  public static final int Q4_END_SEC = 110;
 
   public enum Hub {
     ACTIVE,
@@ -51,30 +47,11 @@ public class GameState {
 
   private static Alliance getAlliance(Optional<Alliance> ally) {
     if (!ally.isPresent()) {
-      // FIXME: add some sort of alert/behavior change if we can not get our Alliance Color
+      // FIXME: add some sort of alert/behavior change if we can not get are Alliance Color
       return Alliance.Red;
     }
     return ally.get();
   }
-
-  public static double getRemainingTimeInPeriod() {
-    double time = DriverStation.getMatchTime();
-    
-    if(time < TRANS_LENGTH_SEC) {
-      return TRANS_LENGTH_SEC - time;
-    } else if(time < Q1_END_SEC) {
-      return Q1_END_SEC - time;
-    } else if(time < Q2_END_SEC) {
-      return Q2_END_SEC - time;
-    } else if(time < Q3_END_SEC) {
-      return Q3_END_SEC - time;
-    } else if(time < Q4_END_SEC) {
-      return Q4_END_SEC - time;
-    } else {
-      return 0;
-    }
-  }
-
 
   private static boolean getWonAuto(String gameData, Alliance ally) {
     if (gameData.length() < 1 || gameData == null) {
