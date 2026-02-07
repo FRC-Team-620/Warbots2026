@@ -1,6 +1,7 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Second;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -26,6 +27,9 @@ public class LEDToControlMode extends Command {
   // TODO: Decide on what factors determine what color the LEDs turn
   private final LEDPattern blueHubActivePattern = LEDPattern.solid(Color.kBlue);
   private final LEDPattern redHubActivePattern = LEDPattern.solid(Color.kRed);
+  private final LEDPattern blueHubFlashPattern = LEDPattern.solid(Color.kBlue).blink(Second.of(0.5));
+  private final LEDPattern redHubFlashPattern = LEDPattern.solid(Color.kRed).blink(Second.of(0.5));
+  
 
   public LEDToControlMode(LED led) {
     this.led = led;
@@ -41,8 +45,12 @@ public class LEDToControlMode extends Command {
 
       if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE)) || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)) )
         led.setPattern(blueHubActivePattern);
+        if(GameState.getRemainingTimeInPeriod() <= 5) {
+            led.setPattern(blueHubFlashPattern);}
       else if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE)) || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE)))
         led.setPattern(redHubActivePattern);
+        if(GameState.getRemainingTimeInPeriod() <= 5) {
+            led.setPattern(redHubFlashPattern);}
       else led.setPattern(scrollingRainbow);
     }
   }
