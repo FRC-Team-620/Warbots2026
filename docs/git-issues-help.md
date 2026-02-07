@@ -2,8 +2,7 @@
 ## Did you...
 1. Check your syntax?
 
-2. 
+2.
 ## Did you make sure to pull from master before pushing your commits? If not...
 1. f
-2. 
-
+2.
