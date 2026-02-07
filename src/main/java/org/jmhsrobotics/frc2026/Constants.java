@@ -41,8 +41,8 @@ public final class Constants {
     // TODO update CANIds
     public static final int kCanAndGyroID = 60;
     public static final int kFlywheelMotorID = 55;
-    public static final int kIntakeMotorID = 0;
-    public static final int kSlapDownMotorID = 0;
+    public static final int kIntakeMotorID = 50;
+    public static final int kSlapDownMotorID = 51;
   }
 
   public static enum Mode {
