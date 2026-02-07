@@ -73,6 +73,7 @@ public final class Constants {
     public static final double kSlapdownI = 0.0;
     public static final double kSlapdownD = 0.0;
 
+    public static final double kBaseRPM = 1000;
     public static final double kSlapDownUpPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownDownPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownToleranceDegrees = 5; // TODO update this (IMPORTANT)

@@ -15,6 +15,8 @@ public interface ControlBoard {
 
   public DoubleSupplier shoot();
 
+  public Trigger moveIntake();
+
   public Trigger SlapdownMoveUp();
 
   public Trigger SlapdownMoveDown();

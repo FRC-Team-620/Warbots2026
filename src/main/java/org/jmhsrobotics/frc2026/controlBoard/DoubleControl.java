@@ -47,4 +47,9 @@ public class DoubleControl implements ControlBoard {
   public Trigger SlapdownMoveUp() {
     return operator.y();
   }
+
+  @Override
+  public Trigger moveIntake() {
+    return operator.y();
+  }
 }

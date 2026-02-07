@@ -43,6 +43,11 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
+  public Trigger moveIntake() {
+    return driver.y();
+  }
+
+  @Override
   public Trigger SlapdownMoveUp() {
     return driver.y();
   }
