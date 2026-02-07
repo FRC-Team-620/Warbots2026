@@ -1,5 +1,6 @@
 package org.jmhsrobotics.frc2026.controlBoard;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.function.DoubleSupplier;
@@ -7,6 +8,7 @@ import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 
 public class SingleControl implements ControlBoard {
   CommandXboxController driver = new CommandXboxController(0);
+  private Rotation2d angle = new Rotation2d();
 
   // TODO: also need to add controller monitor to double control when that gets made
   public SingleControl() {
@@ -50,5 +52,10 @@ public class SingleControl implements ControlBoard {
   @Override
   public Trigger SlapdownMoveUp() {
     return driver.y();
+  }
+
+  @Override
+  public Rotation2d rotationABS() {
+    return angle.plus(Rotation2d.fromDegrees(driver.getLeftX()));
   }
 }
