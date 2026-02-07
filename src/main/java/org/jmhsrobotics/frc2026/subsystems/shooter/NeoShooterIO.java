@@ -62,7 +62,7 @@ public class NeoShooterIO implements ShooterIO {
   }
 
   @Override
-  public void set(double velocityRPM) {
+  public void setRPM(double velocityRPM) {
     this.velocityRPM = velocityRPM;
   }
 
