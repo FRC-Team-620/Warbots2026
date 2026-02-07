@@ -35,8 +35,20 @@ public class SingleControl implements ControlBoard {
     return () -> driver.getRightTriggerAxis();
   }
 
+  // ========Operator Controls========
+
+  @Override
+  public Trigger SlapdownMoveDown() {
+    return driver.x();
+  }
+
   @Override
   public Trigger moveIntake() {
+    return driver.y();
+  }
+
+  @Override
+  public Trigger SlapdownMoveUp() {
     return driver.y();
   }
 }

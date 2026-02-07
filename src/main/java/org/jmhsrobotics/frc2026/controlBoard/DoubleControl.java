@@ -36,6 +36,18 @@ public class DoubleControl implements ControlBoard {
     return () -> driver.getRightTriggerAxis();
   }
 
+  // ========Operator Controls========
+
+  @Override
+  public Trigger SlapdownMoveDown() {
+    return operator.x();
+  }
+
+  @Override
+  public Trigger SlapdownMoveUp() {
+    return operator.y();
+  }
+
   @Override
   public Trigger moveIntake() {
     return operator.y();
