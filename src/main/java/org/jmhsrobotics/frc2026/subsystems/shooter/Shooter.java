@@ -37,7 +37,7 @@ public class Shooter extends SubsystemBase {
       accelerationTimer.stop();
     }
     goalSpeedRPM = velocityRPM;
-    shooterIO.set(velocityRPM);
+    shooterIO.setRPM(velocityRPM);
   }
 
   public void stop() {
