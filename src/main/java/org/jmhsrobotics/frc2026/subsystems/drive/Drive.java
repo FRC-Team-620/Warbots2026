@@ -75,13 +75,9 @@ public class Drive extends SubsystemBase {
   private double maxLinearSpeedMetersPerSec = DriveConstants.maxSpeedMetersPerSec;
   private boolean autoAlignComplete = false;
   private boolean turboMode = false;
-  private boolean alignBlockedByCoral = false;
 
   private double driveVelocity = 0;
   private double driveAcceleration = 0;
-
-  private int coralScoredEast = 0;
-  private int coralScoredWest = 0;
 
   public Drive(
       GyroIO gyroIO,
@@ -143,8 +139,6 @@ public class Drive extends SubsystemBase {
 
     Logger.recordOutput("Gyro/Gyro Connected", gyroInputs.connected);
     Logger.recordOutput("Gyro/Gyro Heading", gyroInputs.yawPosition);
-    Logger.recordOutput("Drive/Coral Scored East", this.coralScoredEast);
-    Logger.recordOutput("Drive/Coral Scored West", this.coralScoredWest);
 
     SwerveModuleState[] states =
         new SwerveModuleState[] {
@@ -154,7 +148,7 @@ public class Drive extends SubsystemBase {
           new SwerveModuleState()
         };
 
-    Logger.recordOutput("MyStates", states);
+    Logger.recordOutput("MyStates", states); // TODO: Clean up Name
     // Calculates acceleration and velocity, then logs them
     driveAcceleration =
         (Math.sqrt(

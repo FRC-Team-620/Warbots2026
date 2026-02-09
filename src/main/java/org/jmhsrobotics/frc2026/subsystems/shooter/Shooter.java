@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }
 
-  public void set(double velocityRPM) {
+  public void setRPM(double velocityRPM) {
     if (velocityRPM > 0) {
       accelerationTimer.start();
     } else {

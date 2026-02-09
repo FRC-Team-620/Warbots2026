@@ -10,15 +10,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jmhsrobotics.frc2026.Constants;
 
 public class SimShooterIO implements ShooterIO {
+  public static final double IN_TO_KG_MOI = 0.0002926397;
+  public static final double MOI = 19.479 * IN_TO_KG_MOI; // TODO add units to var name
+  public static final DCMotor MOTOR = DCMotor.getNEO(3);
+  public static final double GEEARING = 1;
   FlywheelSim flywheelSim =
-      new FlywheelSim(
-          LinearSystemId.createFlywheelSystem(DCMotor.getNEO(2), 2, 1), DCMotor.getNEO(2));
-  PIDController pid = new PIDController(1, 0, 0);
-
+      new FlywheelSim(LinearSystemId.createFlywheelSystem(MOTOR, MOI, GEEARING), MOTOR);
+  PIDController pid;
   public boolean isOpenLoop = false;
   public double outputVolts = 0;
 
-  public SimShooterIO() {
+  public SimShooterIO(double k, double i, double d) {
+    pid = new PIDController(k, i, d);
+
     SmartDashboard.putData("sim/flywheel/pid", pid);
   }
 
@@ -32,8 +36,7 @@ public class SimShooterIO implements ShooterIO {
               -RobotController.getBatteryVoltage(),
               RobotController.getBatteryVoltage());
     }
-
-    this.flywheelSim.setInput(outvolts);
+    this.flywheelSim.setInputVoltage(outvolts);
     this.flywheelSim.update(Constants.ksimTimestep);
 
     inputs.currentAMPS = flywheelSim.getCurrentDrawAmps();
@@ -43,8 +46,9 @@ public class SimShooterIO implements ShooterIO {
   }
 
   @Override
-  public void setRPM(double speedDutyCycle) {
-    setRPM(speedDutyCycle);
+  public void setRPM(double RPM) {
+    isOpenLoop = false;
+    pid.setSetpoint(RPM);
   }
 
   @Override

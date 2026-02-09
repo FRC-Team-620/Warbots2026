@@ -29,6 +29,7 @@ import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
+import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -77,7 +78,12 @@ public class RobotContainer {
                 new ModuleIOSimRev());
 
         // FIXME:add SimShooterIO
-        shooter = new Shooter(new NeoShooterIO() {});
+        shooter =
+            new Shooter(
+                new SimShooterIO(
+                    Constants.ShooterConstants.kP,
+                    Constants.ShooterConstants.kI,
+                    Constants.ShooterConstants.kD) {});
         // FIXME:add SimIntakeIO
         intake = new Intake(new NeoIntakeIO() {});
         break;

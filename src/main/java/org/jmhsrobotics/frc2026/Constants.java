@@ -58,11 +58,11 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.0003;
+    public static final double kP = 0.008;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kBaseRPM = 9000;
+    public static final double kBaseRPM = 3000;
   }
 
   public static class Intake {
