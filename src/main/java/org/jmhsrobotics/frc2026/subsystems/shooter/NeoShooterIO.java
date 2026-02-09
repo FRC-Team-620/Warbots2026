@@ -3,6 +3,7 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -17,16 +18,26 @@ public class NeoShooterIO implements ShooterIO {
   private RelativeEncoder encoder;
   private SparkMaxConfig motorConfig;
   private SparkClosedLoopController pidController;
+  private double velocityRPM;
 
   public NeoShooterIO() {
     motorConfig = new SparkMaxConfig();
     motorConfig
-        .idleMode(IdleMode.kBrake)
+        .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(25)
         .voltageCompensation(12)
-        .inverted(false)
+        .inverted(true)
         .closedLoop
-        .pid(Constants.Shooter.kP, Constants.Shooter.kI, Constants.Shooter.kD);
+        .pid(
+            Constants.ShooterConstants.kP,
+            Constants.ShooterConstants.kI,
+            Constants.ShooterConstants.kD)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .maxOutput(1)
+        .minOutput(0)
+        .maxMotion
+        .cruiseVelocity(9800)
+        .maxAcceleration(20000);
     // TODO set motorConfig values
     // Initialize the closed loop controller
     pidController = motor.getClosedLoopController();
@@ -47,11 +58,12 @@ public class NeoShooterIO implements ShooterIO {
     SparkUtil.ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRPM = value);
     SparkUtil.ifOk(motor, motor::getBusVoltage, (value) -> inputs.voltage = value);
     SparkUtil.ifOk(motor, motor::getMotorTemperature, (value) -> inputs.tempC = value);
+    pidController.setSetpoint(this.velocityRPM, ControlType.kMAXMotionVelocityControl);
   }
 
   @Override
   public void setRPM(double velocityRPM) {
-    pidController.setSetpoint(velocityRPM, ControlType.kVelocity);
+    this.velocityRPM = velocityRPM;
   }
 
   @Override

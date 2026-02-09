@@ -43,7 +43,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.jmhsrobotics.frc2026.Constants;
-import org.jmhsrobotics.frc2026.subsystems.drive.GyroIO.GyroIOInputs;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleThrifty;
 import org.jmhsrobotics.frc2026.util.LocalADStarAK;
@@ -53,8 +52,9 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
-  private final GyroIOInputs gyroInputs = new GyroIOInputs();
-  private final ModuleThrifty[] modules = new ModuleThrifty[4]; // FL, FR, BL, BR
+  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+  private final ModuleThrifty[] modules =
+      new ModuleThrifty[4]; // FL, FR, BL, BR //FIXME: this is wromng should be IO or inputs
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
@@ -75,13 +75,9 @@ public class Drive extends SubsystemBase {
   private double maxLinearSpeedMetersPerSec = DriveConstants.maxSpeedMetersPerSec;
   private boolean autoAlignComplete = false;
   private boolean turboMode = false;
-  private boolean alignBlockedByCoral = false;
 
   private double driveVelocity = 0;
   private double driveAcceleration = 0;
-
-  private int coralScoredEast = 0;
-  private int coralScoredWest = 0;
 
   public Drive(
       GyroIO gyroIO,
@@ -139,12 +135,20 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
-    // TODO: Logger.processInputs("Drive/Gyro", gyroInputs);
+    Logger.processInputs("Drive/Gyro", gyroInputs);
+
     Logger.recordOutput("Gyro/Gyro Connected", gyroInputs.connected);
     Logger.recordOutput("Gyro/Gyro Heading", gyroInputs.yawPosition);
-    Logger.recordOutput("Drive/Coral Scored East", this.coralScoredEast);
-    Logger.recordOutput("Drive/Coral Scored West", this.coralScoredWest);
 
+    SwerveModuleState[] states =
+        new SwerveModuleState[] {
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState()
+        };
+
+    Logger.recordOutput("MyStates", states); // TODO: Clean up Name
     // Calculates acceleration and velocity, then logs them
     driveAcceleration =
         (Math.sqrt(

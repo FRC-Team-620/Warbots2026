@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.function.DoubleSupplier;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 
-public class SingleControl implements ControlBoard {
+public class DoubleControl implements ControlBoard {
   CommandXboxController driver = new CommandXboxController(0);
-  private Rotation2d angle = new Rotation2d();
+  CommandXboxController operator = new CommandXboxController(1);
 
-  // TODO: also need to add controller monitor to double control when that gets made
-  public SingleControl() {
+  public DoubleControl() {
     ControllerMonitor.addController(driver.getHID(), "Driver");
+    ControllerMonitor.addController(operator.getHID(), "Operator");
   }
 
   // ========Driver Controls========
@@ -41,21 +41,22 @@ public class SingleControl implements ControlBoard {
 
   @Override
   public Trigger SlapdownMoveDown() {
-    return driver.x();
-  }
-
-  @Override
-  public Trigger moveIntake() {
-    return driver.y();
+    return operator.x();
   }
 
   @Override
   public Trigger SlapdownMoveUp() {
-    return driver.y();
+    return operator.y();
+  }
+
+  @Override
+  public Trigger moveIntake() {
+    return operator.y();
   }
 
   @Override
   public Rotation2d rotationABS() {
-    return angle.plus(Rotation2d.fromDegrees(driver.getLeftX()));
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'rotationABS'");
   }
 }
