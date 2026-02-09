@@ -7,6 +7,7 @@ package org.jmhsrobotics.frc2026;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -134,7 +135,11 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    DriverStationSim.setFmsAttached(true);
+    DriverStationSim.setDsAttached(true);
+    DriverStationSim.setEnabled(true);
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
