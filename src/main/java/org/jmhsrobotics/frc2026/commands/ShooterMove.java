@@ -18,16 +18,17 @@ public class ShooterMove extends Command {
 
   @Override
   public void initialize() {
-    this.shooter.set(0);
+    this.shooter.setRPM(0);
   }
 
   @Override
   public void execute() {
     double rightTrigger = rightTriggerAxis.getAsDouble();
-    if (rightTrigger > 0) this.shooter.set(Constants.ShooterConstants.kBaseRPM);
-
-    if (rightTrigger == 0) {
-      this.shooter.set(0.0);
+    if (rightTrigger > 0) {
+      this.shooter.setRPM(Constants.ShooterConstants.kBaseRPM);
+    } else {
+      // this.shooter.setRPM(0.0);
+      this.shooter.stop(); //Do not use Power to Spindown flywheels
     }
   }
 
@@ -38,6 +39,7 @@ public class ShooterMove extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    this.shooter.set(0);
+    this.shooter.stop(); //Do not use Power to Spindown flywheels
+    // this.shooter.setRPM(0);
   }
 }

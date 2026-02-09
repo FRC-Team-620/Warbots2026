@@ -1,30 +1,24 @@
 {
   "hubs": [
     {
-      "x": -8,
-      "y": -8,
-      "width": 1296,
-      "height": 768,
+      "x": -11,
+      "y": -11,
+      "width": 1942,
+      "height": 1054,
       "state": {
         "sidebar": {
           "width": 300,
           "expanded": [
-            "/Shuffleboard",
             "/SmartDashboard",
-            "/LiveWindow",
             "/LiveWindow/.status",
             "/Shuffleboard/.metadata",
             "/Shuffleboard/.recording",
-            "/SmartDashboard/Alerts",
-            "/SmartDashboard/Auto Choices",
-            "/SmartDashboard/BuildInfo",
             "/SmartDashboard/DB",
             "/SmartDashboard/PathPlanner",
             "/SmartDashboard/Auto Choices/options",
             "/SmartDashboard/Alerts/warnings",
             "/SmartDashboard/Alerts/infos",
             "/SmartDashboard/Alerts/errors",
-            "/FMSInfo",
             "/AdvantageKit",
             "/AdvantageKit/NetworkInputs",
             "/AdvantageKit/Drive/Module0",
@@ -39,11 +33,11 @@
             "/AdvantageKit/SystemStats",
             "/AdvantageKit/RealOutputs/Odometry",
             "/AdvantageKit/RealOutputs/MyStates",
-            "/AdvantageKit/RealOutputs/Logger"
+            "/AdvantageKit/RealOutputs/Shooter"
           ]
         },
         "tabs": {
-          "selected": 6,
+          "selected": 7,
           "tabs": [
             {
               "type": 0,
@@ -57,22 +51,32 @@
               "type": 3,
               "title": "3D Field",
               "controller": {
-                "sources": [],
-                "game": "FRC:2026 Field"
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "2025 KitBot"
+                    }
+                  }
+                ],
+                "game": "FRC:Evergreen"
               },
               "controllerUUID": "7psjncpawnwtv3v5k8pk7oi92xwelwb6",
               "renderer": {
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -4.085567881642342,
-                  6.121887588974155,
-                  8.681737680699419
+                  12.97083716727887,
+                  15.41814794436949,
+                  2.5526239677172455
                 ],
                 "cameraTarget": [
-                  -0.026502194635158592,
-                  0.5033621913351107,
-                  -0.040894723990170585
+                  0.6194950458295301,
+                  3.130580265238844,
+                  -1.2943091418683783
                 ]
               },
               "controlsHeight": 256
@@ -189,9 +193,61 @@
               "type": 1,
               "title": "Shooter",
               "controller": {
-                "leftSources": [],
-                "rightSources": [],
-                "discreteSources": [],
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter RPM",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Goal RPM",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Current Amps",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Voltage",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#e48b32",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/At RPM Goal",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  }
+                ],
                 "leftLockedRange": null,
                 "rightLockedRange": null,
                 "leftUnitConversion": {
