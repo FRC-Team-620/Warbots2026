@@ -20,7 +20,7 @@ public class SimShooterIO implements ShooterIO {
   public boolean isOpenLoop = false;
   public double outputVolts = 0;
 
-  public SimShooterIO(double k, double i , double d) {
+  public SimShooterIO(double k, double i, double d) {
     pid = new PIDController(k, i, d);
 
     SmartDashboard.putData("sim/flywheel/pid", pid);

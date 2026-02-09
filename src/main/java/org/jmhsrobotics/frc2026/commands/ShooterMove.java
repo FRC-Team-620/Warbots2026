@@ -28,7 +28,7 @@ public class ShooterMove extends Command {
       this.shooter.setRPM(Constants.ShooterConstants.kBaseRPM);
     } else {
       // this.shooter.setRPM(0.0);
-      this.shooter.stop(); //Do not use Power to Spindown flywheels
+      this.shooter.stop(); // Do not use Power to Spindown flywheels
     }
   }
 
@@ -39,7 +39,7 @@ public class ShooterMove extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    this.shooter.stop(); //Do not use Power to Spindown flywheels
+    this.shooter.stop(); // Do not use Power to Spindown flywheels
     // this.shooter.setRPM(0);
   }
 }
