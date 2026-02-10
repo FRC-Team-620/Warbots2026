@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
 
-    Logger.processInputs("/shooter", shooterInputs);
+    Logger.processInputs("/Shooter", shooterInputs);
 
     Logger.recordOutput("Shooter/Shooter Current Amps", shooterInputs.currentAMPS);
     Logger.recordOutput("Shooter/Shooter Voltage", shooterInputs.voltage);
