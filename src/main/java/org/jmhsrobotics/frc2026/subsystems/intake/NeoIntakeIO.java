@@ -124,12 +124,17 @@ public class NeoIntakeIO implements IntakeIO {
         intakeMotor::getMotorTemperature,
         (value) -> inputs.motorTemperatureCelcius = value);
 
-    intakePIDController.setSetpoint(this.speedRPM, ControlType.kMAXMotionVelocityControl);
-    slapDownPIDController.setSetpoint(setPointDegrees, ControlType.kPosition);
+    intakePIDController.setSetpoint(
+        this.speedRPM,
+        ControlType
+            .kMAXMotionVelocityControl); // FIXME: This should be done within the set rpm method
+    slapDownPIDController.setSetpoint(
+        setPointDegrees,
+        ControlType.kPosition); // FIXME: This should be done within the set Degrees method
   }
 
   @Override
-  public void set(double RPM) {
+  public void setRPM(double RPM) {
     this.speedRPM = RPM;
   }
 

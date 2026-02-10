@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jmhsrobotics.frc2026.Constants;
 
 public class SimShooterIO implements ShooterIO {
-  public static final double IN_TO_KG_MOI = 0.0002926397;
+  public static final double IN_TO_KG_MOI = 0.0002926397; // TODO: Move to constants
   public static final double MOI = 19.479 * IN_TO_KG_MOI; // TODO add units to var name
   public static final DCMotor MOTOR = DCMotor.getNEO(3);
   public static final double GEEARING = 1;
@@ -20,7 +20,8 @@ public class SimShooterIO implements ShooterIO {
   public boolean isOpenLoop = false;
   public double outputVolts = 0;
 
-  public SimShooterIO(double k, double i, double d) {
+  public SimShooterIO(
+      double k, double i, double d) { // TODO: This should prob be stored elsewhere (pid gains)
     pid = new PIDController(k, i, d);
 
     SmartDashboard.putData("sim/flywheel/pid", pid);

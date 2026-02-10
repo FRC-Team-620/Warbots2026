@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
-import org.jmhsrobotics.frc2026.commands.DriveCommands;
+import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
@@ -38,6 +38,7 @@ import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
+import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
@@ -94,15 +95,15 @@ public class RobotContainer {
                 new ModuleIOSimRev(),
                 new ModuleIOSimRev());
 
-        // FIXME:add SimShooterIO
         shooter =
             new Shooter(
                 new SimShooterIO(
                     Constants.ShooterConstants.kP,
                     Constants.ShooterConstants.kI,
                     Constants.ShooterConstants.kD) {});
+
         // FIXME:add SimIntakeIO
-        intake = new Intake(new IntakeIO() {});
+        intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
         climber = new Climber(new SimClimberIO());
         break;
@@ -148,10 +149,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    drive.setDefaultCommand(
-        DriveCommands.joystickDriveAtAngle(
-            drive, control::translationX, control::translationY, control::rotationABS));
+    drive.setDefaultCommand(new DriveCommand(drive, control));
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
