@@ -60,14 +60,14 @@ public class DriveConstants {
     public static final int pigeonCanId = 62; // gyro
 
     public static final int frontLeftDriveCanId = 10;
-    public static final int backLeftDriveCanId = 12;
+    public static final int backLeftDriveCanId = 13;
     public static final int frontRightDriveCanId = 11;
-    public static final int backRightDriveCanId = 13;
+    public static final int backRightDriveCanId = 12;
 
     public static final int frontLeftTurnCanId = 20;
-    public static final int backLeftTurnCanId = 22;
+    public static final int backLeftTurnCanId = 23;
     public static final int frontRightTurnCanId = 21;
-    public static final int backRightTurnCanId = 23;
+    public static final int backRightTurnCanId = 22;
 
     // Drive motor configuration
     public static final int driveMotorCurrentLimit = 50;
