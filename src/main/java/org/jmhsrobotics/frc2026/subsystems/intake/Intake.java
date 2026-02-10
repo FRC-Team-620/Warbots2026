@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
 
     intakeIO.updateInputs(inputs);
 
-    Logger.processInputs("/intake", inputs);
+    Logger.processInputs("/Intake", inputs);
 
     Logger.recordOutput("Intake/Intake Current Amps", inputs.intakeCurrentAmps);
     Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);

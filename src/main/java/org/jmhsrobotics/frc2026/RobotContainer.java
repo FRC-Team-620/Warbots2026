@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
+import org.jmhsrobotics.frc2026.commands.ClimberMove;
+import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DriveCommands;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
@@ -18,6 +21,10 @@ import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.SingleControl;
+import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
+import org.jmhsrobotics.frc2026.subsystems.climber.ClimberIO;
+import org.jmhsrobotics.frc2026.subsystems.climber.NeoClimberIO;
+import org.jmhsrobotics.frc2026.subsystems.climber.SimClimberIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
@@ -52,6 +59,7 @@ public class RobotContainer {
   private final ControlBoard control;
   private final Intake intake;
   private final Indexer indexer;
+  private final Climber climber;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -73,6 +81,7 @@ public class RobotContainer {
         shooter = new Shooter(new NeoShooterIO());
         intake = new Intake(new NeoIntakeIO());
         indexer = new Indexer(new NeoIndexerIO());
+        climber = new Climber(new NeoClimberIO());
         break;
 
       case SIM:
@@ -95,6 +104,7 @@ public class RobotContainer {
         // FIXME:add SimIntakeIO
         intake = new Intake(new IntakeIO() {});
         indexer = new Indexer(new SimIndexerIO());
+        climber = new Climber(new SimClimberIO());
         break;
 
       default:
@@ -110,6 +120,7 @@ public class RobotContainer {
         shooter = new Shooter(new ShooterIO() {});
         intake = new Intake(new IntakeIO() {});
         indexer = new Indexer(new IndexerIO() {});
+        climber = new Climber(new ClimberIO() {});
         break;
     }
 
@@ -144,10 +155,16 @@ public class RobotContainer {
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
+    climber.setDefaultCommand(
+        new ClimberMove(climber, 0)); // TODO figure out real parameters for climber move
 
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
+    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 1));
+    SmartDashboard.putData("Climber Down", new ClimberMove(climber, 0));
+    SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
+    SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
   }
 
   /**
