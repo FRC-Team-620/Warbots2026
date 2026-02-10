@@ -26,6 +26,7 @@ import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
+import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
@@ -77,15 +78,13 @@ public class RobotContainer {
                 new ModuleIOSimRev(),
                 new ModuleIOSimRev());
 
-        // FIXME:add SimShooterIO
         shooter =
             new Shooter(
                 new SimShooterIO(
                     Constants.ShooterConstants.kP,
                     Constants.ShooterConstants.kI,
                     Constants.ShooterConstants.kD) {});
-        // FIXME:add SimIntakeIO
-        intake = new Intake(new NeoIntakeIO() {});
+        intake = new Intake(new SimIntakeIO());
         break;
 
       default:
