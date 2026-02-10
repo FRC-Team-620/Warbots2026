@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import org.jmhsrobotics.frc2026.commands.DriveCommands;
+import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
@@ -138,10 +138,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    drive.setDefaultCommand(
-        DriveCommands.joystickDriveAtAngle(
-            drive, control::translationX, control::translationY, control::rotationABS));
+    drive.setDefaultCommand(new DriveCommand(drive, control));
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));

@@ -33,6 +33,11 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
+  public Trigger resetForward() {
+    return driver.rightBumper();
+  }
+
+  @Override
   public DoubleSupplier shoot() {
     return () -> driver.getRightTriggerAxis();
   }

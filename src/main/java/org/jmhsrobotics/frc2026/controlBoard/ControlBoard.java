@@ -14,6 +14,8 @@ public interface ControlBoard {
 
   public double translationY();
 
+  public Trigger resetForward();
+
   // =======Operator Controls=======
 
   public DoubleSupplier shoot();
