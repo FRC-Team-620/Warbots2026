@@ -63,4 +63,8 @@ public class SingleControl implements ControlBoard {
   public Rotation2d rotationABS() {
     return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
   }
+
+  public Trigger index() {
+    return driver.b();
+  }
 }
