@@ -1,7 +1,5 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
-
-
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -13,18 +11,14 @@ import org.jmhsrobotics.frc2026.Constants;
 
 public class SimIntakeIO implements IntakeIO {
 
-
   private static final DCMotor INTAKE_MOTOR = DCMotor.getNEO(1);
-  private static final double INTAKE_GEAR_RATIO = 2.0; //Reduction
-    public static final double IN_TO_KG_MOI = 0.0002926397;
-    public static final double INTAKE_MOI = 0.4 *IN_TO_KG_MOI; //TODO: Use Real moI
+  private static final double INTAKE_GEAR_RATIO = 2.0; // Reduction
+  public static final double IN_TO_KG_MOI = 0.0002926397;
+  public static final double INTAKE_MOI = 0.4 * IN_TO_KG_MOI; // TODO: Use Real moI
 
   private final FlywheelSim intakeSim =
       new FlywheelSim(
-          LinearSystemId.createFlywheelSystem(
-              INTAKE_MOTOR,
-              INTAKE_MOI,
-              INTAKE_GEAR_RATIO),
+          LinearSystemId.createFlywheelSystem(INTAKE_MOTOR, INTAKE_MOI, INTAKE_GEAR_RATIO),
           INTAKE_MOTOR);
 
   private final PIDController intakePID = new PIDController(0.001, 0, 0);
@@ -32,14 +26,13 @@ public class SimIntakeIO implements IntakeIO {
   private boolean intakeOpenLoop = true;
   private double intakeVolts = 0.0;
 
-
   private static final DCMotor SLAPDOWN_MOTOR = DCMotor.getNEO(1);
   private static final double SLAPDOWN_GEAR_RATIO = 40.0;
   private static final double SLAPDOWN_ARM_LENGTH_METERS = 0.4;
   private static final double SLAPDOWN_MIN_ANGLE_RAD = Math.toRadians(-10);
   private static final double SLAPDOWN_MAX_ANGLE_RAD = Math.toRadians(110);
 
-  private static final double SLAPDOWN_MOI = 0.4 *IN_TO_KG_MOI; //TODO: Real MOI
+  private static final double SLAPDOWN_MOI = 0.4 * IN_TO_KG_MOI; // TODO: Real MOI
 
   private final SingleJointedArmSim slapDownSim =
       new SingleJointedArmSim(
@@ -54,7 +47,6 @@ public class SimIntakeIO implements IntakeIO {
 
   private final PIDController slapDownPID = new PIDController(4.0, 0.0, 0.2);
   private double slapDownTargetRad = 0.0;
-
 
   @Override
   public void setRPM(double rpm) {
@@ -89,10 +81,7 @@ public class SimIntakeIO implements IntakeIO {
       intakeOutVolts = intakeVolts;
     } else {
       intakeOutVolts =
-          MathUtil.clamp(
-              intakePID.calculate(intakeSim.getAngularVelocityRPM()),
-              -12.0,
-              12.0);
+          MathUtil.clamp(intakePID.calculate(intakeSim.getAngularVelocityRPM()), -12.0, 12.0);
     }
 
     intakeSim.setInputVoltage(intakeOutVolts);
@@ -102,22 +91,15 @@ public class SimIntakeIO implements IntakeIO {
     inputs.RPM = intakeSim.getAngularVelocityRPM();
     inputs.motorTemperatureCelcius = 25.0;
 
-
     double slapDownVolts =
         MathUtil.clamp(
-            slapDownPID.calculate(
-                slapDownSim.getAngleRads(),
-                slapDownTargetRad),
-            -12.0,
-            12.0);
+            slapDownPID.calculate(slapDownSim.getAngleRads(), slapDownTargetRad), -12.0, 12.0);
 
     slapDownSim.setInputVoltage(slapDownVolts);
     slapDownSim.update(Constants.ksimTimestep);
 
-    inputs.slapDownPositionDegrees =
-        Math.toDegrees(slapDownSim.getAngleRads());
-    inputs.slapDownSpeedDegPerSec =
-        Math.toDegrees(slapDownSim.getVelocityRadPerSec());
+    inputs.slapDownPositionDegrees = Math.toDegrees(slapDownSim.getAngleRads());
+    inputs.slapDownSpeedDegPerSec = Math.toDegrees(slapDownSim.getVelocityRadPerSec());
     inputs.slapDownCurrentAmps = slapDownSim.getCurrentDrawAmps();
     // inputs.slapDownAccelerationRPMPerSec =
     //     Units.radiansPerSecondToRotationsPerMinute(
@@ -128,6 +110,6 @@ public class SimIntakeIO implements IntakeIO {
   @Override
   public void setBrakeMode(boolean enable, SparkMax motor) {
     // Sim brake mode is approximated by increased damping
-    //TODO: implement
+    // TODO: implement
   }
 }

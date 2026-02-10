@@ -21,6 +21,9 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
+
+    Logger.processInputs("/shooter", shooterInputs);
+
     Logger.recordOutput("Shooter/Shooter Current Amps", shooterInputs.currentAMPS);
     Logger.recordOutput("Shooter/Shooter Voltage", shooterInputs.voltage);
     Logger.recordOutput("Shooter/Shooter Goal RPM", shooterInputs.goalRPM);

@@ -23,4 +23,6 @@ public interface ControlBoard {
   public Trigger SlapdownMoveUp();
 
   public Trigger SlapdownMoveDown();
+
+  public Trigger index();
 }

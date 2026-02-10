@@ -54,6 +54,10 @@ public class DoubleControl implements ControlBoard {
     return operator.y();
   }
 
+  public Trigger index() {
+    return operator.b();
+  }
+
   @Override
   public Rotation2d rotationABS() {
     // TODO Auto-generated method stub

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.DriveCommands;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterMove;
@@ -23,6 +24,10 @@ import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
+import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
+import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
+import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
@@ -30,6 +35,7 @@ import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
+import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -46,6 +52,7 @@ public class RobotContainer {
   private final LED led;
   private final ControlBoard control;
   private final Intake intake;
+  private final Indexer indexer;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -64,8 +71,9 @@ public class RobotContainer {
                 new ModuleIOThrifty(2),
                 new ModuleIOThrifty(3));
 
-        shooter = new Shooter(new NeoShooterIO() {});
-        intake = new Intake(new NeoIntakeIO() {});
+        shooter = new Shooter(new NeoShooterIO());
+        intake = new Intake(new NeoIntakeIO());
+        indexer = new Indexer(new NeoIndexerIO());
         break;
 
       case SIM:
@@ -84,7 +92,10 @@ public class RobotContainer {
                     Constants.ShooterConstants.kP,
                     Constants.ShooterConstants.kI,
                     Constants.ShooterConstants.kD) {});
+
+        // FIXME:add SimIntakeIO
         intake = new Intake(new SimIntakeIO());
+        indexer = new Indexer(new SimIndexerIO());
         break;
 
       default:
@@ -97,8 +108,9 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
 
-        shooter = new Shooter(new NeoShooterIO() {});
+        shooter = new Shooter(new ShooterIO() {});
         intake = new Intake(new IntakeIO() {});
+        indexer = new Indexer(new IndexerIO() {});
         break;
     }
 
@@ -132,6 +144,11 @@ public class RobotContainer {
             drive, control::translationX, control::translationY, control::rotationABS));
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
+    indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
+
+    SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
+    SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
+    SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
   }
 
   /**
