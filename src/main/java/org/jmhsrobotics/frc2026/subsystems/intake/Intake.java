@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void set(double speedRPM) {
-    intakeIO.set(speedRPM);
+    intakeIO.setRPM(speedRPM);
   }
 
   public boolean atGoal() {

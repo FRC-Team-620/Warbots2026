@@ -54,7 +54,7 @@ public class Drive extends SubsystemBase {
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final ModuleThrifty[] modules =
-      new ModuleThrifty[4]; // FL, FR, BL, BR //FIXME: this is wromng should be IO or inputs
+      new ModuleThrifty[4]; // FL, FR, BL, BR //FIXME: this is wrong should be IO or inputs
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
