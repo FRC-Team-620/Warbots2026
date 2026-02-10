@@ -43,6 +43,7 @@ public final class Constants {
     public static final int kFlywheelMotorID = 55;
     public static final int kIntakeMotorID = 50;
     public static final int kSlapDownMotorID = 51;
+    public static final int kIndexerMotorID = 0;
   }
 
   public static enum Mode {
