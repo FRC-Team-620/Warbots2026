@@ -5,12 +5,17 @@
 package org.jmhsrobotics.frc2026;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import org.jmhsrobotics.frc2026.commands.DriveCommands;
+import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
@@ -47,8 +52,6 @@ public class RobotContainer {
   private final Intake intake;
 
   private final LoggedDashboardChooser<Command> autoChooser;
-
-  private final DriveCommand driveCommand;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -109,9 +112,6 @@ public class RobotContainer {
 
     led = new LED();
 
-    this.driveCommand = new DriveCommand(this.drive, this.control);
-    this.drive.setDefaultCommand(driveCommand);
-
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
     // (current values 2.2 and 0.3 are from 2025 season)
@@ -132,12 +132,26 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    drive.setDefaultCommand(
-        DriveCommands.joystickDriveAtAngle(
-            drive, control::translationX, control::translationY, control::rotationABS));
+    drive.setDefaultCommand(new DriveCommand(drive, control));
     shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
+
+    // Reset gyro to 0° when right bumper is pressed
+
+    control
+        .resetForward()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  boolean isRed =
+                      DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == Alliance.Red;
+                  drive.setPose(
+                      new Pose2d(
+                          drive.getPose().getTranslation(),
+                          Rotation2d.fromDegrees(isRed ? 180 : 0)));
+                },
+                drive));
   }
 
   /**

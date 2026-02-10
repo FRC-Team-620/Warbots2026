@@ -33,6 +33,11 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
+  public Trigger resetForward() {
+    return driver.rightBumper();
+  }
+
+  @Override
   public DoubleSupplier shoot() {
     return () -> driver.getRightTriggerAxis();
   }
@@ -56,6 +61,6 @@ public class SingleControl implements ControlBoard {
 
   @Override
   public Rotation2d rotationABS() {
-    return angle.plus(Rotation2d.fromDegrees(driver.getLeftX()));
+    return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
   }
 }
