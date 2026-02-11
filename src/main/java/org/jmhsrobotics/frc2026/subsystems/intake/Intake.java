@@ -39,11 +39,11 @@ public class Intake extends SubsystemBase {
     Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);
     Logger.recordOutput("Intake/Slap Down Position Degrees", inputs.slapDownPositionDegrees);
     Logger.recordOutput("Intake/Slap Down Current Amps", inputs.slapDownCurrentAmps);
-    Logger.recordOutput("Intake/Intake Temperature Celcius", inputs.motorTemperatureCelcius);
+    Logger.recordOutput("Intake/Intake Temperature Celcius", inputs.intakeMotorTemperatureCelcius);
   }
 
-  public void set(double speedRPM) {
-    intakeIO.setRPM(speedRPM);
+  public void set(double speedDutyCycle) {
+    intakeIO.setSpeedDutyCycle(speedDutyCycle);
   }
 
   public boolean atGoal() {
@@ -57,8 +57,12 @@ public class Intake extends SubsystemBase {
     this.setPointDegrees = setPointDegrees;
   }
 
-  public void setBrakeMode(boolean enable, SparkMax motor) {
-    intakeIO.setBrakeMode(enable, motor);
+  public void setIntakeBrakeMode(boolean enable) {
+    intakeIO.setIntakeBrakeMode(enable);
+  }
+
+  public void setSlapDownBrakeMode(boolean enable) {
+    intakeIO.setSlapDownBrakeMode(enable);
   }
 
   public double getPositionDegrees() {

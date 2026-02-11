@@ -49,9 +49,9 @@ public class SimIntakeIO implements IntakeIO {
   private double slapDownTargetRad = 0.0;
 
   @Override
-  public void setRPM(double rpm) {
+  public void setSpeedDutyCycle(double dutyCycle) {
     intakeOpenLoop = false;
-    intakePID.setSetpoint(rpm);
+    intakePID.setSetpoint(dutyCycle * Constants.Intake.kBaseRPM); // Convert duty cycle to RPM
   }
 
   @Override
@@ -89,7 +89,7 @@ public class SimIntakeIO implements IntakeIO {
 
     inputs.intakeCurrentAmps = intakeSim.getCurrentDrawAmps();
     inputs.RPM = intakeSim.getAngularVelocityRPM();
-    inputs.motorTemperatureCelcius = 25.0;
+    inputs.intakeMotorTemperatureCelcius = 25.0;
 
     double slapDownVolts =
         MathUtil.clamp(
@@ -108,7 +108,13 @@ public class SimIntakeIO implements IntakeIO {
   }
 
   @Override
-  public void setBrakeMode(boolean enable, SparkMax motor) {
+  public void setIntakeBrakeMode(boolean enable) {
+    // Sim brake mode is approximated by increased damping
+    // TODO: implement
+  }
+
+  @Override
+  public void setSlapDownBrakeMode(boolean enable) {
     // Sim brake mode is approximated by increased damping
     // TODO: implement
   }
