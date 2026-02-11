@@ -22,7 +22,7 @@ public class DoubleControl implements ControlBoard {
     return driver.getRightX();
   }
 
-    @Override
+  @Override
   public Rotation2d rotationABS() {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'rotationABS'");
@@ -79,25 +79,24 @@ public class DoubleControl implements ControlBoard {
   public Trigger intakeToggle() {
     return operator.rightBumper();
   }
-  
+
   @Override
   public Trigger climberUp() {
     return operator.povUp();
   }
-  
+
   @Override
   public Trigger climberDown() {
     return operator.povDown();
   }
-  
+
   @Override
   public Trigger extakeFuel() {
     return operator.x();
   }
-  
+
   @Override
   public Trigger intakeIndexOn() {
     return operator.y();
   }
-
 }

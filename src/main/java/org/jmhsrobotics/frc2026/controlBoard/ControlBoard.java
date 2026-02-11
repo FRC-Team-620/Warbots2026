@@ -15,9 +15,9 @@ public interface ControlBoard {
   public double translationY();
 
   public Trigger resetForward();
-  
+
   public DoubleSupplier autoAim();
-  
+
   public Trigger turbo();
 
   // =======Operator Controls=======

@@ -15,7 +15,6 @@ public class SingleControl implements ControlBoard {
     ControllerMonitor.addController(driver.getHID(), "Driver");
   }
 
- 
   // ========Driver Controls========
 
   @Override
@@ -79,25 +78,24 @@ public class SingleControl implements ControlBoard {
   public Trigger intakeToggle() {
     return driver.rightBumper();
   }
-  
+
   @Override
   public Trigger climberUp() {
     return driver.povUp();
   }
-  
+
   @Override
   public Trigger climberDown() {
     return driver.povDown();
   }
-  
+
   @Override
   public Trigger extakeFuel() {
     return driver.x();
   }
-  
+
   @Override
   public Trigger intakeIndexOn() {
     return driver.y();
   }
-
 }
