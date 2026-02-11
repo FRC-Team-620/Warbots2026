@@ -38,11 +38,16 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
-  public DoubleSupplier shoot() {
-    return () -> driver.getRightTriggerAxis();
+  public double autoAim() {
+    return driver.getRightTriggerAxis();
   }
 
   // ========Operator Controls========
+
+  @Override
+  public double shoot() {
+    return operator.getRightTriggerAxis();
+  }
 
   @Override
   public Trigger SlapdownMoveDown() {

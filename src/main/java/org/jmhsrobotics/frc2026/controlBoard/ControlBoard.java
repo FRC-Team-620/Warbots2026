@@ -15,16 +15,28 @@ public interface ControlBoard {
   public double translationY();
 
   public Trigger resetForward();
+  
+  public DoubleSupplier autoAim();
+  
+  public Trigger turbo();
 
   // =======Operator Controls=======
 
   public DoubleSupplier shoot();
 
-  public Trigger moveIntake();
-
   public Trigger SlapdownMoveUp();
 
   public Trigger SlapdownMoveDown();
 
-  public Trigger index();
+  public Trigger indexToggle();
+
+  public Trigger intakeToggle();
+
+  public Trigger climberUp();
+
+  public Trigger climberDown();
+
+  public Trigger extakeFuel();
+
+  public Trigger intakeIndexOn();
 }

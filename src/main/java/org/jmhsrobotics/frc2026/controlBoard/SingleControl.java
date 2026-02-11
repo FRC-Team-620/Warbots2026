@@ -38,11 +38,16 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
-  public DoubleSupplier shoot() {
+  public DoubleSupplier autoAim() {
     return () -> driver.getRightTriggerAxis();
   }
 
   // ========Operator Controls========
+  @Override
+  public DoubleSupplier shoot() {
+    return () -> driver.getRightTriggerAxis();
+  }
+
 
   @Override
   public Trigger SlapdownMoveDown() {
