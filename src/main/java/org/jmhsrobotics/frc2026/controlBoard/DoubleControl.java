@@ -3,7 +3,6 @@ package org.jmhsrobotics.frc2026.controlBoard;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import java.util.function.DoubleSupplier;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 
 public class DoubleControl implements ControlBoard {
@@ -38,8 +37,8 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
-  public DoubleSupplier shoot() {
-    return () -> driver.getRightTriggerAxis();
+  public Trigger shoot() {
+    return operator.rightTrigger();
   }
 
   // ========Operator Controls========
