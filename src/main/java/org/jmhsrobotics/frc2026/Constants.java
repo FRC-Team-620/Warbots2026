@@ -47,10 +47,10 @@ public final class Constants {
   }
 
   public static class DoryCAN {
-    public static final int kIndexerMotorID = 55;
+    public static final int kIndexerMotorID = 0;
     public static final int kIntakeMotorID = 50;
     public static final int kSlapDownMotorID = 40;
-    public static final int kShooterMotorID = 0;
+    public static final int kShooterMotorID = 55;
   }
 
   public static enum Mode {
