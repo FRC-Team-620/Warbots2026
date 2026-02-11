@@ -15,11 +15,17 @@ public class SingleControl implements ControlBoard {
     ControllerMonitor.addController(driver.getHID(), "Driver");
   }
 
+ 
   // ========Driver Controls========
 
   @Override
   public double rotation() {
     return driver.getRightX();
+  }
+
+  @Override
+  public Rotation2d rotationABS() {
+    return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
   }
 
   @Override
@@ -42,34 +48,56 @@ public class SingleControl implements ControlBoard {
     return () -> driver.getRightTriggerAxis();
   }
 
+  @Override
+  public Trigger turbo() {
+    return driver.leftBumper();
+  }
+
   // ========Operator Controls========
+
   @Override
   public DoubleSupplier shoot() {
     return () -> driver.getRightTriggerAxis();
   }
 
-
   @Override
   public Trigger SlapdownMoveDown() {
-    return driver.x();
-  }
-
-  @Override
-  public Trigger moveIntake() {
-    return driver.y();
+    return driver.povLeft();
   }
 
   @Override
   public Trigger SlapdownMoveUp() {
-    return driver.y();
+    return driver.povRight();
   }
 
   @Override
-  public Rotation2d rotationABS() {
-    return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
+  public Trigger indexToggle() {
+    return driver.leftBumper();
   }
 
-  public Trigger index() {
-    return driver.b();
+  @Override
+  public Trigger intakeToggle() {
+    return driver.rightBumper();
   }
+  
+  @Override
+  public Trigger climberUp() {
+    return driver.povUp();
+  }
+  
+  @Override
+  public Trigger climberDown() {
+    return driver.povDown();
+  }
+  
+  @Override
+  public Trigger extakeFuel() {
+    return driver.x();
+  }
+  
+  @Override
+  public Trigger intakeIndexOn() {
+    return driver.y();
+  }
+
 }
