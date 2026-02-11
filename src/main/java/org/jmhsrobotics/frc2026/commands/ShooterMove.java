@@ -1,17 +1,15 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import java.util.function.DoubleSupplier;
-import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 
 public class ShooterMove extends Command {
   private Shooter shooter;
-  private DoubleSupplier rightTriggerAxis;
+  private double goalRPM;
 
-  public ShooterMove(Shooter shooter, DoubleSupplier rightTriggerAxis) {
+  public ShooterMove(Shooter shooter, double goalRPM) {
     this.shooter = shooter;
-    this.rightTriggerAxis = rightTriggerAxis;
+    this.goalRPM = goalRPM;
 
     addRequirements(this.shooter);
   }
@@ -23,9 +21,8 @@ public class ShooterMove extends Command {
 
   @Override
   public void execute() {
-    double rightTrigger = rightTriggerAxis.getAsDouble();
-    if (rightTrigger > 0) {
-      this.shooter.setRPM(Constants.ShooterConstants.kBaseRPM);
+    if (goalRPM > 0) {
+      this.shooter.setRPM(goalRPM);
     } else {
       // this.shooter.setRPM(0.0);
       this.shooter.stop(); // Do not use Power to Spindown flywheels

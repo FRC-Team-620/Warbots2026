@@ -150,11 +150,12 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drive.setDefaultCommand(new DriveCommand(drive, control));
-    shooter.setDefaultCommand(new ShooterMove(shooter, control.shoot()));
     intake.setDefaultCommand(new IntakeMove(intake));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
     climber.setDefaultCommand(
         new ClimberMove(climber, 0)); // TODO figure out real parameters for climber move
+
+    control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
 
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
@@ -164,6 +165,9 @@ public class RobotContainer {
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
+    SmartDashboard.putData(
+        "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
+    SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
   }
 
   /**
