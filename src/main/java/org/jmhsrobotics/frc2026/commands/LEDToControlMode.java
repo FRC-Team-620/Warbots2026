@@ -1,7 +1,6 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -31,8 +30,9 @@ public class LEDToControlMode extends Command {
   // TODO: Decide on what factors determine what color the LEDs turn
   private final LEDPattern blueHubActivePattern = LEDPattern.solid(Color.kBlue);
   private final LEDPattern redHubActivePattern = LEDPattern.solid(Color.kRed);
-  private final LEDPattern hubSwitchingPattern =
-      LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.5));
+
+  // private final LEDPattern hubSwitchingPattern =
+  //     LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.5));
 
   public LEDToControlMode(LED led) {
     this.led = led;
@@ -47,7 +47,7 @@ public class LEDToControlMode extends Command {
     if (ally.isPresent()) {
 
       if ((time - 40 == 28) || (time - 40 == 53) || (time - 40 == 78) || (time - 30 == 103)) {
-        led.setPattern(hubSwitchingPattern);
+        new LEDFlashPattern(led, LEDPattern.solid(Color.kWhite), LEDPattern.solid(Color.kGreen));
       }
       if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
           || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)))
