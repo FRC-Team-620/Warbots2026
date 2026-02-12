@@ -1,6 +1,7 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -18,6 +19,7 @@ public class LEDToControlMode extends Command {
   private LED led;
 
   // used for transition flashes
+  
   double time = DriverStation.getMatchTime();
   //   private Intake intake;
 
@@ -30,8 +32,10 @@ public class LEDToControlMode extends Command {
   private final LEDPattern blueHubActivePattern = LEDPattern.solid(Color.kBlue);
   private final LEDPattern redHubActivePattern = LEDPattern.solid(Color.kRed);
 
-  // private final LEDPattern hubSwitchingPattern =
-  //     LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.5));
+  // private final LEDPattern blueToRedLedPattern = blueHubActivePattern.blend(redHubActivePattern);
+
+  private final LEDPattern hubSwitchingPattern =
+      LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.1));
 
   public LEDToControlMode(LED led) {
     this.led = led;
@@ -39,11 +43,12 @@ public class LEDToControlMode extends Command {
     addRequirements(led);
   }
 
-  // TODO: Based on decided factors, change LED pattern
   @Override
   public void execute() {
     time = DriverStation.getMatchTime();
     Optional<Alliance> ally = DriverStation.getAlliance();
+    Alliance alliance = GameState.getAlliance(DriverStation.getAlliance());
+    boolean wonAuto = GameState.getWonAuto(DriverStation.getGameSpecificMessage(), alliance);
     if (ally.isPresent() && DriverStation.isTeleop()) {
 
       if (((time < 33) && (time > 30))
@@ -51,7 +56,7 @@ public class LEDToControlMode extends Command {
           || ((time < 83) && (time > 80))
           || ((time < 107) && (time > 105))
           || ((time < 133) && (time > 130))) {
-        led.setPattern(scrollingRainbow);
+        led.setPattern(hubSwitchingPattern);
       } else if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
           || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)))
         led.setPattern(blueHubActivePattern);
