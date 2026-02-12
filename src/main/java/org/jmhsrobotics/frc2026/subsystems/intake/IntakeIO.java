@@ -1,6 +1,5 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
-import com.revrobotics.spark.SparkMax;
 import org.littletonrobotics.junction.AutoLog;
 
 // TODO: in future we may want to split up this hardware layer for arm and intake motors
@@ -8,7 +7,7 @@ public interface IntakeIO {
   @AutoLog
   public static class IntakeIOInputs {
     public double intakeCurrentAmps;
-    public double intakeMotorTemperatureCelcius; 
+    public double intakeMotorTemperatureCelcius;
     public double RPM;
     public double outputSpeedDutyCycle;
 
@@ -28,14 +27,15 @@ public interface IntakeIO {
 
   public default void setPosition(double degrees) {}
 
-  public default void setSpeedDutyCycle(double dutyCycle) {} // TODO: we may want to stick with open loop control for intake
+  public default void setSpeedDutyCycle(
+      double dutyCycle) {} // TODO: we may want to stick with open loop control for intake
 
   public default void stop() {}
 
   public default void updateInputs(IntakeIOInputs inputs) {}
 
-  public default void setIntakeBrakeMode(boolean enable) {} 
-  
-  public default void setSlapDownBrakeMode(boolean enable) {} 
+  public default void setIntakeBrakeMode(boolean enable) {}
+
+  public default void setSlapDownBrakeMode(boolean enable) {}
   ;
 }

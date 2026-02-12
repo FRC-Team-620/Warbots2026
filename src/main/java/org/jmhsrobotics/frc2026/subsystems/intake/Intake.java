@@ -1,6 +1,5 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;

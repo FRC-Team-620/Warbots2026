@@ -1,6 +1,5 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;

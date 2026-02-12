@@ -49,7 +49,6 @@ public class NeoIntakeIO implements IntakeIO {
             intakeMotor.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-
     // SlapDown motor
     slapDownMotorConfig = new SparkMaxConfig();
     slapDownMotorConfig
@@ -89,7 +88,7 @@ public class NeoIntakeIO implements IntakeIO {
 
   public void updateInputs(IntakeIOInputs inputs) {
     SparkUtil.sparkStickyFault = false;
-    
+
     // slapdown
     SparkUtil.ifOk(
         slapDownMotor,
@@ -100,7 +99,6 @@ public class NeoIntakeIO implements IntakeIO {
         slapDownMotor::getOutputCurrent,
         (value) -> inputs.slapDownCurrentAmps = value);
 
-
     // intake
     SparkUtil.ifOk(
         intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeCurrentAmps = value);
@@ -109,8 +107,6 @@ public class NeoIntakeIO implements IntakeIO {
         intakeMotor,
         intakeMotor::getMotorTemperature,
         (value) -> inputs.intakeMotorTemperatureCelcius = value);
-
-
   }
 
   @Override
@@ -120,9 +116,7 @@ public class NeoIntakeIO implements IntakeIO {
   }
 
   public void setPositionDegrees(double degrees) {
-    slapDownPIDController.setSetpoint(
-        degrees,
-        ControlType.kPosition);
+    slapDownPIDController.setSetpoint(degrees, ControlType.kPosition);
   }
 
   @Override
