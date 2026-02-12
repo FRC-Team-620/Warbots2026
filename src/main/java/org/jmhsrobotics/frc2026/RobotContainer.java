@@ -19,6 +19,7 @@ import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterMove;
+import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.SingleControl;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
@@ -167,6 +168,8 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
+    SmartDashboard.putData("Slapdown Down", new SlapdownMove(intake, 43));
+    SmartDashboard.putData("Slapdown Up", new SlapdownMove(intake, 90.0));
   }
 
   /**
