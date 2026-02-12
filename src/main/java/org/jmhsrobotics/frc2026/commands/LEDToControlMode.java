@@ -18,7 +18,7 @@ public class LEDToControlMode extends Command {
   private LED led;
 
   // used for transition flashes
-
+  double time = DriverStation.getMatchTime();
   //   private Intake intake;
 
   private final LEDPattern searchModePattern = LEDPattern.rainbow(255, 255);
@@ -42,14 +42,15 @@ public class LEDToControlMode extends Command {
   // TODO: Based on decided factors, change LED pattern
   @Override
   public void execute() {
-    double time = DriverStation.getMatchTime();
+    time = DriverStation.getMatchTime();
     Optional<Alliance> ally = DriverStation.getAlliance();
-    if (ally.isPresent()) {
+    if (ally.isPresent() && DriverStation.isTeleop()) {
 
-      if (((time - 40 <= 25) && (time - 40 >= 22))
-          || ((time - 40 <= 50) && (time - 40 >= 57))
-          || ((time - 40 <= 75) && (time - 40 >= 72))
-          || ((time - 10 <= 100) && (time - 10 >= 97))) {
+      if (((time < 33) && (time > 30))
+          || ((time < 57) && (time > 55))
+          || ((time < 83) && (time > 80))
+          || ((time < 107) && (time > 105))
+          || ((time < 133) && (time > 130))) {
         led.setPattern(scrollingRainbow);
       } else if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
           || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)))
@@ -58,6 +59,8 @@ public class LEDToControlMode extends Command {
           || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE)))
         led.setPattern(redHubActivePattern);
       else led.setPattern(scrollingRainbow);
+    } else {
+      led.setPattern(scrollingRainbow);
     }
   }
 
