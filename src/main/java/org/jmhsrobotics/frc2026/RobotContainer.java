@@ -150,7 +150,6 @@ public class RobotContainer {
    */
   private void configureBindings() {
     drive.setDefaultCommand(new DriveCommand(drive, control));
-    intake.setDefaultCommand(new IntakeMove(intake));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
     climber.setDefaultCommand(
         new ClimberMove(climber, 0)); // TODO figure out real parameters for climber move
