@@ -22,10 +22,9 @@ public class NeoIntakeIO implements IntakeIO {
   private RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
   private RelativeEncoder slapDownEncoder = slapDownMotor.getEncoder();
   private AbsoluteEncoderConfig slapDownEncoderConfig = new AbsoluteEncoderConfig();
-  private SparkClosedLoopController intakePIDController;
   private SparkClosedLoopController slapDownPIDController;
   private double speedRPM;
-  private double previousRPM;
+  private double speedDutyCycle;
 
   private double setPointDegrees = Constants.Intake.kSlapDownUpPositionDegrees;
 
@@ -41,14 +40,7 @@ public class NeoIntakeIO implements IntakeIO {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(20)
         .voltageCompensation(12)
-        .inverted(false)
-        .closedLoop
-        .pid(Constants.Intake.kIntakeP, Constants.Intake.kIntakeI, Constants.Intake.kIntakeD)
-        .maxOutput(1)
-        .minOutput(0)
-        .maxMotion
-        .cruiseVelocity(980)
-        .maxAcceleration(20000);
+        .inverted(false);
 
     SparkUtil.tryUntilOk(
         intakeMotor,
@@ -56,8 +48,6 @@ public class NeoIntakeIO implements IntakeIO {
         () ->
             intakeMotor.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-    intakePIDController = intakeMotor.getClosedLoopController();
 
     // SlapDown motor
     slapDownMotorConfig = new SparkMaxConfig();
@@ -98,12 +88,8 @@ public class NeoIntakeIO implements IntakeIO {
 
   public void updateInputs(IntakeIOInputs inputs) {
     SparkUtil.sparkStickyFault = false;
-    // slapdown
-    SparkUtil.ifOk(
-        slapDownMotor,
-        slapDownEncoder::getVelocity,
-        (value) -> inputs.slapDownAccelerationRPMPerSec = (value - previousRPM) / 0.02);
 
+    // slapdown
     SparkUtil.ifOk(
         slapDownMotor,
         slapDownEncoder::getPosition,
@@ -113,8 +99,6 @@ public class NeoIntakeIO implements IntakeIO {
         slapDownMotor::getOutputCurrent,
         (value) -> inputs.slapDownCurrentAmps = value);
 
-    inputs.slapDownSpeedDegPerSec = previousRPM;
-
     // intake
     SparkUtil.ifOk(
         intakeMotor, intakeMotor::getOutputCurrent, (value) -> inputs.intakeCurrentAmps = value);
@@ -122,35 +106,40 @@ public class NeoIntakeIO implements IntakeIO {
     SparkUtil.ifOk(
         intakeMotor,
         intakeMotor::getMotorTemperature,
-        (value) -> inputs.motorTemperatureCelcius = value);
-
-    intakePIDController.setSetpoint(
-        this.speedRPM,
-        ControlType
-            .kMAXMotionVelocityControl); // FIXME: This should be done within the set rpm method
-    slapDownPIDController.setSetpoint(
-        setPointDegrees,
-        ControlType.kPosition); // FIXME: This should be done within the set Degrees method
+        (value) -> inputs.intakeMotorTemperatureCelcius = value);
   }
 
   @Override
-  public void setRPM(double RPM) {
-    this.speedRPM = RPM;
+  public void setSpeedDutyCycle(double speedDutyCycle) {
+    this.speedDutyCycle = speedDutyCycle;
+    intakeMotor.set(speedDutyCycle);
   }
 
   public void setPositionDegrees(double degrees) {
-    this.setPointDegrees = degrees;
+    slapDownPIDController.setSetpoint(degrees, ControlType.kPosition);
   }
 
   @Override
-  public void setBrakeMode(boolean enable, SparkMax motor) {
+  public void setIntakeBrakeMode(boolean enable) {
     var brakeConfig = new SparkMaxConfig();
     brakeConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     SparkUtil.tryUntilOk(
-        motor,
+        intakeMotor,
         5,
         () ->
-            motor.configure(
+            intakeMotor.configure(
+                brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+  }
+
+  @Override
+  public void setSlapDownBrakeMode(boolean enable) {
+    var brakeConfig = new SparkMaxConfig();
+    brakeConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    SparkUtil.tryUntilOk(
+        slapDownMotor,
+        5,
+        () ->
+            slapDownMotor.configure(
                 brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 }
