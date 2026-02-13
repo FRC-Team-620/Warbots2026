@@ -40,8 +40,8 @@ public class DriveConstants {
     public static final DCMotor driveGearbox = DCMotor.getNEO(1);
     public static final DCMotor turnGearbox = DCMotor.getNeo550(1);
 
-    public static final double trackWidth = Units.inchesToMeters(22.5); // make this a variable?
-    public static final double wheelBase = Units.inchesToMeters(22.5); // this too?
+    public static final double trackWidth = Units.inchesToMeters(20); // make this a variable? and change it because new bot
+    public static final double wheelBase = Units.inchesToMeters(20); // this too? and change it beacuse new bot
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
     public static final Translation2d[] moduleTranslations =
         new Translation2d[] {
@@ -203,9 +203,9 @@ public class DriveConstants {
     public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
 
     // PathPlanner configuration
-    public static final double robotMassKg = 74.088;
-    public static final double robotMOI = 6.883;
-    public static final double wheelCOF = 1.2;
+    public static final double robotMassKg = 50.34875;
+    public static final double robotMOI = 6.883; //needs to be changed later
+    public static final double wheelCOF = 1.2; //needs to be changed later
     public static final RobotConfig ppConfig =
         new RobotConfig(
             robotMassKg,
