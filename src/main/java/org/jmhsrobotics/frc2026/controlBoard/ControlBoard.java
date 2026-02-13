@@ -23,8 +23,6 @@ public interface ControlBoard {
 
   public Trigger shoot();
 
-  public Trigger moveIntake();
-
   public Trigger SlapdownMoveUp();
 
   public Trigger SlapdownMoveDown();
