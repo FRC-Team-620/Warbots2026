@@ -22,6 +22,12 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
+  public Rotation2d rotationABS() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'rotationABS'");
+  }
+
+  @Override
   public double translationX() {
     return driver.getLeftX();
   }
@@ -37,34 +43,59 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
-  public Trigger shoot() {
-    return operator.rightTrigger();
+  public Trigger autoAim() {
+    return driver.rightTrigger();
+  }
+
+  @Override
+  public Trigger turbo() {
+    return driver.leftBumper();
   }
 
   // ========Operator Controls========
 
   @Override
+  public Trigger shoot() {
+    return operator.rightTrigger();
+  }
+
+  @Override
   public Trigger SlapdownMoveDown() {
-    return operator.x();
+    return operator.povLeft();
   }
 
   @Override
   public Trigger SlapdownMoveUp() {
-    return operator.y();
+    return operator.povRight();
   }
 
   @Override
-  public Trigger moveIntake() {
-    return operator.y();
-  }
-
-  public Trigger index() {
-    return operator.b();
+  public Trigger indexToggle() {
+    return operator.leftBumper();
   }
 
   @Override
-  public Rotation2d rotationABS() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'rotationABS'");
+  public Trigger intakeToggle() {
+    return operator.rightBumper();
+  }
+
+  @Override
+  public Trigger climberUp() {
+    return operator.povUp();
+  }
+
+  @Override
+  public Trigger climberDown() {
+    return operator.povDown();
+  }
+
+  @Override
+  public Trigger extakeFuel() {
+    return operator.x();
+  }
+
+  @Override
+  public Trigger intakeIndexOn() {
+    return operator.y();
   }
 }
