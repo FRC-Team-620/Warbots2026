@@ -44,8 +44,8 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
-  public DoubleSupplier autoAim() {
-    return () -> driver.getRightTriggerAxis();
+  public Trigger autoAim() {
+    return driver.rightTrigger();
   }
 
   @Override
@@ -56,8 +56,8 @@ public class DoubleControl implements ControlBoard {
   // ========Operator Controls========
 
   @Override
-  public DoubleSupplier shoot() {
-    return () -> operator.getRightTriggerAxis();
+  public Trigger shoot() {
+    return operator.rightTrigger();
   }
 
   @Override

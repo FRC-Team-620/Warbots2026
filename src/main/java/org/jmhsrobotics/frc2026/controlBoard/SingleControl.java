@@ -43,8 +43,8 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
-  public DoubleSupplier autoAim() {
-    return () -> driver.getRightTriggerAxis();
+  public Trigger autoAim() {
+    return driver.rightTrigger();
   }
 
   @Override
@@ -55,8 +55,8 @@ public class SingleControl implements ControlBoard {
   // ========Operator Controls========
 
   @Override
-  public DoubleSupplier shoot() {
-    return () -> driver.getRightTriggerAxis();
+  public Trigger shoot() {
+    return driver.rightTrigger();
   }
 
   @Override
