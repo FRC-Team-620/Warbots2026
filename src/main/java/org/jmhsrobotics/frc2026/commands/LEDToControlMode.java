@@ -19,7 +19,7 @@ public class LEDToControlMode extends Command {
   private LED led;
 
   // used for transition flashes
-  
+
   double time = DriverStation.getMatchTime();
   //   private Intake intake;
 
@@ -31,11 +31,15 @@ public class LEDToControlMode extends Command {
   // TODO: Decide on what factors determine what color the LEDs turn
   private final LEDPattern blueHubActivePattern = LEDPattern.solid(Color.kBlue);
   private final LEDPattern redHubActivePattern = LEDPattern.solid(Color.kRed);
+  private final LEDPattern bothHubsActivePattern = LEDPattern.solid(Color.kPurple);
 
   // private final LEDPattern blueToRedLedPattern = blueHubActivePattern.blend(redHubActivePattern);
 
-  private final LEDPattern hubSwitchingPattern =
-      LEDPattern.solid(Color.kWhite).blink(Seconds.of(0.1));
+  private final LEDPattern blueHubSwitchingPattern =
+      LEDPattern.solid(Color.kBlue).blink(Seconds.of(0.1));
+
+  private final LEDPattern redHubSwitchingPattern =
+      LEDPattern.solid(Color.kRed).blink(Seconds.of(0.1));
 
   public LEDToControlMode(LED led) {
     this.led = led;
@@ -47,8 +51,6 @@ public class LEDToControlMode extends Command {
   public void execute() {
     time = DriverStation.getMatchTime();
     Optional<Alliance> ally = DriverStation.getAlliance();
-    Alliance alliance = GameState.getAlliance(DriverStation.getAlliance());
-    boolean wonAuto = GameState.getWonAuto(DriverStation.getGameSpecificMessage(), alliance);
     if (ally.isPresent() && DriverStation.isTeleop()) {
 
       if (((time < 33) && (time > 30))
@@ -56,7 +58,15 @@ public class LEDToControlMode extends Command {
           || ((time < 83) && (time > 80))
           || ((time < 107) && (time > 105))
           || ((time < 133) && (time > 130))) {
-        led.setPattern(hubSwitchingPattern);
+        if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE))
+            || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE))) {
+          led.setPattern(redHubSwitchingPattern);
+        } else if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
+            || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE))) {
+          led.setPattern(blueHubSwitchingPattern);
+        }
+      } else if ((time > 133) || (time <= 30)) {
+        led.setPattern(bothHubsActivePattern);
       } else if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
           || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)))
         led.setPattern(blueHubActivePattern);
