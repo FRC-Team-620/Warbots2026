@@ -15,7 +15,7 @@ public class SlapdownMove extends Command {
 
   @Override
   public void initialize() {
-    this.intake.setSetpoint(goalDegrees);
+    this.intake.setPositionDegrees(goalDegrees);
   }
 
   @Override

@@ -3,6 +3,7 @@ package org.jmhsrobotics.frc2026.subsystems.intake;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -37,8 +38,8 @@ public class NeoIntakeIO implements IntakeIO {
 
     intakeMotorConfig = new SparkMaxConfig();
     intakeMotorConfig
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(20)
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(30)
         .voltageCompensation(12)
         .inverted(false);
 
@@ -52,8 +53,8 @@ public class NeoIntakeIO implements IntakeIO {
     // SlapDown motor
     slapDownMotorConfig = new SparkMaxConfig();
     slapDownMotorConfig
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(20)
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(35)
         .voltageCompensation(12)
         .inverted(false)
         .signals
@@ -68,7 +69,8 @@ public class NeoIntakeIO implements IntakeIO {
     slapDownMotorConfig
         .closedLoop
         .pid(Constants.Intake.kSlapdownP, Constants.Intake.kSlapdownI, Constants.Intake.kSlapdownD)
-        .outputRange(-180, 180) // TODO update to real values
+        .outputRange(-1, 1)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .maxMotion
         .cruiseVelocity(2)
         .maxAcceleration(12);
@@ -116,6 +118,7 @@ public class NeoIntakeIO implements IntakeIO {
   }
 
   public void setPositionDegrees(double degrees) {
+    this.setPointDegrees = degrees;
     slapDownPIDController.setSetpoint(degrees, ControlType.kPosition);
   }
 

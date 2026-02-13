@@ -54,7 +54,7 @@ public class SimIntakeIO implements IntakeIO {
   }
 
   @Override
-  public void setPosition(double degrees) {
+  public void setPositionDegrees(double degrees) {
     slapDownTargetRad = Math.toRadians(degrees);
   }
 

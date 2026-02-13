@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
             0.02,
             calcluatedState,
             new State(setPointDegrees, 0)); // 20ms is the default periodic rate
-    intakeIO.setPosition(calcluatedState.position);
+    intakeIO.setPositionDegrees(calcluatedState.position);
 
     intakeIO.updateInputs(inputs);
 
@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
         Constants.Intake.kSlapDownToleranceDegrees);
   }
 
-  public void setSetpoint(double setPointDegrees) {
+  public void setPositionDegrees(double setPointDegrees) {
     this.setPointDegrees = setPointDegrees;
   }
 

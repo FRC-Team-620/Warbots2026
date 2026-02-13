@@ -42,7 +42,7 @@ public final class Constants {
     public static final int kCanAndGyroID = 60;
     public static final int kFlywheelMotorID = 55;
     public static final int kIntakeMotorID = 50;
-    public static final int kSlapDownMotorID = 51;
+    public static final int kSlapDownMotorID = 40;
     public static final int kIndexerMotorID = 0;
   }
 
@@ -74,7 +74,7 @@ public final class Constants {
     public static final double kSlapdownI = 0.0;
     public static final double kSlapdownD = 0.0;
 
-    public static final double kBaseRPM = 1000;
+    public static final double kBaseRPM = 000;
     public static final double kSlapDownUpPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownDownPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownToleranceDegrees = 5; // TODO update this (IMPORTANT)

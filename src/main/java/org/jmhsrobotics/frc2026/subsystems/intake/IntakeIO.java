@@ -25,7 +25,7 @@ public interface IntakeIO {
 
   // motors
 
-  public default void setPosition(double degrees) {}
+  public default void setPositionDegrees(double degrees) {}
 
   public default void setSpeedDutyCycle(
       double dutyCycle) {} // TODO: we may want to stick with open loop control for intake
