@@ -22,6 +22,11 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
+  public Rotation2d rotationABS() {
+    return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
+  }
+
+  @Override
   public double translationX() {
     return driver.getLeftX();
   }
@@ -37,33 +42,59 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
-  public Trigger shoot() {
+  public Trigger autoAim() {
     return driver.rightTrigger();
+  }
+
+  @Override
+  public Trigger turbo() {
+    return driver.leftBumper();
   }
 
   // ========Operator Controls========
 
   @Override
-  public Trigger SlapdownMoveDown() {
-    return driver.x();
+  public Trigger shoot() {
+    return driver.rightTrigger();
   }
 
   @Override
-  public Trigger moveIntake() {
-    return driver.y();
+  public Trigger SlapdownMoveDown() {
+    return driver.povLeft();
   }
 
   @Override
   public Trigger SlapdownMoveUp() {
-    return driver.y();
+    return driver.povRight();
   }
 
   @Override
-  public Rotation2d rotationABS() {
-    return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
+  public Trigger indexToggle() {
+    return driver.leftBumper();
   }
 
-  public Trigger index() {
-    return driver.b();
+  @Override
+  public Trigger intakeToggle() {
+    return driver.rightBumper();
+  }
+
+  @Override
+  public Trigger climberUp() {
+    return driver.povUp();
+  }
+
+  @Override
+  public Trigger climberDown() {
+    return driver.povDown();
+  }
+
+  @Override
+  public Trigger extakeFuel() {
+    return driver.x();
+  }
+
+  @Override
+  public Trigger intakeIndexOn() {
+    return driver.y();
   }
 }
