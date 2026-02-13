@@ -41,6 +41,9 @@ public class LEDToControlMode extends Command {
   private final LEDPattern redHubSwitchingPattern =
       LEDPattern.solid(Color.kRed).blink(Seconds.of(0.1));
 
+  private final LEDPattern transitionSwitchingPattern =
+      LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1));
+
   public LEDToControlMode(LED led) {
     this.led = led;
 
@@ -53,11 +56,12 @@ public class LEDToControlMode extends Command {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent() && DriverStation.isTeleop()) {
 
-      if (((time < 33) && (time > 30))
+      if ((time < 133) && (time > 130)) {
+        led.setPattern(transitionSwitchingPattern);
+      } else if (((time < 33) && (time > 30))
           || ((time < 57) && (time > 55))
           || ((time < 83) && (time > 80))
-          || ((time < 107) && (time > 105))
-          || ((time < 133) && (time > 130))) {
+          || ((time < 107) && (time > 105))) {
         if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE))
             || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE))) {
           led.setPattern(redHubSwitchingPattern);
