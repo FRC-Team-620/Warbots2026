@@ -2,7 +2,6 @@ package org.jmhsrobotics.frc2026.controlBoard;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import java.util.function.DoubleSupplier;
 
 public interface ControlBoard {
   // ========Driver Controls========
@@ -16,15 +15,27 @@ public interface ControlBoard {
 
   public Trigger resetForward();
 
+  public Trigger autoAim();
+
+  public Trigger turbo();
+
   // =======Operator Controls=======
 
-  public DoubleSupplier shoot();
-
-  public Trigger moveIntake();
+  public Trigger shoot();
 
   public Trigger SlapdownMoveUp();
 
   public Trigger SlapdownMoveDown();
 
-  public Trigger index();
+  public Trigger indexToggle();
+
+  public Trigger intakeToggle();
+
+  public Trigger climberUp();
+
+  public Trigger climberDown();
+
+  public Trigger extakeFuel();
+
+  public Trigger intakeIndexOn();
 }
