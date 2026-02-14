@@ -24,7 +24,6 @@ public class ShooterMove extends Command {
     if (goalRPM > 0) {
       this.shooter.setRPM(goalRPM);
     } else {
-      // this.shooter.setRPM(0.0);
       this.shooter.stop(); // Do not use Power to Spindown flywheels
     }
   }
