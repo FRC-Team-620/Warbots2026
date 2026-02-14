@@ -40,7 +40,6 @@ public final class Constants {
   public static class CAN {
     // TODO update CANIds
     public static final int kCanAndGyroID = 60;
-    public static final int kFlywheelMotorID = 55;
     public static final int kIntakeMotorID = 41;
     public static final int kSlapDownMotorID = 40;
     public static final int kIndexerMotorID = 2;
@@ -49,6 +48,13 @@ public final class Constants {
     public static final int kLeftFlywheelMotorID = 50;
     public static final int kCenterFlywheelMotorID = 51;
     public static final int kRightFlywheelMotorID = 52;
+  }
+
+  public static class DoryCAN {
+    public static final int kIndexerMotorID = 0;
+    public static final int kIntakeMotorID = 50;
+    public static final int kSlapDownMotorID = 40;
+    public static final int kShooterMotorID = 55;
   }
 
   public static enum Mode {
@@ -72,14 +78,11 @@ public final class Constants {
   }
 
   public static class Intake {
-    public static final double kIntakeP = 0.0;
-    public static final double kIntakeI = 0.0;
-    public static final double kIntakeD = 0.0;
-    public static final double kSlapdownP = 0.0;
+    public static final double kSlapdownP = 0.0225 / 2;
     public static final double kSlapdownI = 0.0;
     public static final double kSlapdownD = 0.0;
 
-    public static final double kBaseRPM = 1000;
+    public static final double kBaseRPM = 000;
     public static final double kSlapDownUpPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownDownPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownToleranceDegrees = 5; // TODO update this (IMPORTANT)

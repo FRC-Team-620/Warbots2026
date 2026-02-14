@@ -153,7 +153,7 @@ public class ModuleIOThrifty implements ModuleIO {
         .positionWrappingInputRange(
             thriftyConstants.turnPIDMinInput, thriftyConstants.turnPIDMaxInput)
         // .pid(0,0,0).kP(thriftyConstants.turnKp).kD(thriftyConstants.turnKd);
-        .pid(0, 0, 0);
+        .pid(3, 0, 0);
     turnConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)

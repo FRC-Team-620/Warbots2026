@@ -13,8 +13,8 @@ public interface IntakeIO {
 
     public double slapDownPositionDegrees;
     public double slapDownCurrentAmps;
-    public double slapDownAccelerationRPMPerSec; // TODO: Why do we have this unit?
     public double slapDownSpeedDegPerSec;
+    public double PIDSetpoint;
   }
 
   public default void setPIDF(
@@ -25,10 +25,9 @@ public interface IntakeIO {
 
   // motors
 
-  public default void setPosition(double degrees) {}
+  public default void setPositionDegrees(double degrees) {}
 
-  public default void setSpeedDutyCycle(
-      double dutyCycle) {} // TODO: we may want to stick with open loop control for intake
+  public default void setSpeedDutyCycle(double dutyCycle) {}
 
   public default void stop() {}
 
