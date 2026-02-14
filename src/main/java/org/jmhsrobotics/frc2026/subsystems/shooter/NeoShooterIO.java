@@ -14,15 +14,30 @@ import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
 
 public class NeoShooterIO implements ShooterIO {
-  private SparkMax motor = new SparkMax(Constants.CAN.kFlywheelMotorID, MotorType.kBrushless);
-  private RelativeEncoder encoder;
-  private SparkMaxConfig motorConfig;
-  private SparkClosedLoopController pidController;
+  private SparkMax leftFlywheelMotorLeader =
+      new SparkMax(Constants.CAN.kLeftFlywheelMotorID, MotorType.kBrushless);
+  private SparkMax centerFlywheelMotor =
+      new SparkMax(Constants.CAN.kCenterFlywheelMotorID, MotorType.kBrushless);
+  private SparkMax rightFlywheelMotor =
+      new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
+  private SparkMaxConfig motorConfigLeader;
+  private SparkMaxConfig motorConfigFollower;
+  private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
+  private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
+  private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
+  private SparkClosedLoopController leftFlywheelPIDController =
+      leftFlywheelMotorLeader.getClosedLoopController();
+  private SparkClosedLoopController centerFlywheelPIDController =
+      centerFlywheelMotor.getClosedLoopController();
+  private SparkClosedLoopController rightFlywheelPIDController =
+      rightFlywheelMotor.getClosedLoopController();
   private double velocityRPM;
 
   public NeoShooterIO() {
-    motorConfig = new SparkMaxConfig();
-    motorConfig
+
+    // leftFlywheelMotor
+    motorConfigLeader = new SparkMaxConfig();
+    motorConfigLeader
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(25)
         .voltageCompensation(12)
@@ -34,55 +49,107 @@ public class NeoShooterIO implements ShooterIO {
             Constants.ShooterConstants.kD)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .maxOutput(1)
-        .minOutput(0)
-        .maxMotion
-        .cruiseVelocity(9800)
-        .maxAcceleration(20000);
-    // TODO set motorConfig values
-    // Initialize the closed loop controller
-    pidController = motor.getClosedLoopController();
-
+        .minOutput(0);
     SparkUtil.tryUntilOk(
-        motor,
+        leftFlywheelMotorLeader,
         5,
         () ->
-            motor.configure(
-                motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+            leftFlywheelMotorLeader.configure(
+                motorConfigLeader, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-    encoder = motor.getEncoder();
+    motorConfigFollower = new SparkMaxConfig();
+    motorConfigFollower
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit(25)
+        .voltageCompensation(12)
+        .follow(leftFlywheelMotorLeader)
+        .inverted(true);
+    SparkUtil.tryUntilOk(
+        centerFlywheelMotor,
+        5,
+        () ->
+            centerFlywheelMotor.configure(
+                motorConfigFollower,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters));
+    SparkUtil.tryUntilOk(
+        rightFlywheelMotor,
+        5,
+        () ->
+            rightFlywheelMotor.configure(
+                motorConfigFollower,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters));
+    // TODO set motorConfig values
+    // Initialize the closed loop controller
+    // motorConfig.follow(leftFlywheelMotorLeader)
+    // pidController = motor.getClosedLoopController();
+
+    // SparkUtil.tryUntilOk(
+    //     motor,
+    //     5,
+    //     () ->
+    //         motor.configure(
+    //             motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+    // leftFlywheelEncoder = leftFlywheelMotorLeader.getAbsoluteEncoder();
   }
 
   @Override
   public void updateInputs(ShooterIOInputs inputs) {
-    SparkUtil.ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAMPS = value);
-    SparkUtil.ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRPM = value);
-    SparkUtil.ifOk(motor, motor::getBusVoltage, (value) -> inputs.voltage = value);
-    SparkUtil.ifOk(motor, motor::getMotorTemperature, (value) -> inputs.tempC = value);
-    pidController.setSetpoint(this.velocityRPM, ControlType.kMAXMotionVelocityControl);
+    // FIXME: Should make an array for each individaul input that contains values from all 3 motors,
+    // then return arrays
+    // SparkUtil.ifOk(motor, motor::getOutputCurrent, (value) -> inputs.currentAMPS
+    // = value);
+    // SparkUtil.ifOk(motor, encoder::getVelocity, (value) -> inputs.velocityRPM =
+    // value);
+    // SparkUtil.ifOk(motor, motor::getBusVoltage, (value) -> inputs.voltage =
+    // value);
+    // SparkUtil.ifOk(motor, motor::getMotorTemperature, (value) -> inputs.tempC =
+    // value);
+    // pidController.setSetpoint(this.velocityRPM,
+    // ControlType.kMAXMotionVelocityControl);
+    SparkUtil.ifOk(
+        leftFlywheelMotorLeader,
+        leftFlywheelMotorLeader::getOutputCurrent,
+        (value) -> inputs.currentAMPS = value);
+    SparkUtil.ifOk(
+        leftFlywheelMotorLeader,
+        leftFlywheelEncoder::getVelocity,
+        (value) -> inputs.velocityRPM = value);
+    SparkUtil.ifOk(
+        leftFlywheelMotorLeader,
+        leftFlywheelMotorLeader::getBusVoltage,
+        (value) -> inputs.voltage = value);
+    SparkUtil.ifOk(
+        leftFlywheelMotorLeader,
+        leftFlywheelMotorLeader::getMotorTemperature,
+        (value) -> inputs.tempC = value);
   }
 
   @Override
   public void setRPM(double velocityRPM) {
-    this.velocityRPM = velocityRPM;
+    leftFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
   }
 
   @Override
   public void setPIDF(double p, double i, double d, double f) {
     // TODO: Implement ff term
     // FIXME:
-    var setPIDF = new SparkMaxConfig();
-    setPIDF.closedLoop.pid(p, i, d);
-    SparkUtil.tryUntilOk(
-        motor,
-        5,
-        () ->
-            motor.configure(
-                setPIDF, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+    // var setPIDF = new SparkMaxConfig();
+    // setPIDF.closedLoop.pid(p, i, d);
+    // SparkUtil.tryUntilOk(
+    // motor,
+    // 5,
+    // () ->
+    // motor.configure(
+    // setPIDF, ResetMode.kNoResetSafeParameters,
+    // PersistMode.kNoPersistParameters));
   }
 
   @Override
   public void stop() {
-    motor.set(0);
+    leftFlywheelPIDController.setSetpoint(0, ControlType.kVelocity);
   }
 
   @Override
@@ -90,10 +157,10 @@ public class NeoShooterIO implements ShooterIO {
     var brakeConfig = new SparkMaxConfig();
     brakeConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     SparkUtil.tryUntilOk(
-        motor,
+        leftFlywheelMotorLeader,
         5,
         () ->
-            motor.configure(
+            leftFlywheelMotorLeader.configure(
                 brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 }
