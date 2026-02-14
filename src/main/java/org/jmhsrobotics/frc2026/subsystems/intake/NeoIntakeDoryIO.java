@@ -1,8 +1,10 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -21,9 +23,8 @@ public class NeoIntakeDoryIO implements IntakeIO {
       new SparkMax(Constants.DoryCAN.kSlapDownMotorID, MotorType.kBrushless);
   private SparkMaxConfig slapDownMotorConfig;
   private RelativeEncoder intakeEncoder = intakeMotor.getEncoder();
-  private RelativeEncoder slapDownEncoder = slapDownMotor.getEncoder();
+  private AbsoluteEncoder slapDownEncoder = slapDownMotor.getAbsoluteEncoder();
   private AbsoluteEncoderConfig slapDownEncoderConfig = new AbsoluteEncoderConfig();
-  private SparkClosedLoopController intakePIDController;
   private SparkClosedLoopController slapDownPIDController;
   private double speedRPM;
   private double previousRPM;
@@ -42,14 +43,7 @@ public class NeoIntakeDoryIO implements IntakeIO {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(20)
         .voltageCompensation(12)
-        .inverted(false)
-        .closedLoop
-        .pid(Constants.Intake.kIntakeP, Constants.Intake.kIntakeI, Constants.Intake.kIntakeD)
-        .maxOutput(1)
-        .minOutput(0)
-        .maxMotion
-        .cruiseVelocity(980)
-        .maxAcceleration(20000);
+        .inverted(false);
 
     SparkUtil.tryUntilOk(
         intakeMotor,
@@ -58,13 +52,12 @@ public class NeoIntakeDoryIO implements IntakeIO {
             intakeMotor.configure(
                 intakeMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-    intakePIDController = intakeMotor.getClosedLoopController();
-
     // SlapDown motor
     slapDownMotorConfig = new SparkMaxConfig();
+    slapDownMotorConfig.absoluteEncoder.apply(slapDownEncoderConfig);
     slapDownMotorConfig
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(20)
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(25)
         .voltageCompensation(12)
         .inverted(false)
         .signals
@@ -79,11 +72,8 @@ public class NeoIntakeDoryIO implements IntakeIO {
     slapDownMotorConfig
         .closedLoop
         .pid(Constants.Intake.kSlapdownP, Constants.Intake.kSlapdownI, Constants.Intake.kSlapdownD)
-        .outputRange(-180, 180) // TODO update to real values
-        .maxMotion
-        .cruiseVelocity(2)
-        .maxAcceleration(12);
-    slapDownMotorConfig.absoluteEncoder.apply(slapDownEncoderConfig);
+        .outputRange(-1, 1)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder); // TODO update to real values
 
     SparkUtil.tryUntilOk(
         slapDownMotor,
@@ -102,11 +92,6 @@ public class NeoIntakeDoryIO implements IntakeIO {
     // slapdown
     SparkUtil.ifOk(
         slapDownMotor,
-        slapDownEncoder::getVelocity,
-        (value) -> inputs.slapDownAccelerationRPMPerSec = (value - previousRPM) / 0.02);
-
-    SparkUtil.ifOk(
-        slapDownMotor,
         slapDownEncoder::getPosition,
         (value) -> inputs.slapDownPositionDegrees = value);
     SparkUtil.ifOk(
@@ -123,35 +108,45 @@ public class NeoIntakeDoryIO implements IntakeIO {
     SparkUtil.ifOk(
         intakeMotor,
         intakeMotor::getMotorTemperature,
-        (value) -> inputs.motorTemperatureCelcius = value);
+        (value) -> inputs.intakeMotorTemperatureCelcius = value);
 
-    intakePIDController.setSetpoint(
-        this.speedRPM,
-        ControlType
-            .kMAXMotionVelocityControl); // FIXME: This should be done within the set rpm method
-    slapDownPIDController.setSetpoint(
-        setPointDegrees,
-        ControlType.kPosition); // FIXME: This should be done within the set Degrees method
+    inputs.PIDSetpoint = slapDownPIDController.getSetpoint();
+
+    // FIXME: This should be done within the set rpm method
+    // FIXME: This should be done within the set Degrees method
   }
 
   @Override
-  public void setRPM(double RPM) {
+  public void setSpeedDutyCycle(double RPM) {
     this.speedRPM = RPM;
   }
 
   public void setPositionDegrees(double degrees) {
     this.setPointDegrees = degrees;
+    slapDownPIDController.setSetpoint(degrees, ControlType.kPosition);
   }
 
   @Override
-  public void setBrakeMode(boolean enable, SparkMax motor) {
+  public void setIntakeBrakeMode(boolean enable) {
     var brakeConfig = new SparkMaxConfig();
     brakeConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     SparkUtil.tryUntilOk(
-        motor,
+        intakeMotor,
         5,
         () ->
-            motor.configure(
+            intakeMotor.configure(
+                brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+  }
+
+  @Override
+  public void setSlapDownBrakeMode(boolean enable) {
+    var brakeConfig = new SparkMaxConfig();
+    brakeConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+    SparkUtil.tryUntilOk(
+        slapDownMotor,
+        5,
+        () ->
+            slapDownMotor.configure(
                 brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 }

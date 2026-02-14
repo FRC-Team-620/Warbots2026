@@ -24,16 +24,13 @@ public class NeoIntakeIO implements IntakeIO {
   private RelativeEncoder slapDownEncoder = slapDownMotor.getEncoder();
   private AbsoluteEncoderConfig slapDownEncoderConfig = new AbsoluteEncoderConfig();
   private SparkClosedLoopController slapDownPIDController;
-  private double speedRPM;
   private double speedDutyCycle;
 
   private double setPointDegrees = Constants.Intake.kSlapDownUpPositionDegrees;
 
   public NeoIntakeIO() {
 
-    slapDownEncoderConfig
-        .positionConversionFactor(360)
-        .velocityConversionFactor(6); // TODO update these values
+    slapDownEncoderConfig.positionConversionFactor(360).velocityConversionFactor(6);
     // intakeMotor
 
     intakeMotorConfig = new SparkMaxConfig();
@@ -52,6 +49,7 @@ public class NeoIntakeIO implements IntakeIO {
 
     // SlapDown motor
     slapDownMotorConfig = new SparkMaxConfig();
+    slapDownMotorConfig.absoluteEncoder.apply(slapDownEncoderConfig);
     slapDownMotorConfig
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(35)
@@ -70,11 +68,7 @@ public class NeoIntakeIO implements IntakeIO {
         .closedLoop
         .pid(Constants.Intake.kSlapdownP, Constants.Intake.kSlapdownI, Constants.Intake.kSlapdownD)
         .outputRange(-1, 1)
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .maxMotion
-        .cruiseVelocity(2)
-        .maxAcceleration(12);
-    slapDownMotorConfig.absoluteEncoder.apply(slapDownEncoderConfig);
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
     SparkUtil.tryUntilOk(
         slapDownMotor,
@@ -109,6 +103,8 @@ public class NeoIntakeIO implements IntakeIO {
         intakeMotor,
         intakeMotor::getMotorTemperature,
         (value) -> inputs.intakeMotorTemperatureCelcius = value);
+
+    inputs.PIDSetpoint = slapDownPIDController.getSetpoint();
   }
 
   @Override

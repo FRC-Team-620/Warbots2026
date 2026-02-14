@@ -74,10 +74,7 @@ public final class Constants {
   }
 
   public static class Intake {
-    public static final double kIntakeP = 0.0;
-    public static final double kIntakeI = 0.0;
-    public static final double kIntakeD = 0.0;
-    public static final double kSlapdownP = 0.0;
+    public static final double kSlapdownP = 0.0225 / 2;
     public static final double kSlapdownI = 0.0;
     public static final double kSlapdownD = 0.0;
 
