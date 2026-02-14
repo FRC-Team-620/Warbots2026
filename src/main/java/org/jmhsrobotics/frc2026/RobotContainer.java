@@ -164,7 +164,7 @@ public class RobotContainer {
     SmartDashboard.putData("Climber Down", new ClimberMove(climber, 0));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
-    SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
+    // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
         "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
