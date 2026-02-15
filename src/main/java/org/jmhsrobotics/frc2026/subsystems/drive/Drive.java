@@ -24,7 +24,9 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -131,8 +133,11 @@ public class Drive extends SubsystemBase {
                 (voltage) -> runCharacterization(voltage.in(Units.Volts)), null, this));
   }
 
+  double test = 0.0;
+
   @Override
   public void periodic() {
+    double cycle = (Math.sin(test) * 0.5) + 0.5;
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -140,6 +145,16 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Gyro/Gyro Connected", gyroInputs.connected);
     Logger.recordOutput("Gyro/Gyro Heading", gyroInputs.yawPosition);
 
+    Logger.recordOutput(
+        "test/climber_right", new Pose3d(0, 0, -cycle * 0.55, new Rotation3d())); // *0.30188
+    Logger.recordOutput(
+        "test/climber_left", new Pose3d(0, 0, cycle * 0.55, new Rotation3d())); // *0.30188
+    Logger.recordOutput(
+        "test/climber_right_hook",
+        new Pose3d(0, cycle * 0.1, -cycle * 0.55, new Rotation3d())); // *0.30188
+    Logger.recordOutput(
+        "test/climber_left_hook",
+        new Pose3d(0, cycle * 0.1, cycle * 0.55, new Rotation3d())); // *0.30188
     SwerveModuleState[] states =
         new SwerveModuleState[] {
           new SwerveModuleState(),
