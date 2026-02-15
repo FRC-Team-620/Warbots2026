@@ -117,7 +117,7 @@ public class NeoIntakeDoryIO implements IntakeIO {
   }
 
   @Override
-  public void setSpeedDutyCycle(double RPM) {
+  public void setIntakeSpeed(double RPM) {
     this.speedRPM = RPM;
   }
 

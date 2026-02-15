@@ -48,7 +48,7 @@ public class SimIntakeIO implements IntakeIO {
   private double slapDownTargetRad = 0.0;
 
   @Override
-  public void setSpeedDutyCycle(double dutyCycle) {
+  public void setIntakeSpeed(double dutyCycle) {
     intakeOpenLoop = false;
     intakePID.setSetpoint(dutyCycle * Constants.Intake.kBaseRPM); // Convert duty cycle to RPM
   }

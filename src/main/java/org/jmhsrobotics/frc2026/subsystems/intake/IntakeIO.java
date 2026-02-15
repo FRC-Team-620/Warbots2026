@@ -24,10 +24,19 @@ public interface IntakeIO {
       double f) {} // TODO: inclear what loop this PIDF is setting, is it ment for the arm or intake
 
   // motors
+  
 
+  /**
+   * Sets the Position of the slapdown intake arm
+   * @param degrees
+   */
   public default void setPositionDegrees(double degrees) {}
 
-  public default void setSpeedDutyCycle(double dutyCycle) {}
+  /**
+   * Sets the speed of the intake Rollers +1 is intake full speed. -1 is expell
+   * @param dutyCycle
+   */
+  public default void setIntakeSpeed(double dutyCycle) {}
 
   public default void stop() {}
 

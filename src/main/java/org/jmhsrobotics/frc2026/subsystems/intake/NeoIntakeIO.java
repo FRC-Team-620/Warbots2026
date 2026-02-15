@@ -108,7 +108,7 @@ public class NeoIntakeIO implements IntakeIO {
   }
 
   @Override
-  public void setSpeedDutyCycle(double speedDutyCycle) {
+  public void setIntakeSpeed(double speedDutyCycle) {
     this.speedDutyCycle = speedDutyCycle;
     intakeMotor.set(speedDutyCycle);
   }

@@ -15,7 +15,7 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
   private IntakeIO intakeIO;
   private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-  private double setPointDegrees = Constants.Intake.kSlapDownUpPositionDegrees;
+  private double setPointDegrees = Constants.Intake.kSlapDownUpPositionDegrees; //TODO: Clean up this name
 
   private State calcluatedState = new State(Constants.Intake.kSlapDownUpPositionDegrees, 0);
   private TrapezoidProfile trapezoidProfile =
@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     calcluatedState =
         trapezoidProfile.calculate(
-            0.02,
+            Constants.krealTimeStep,
             calcluatedState,
             new State(setPointDegrees, 0)); // 20ms is the default periodic rate
     intakeIO.setPositionDegrees(calcluatedState.position);
@@ -52,6 +52,18 @@ public class Intake extends SubsystemBase {
             0,
             new Rotation3d()));
 
+    Logger.recordOutput(
+        "Model/Intake/arm_position_goal",
+        new Pose3d(
+            0.252,
+            0,
+            0.204730,
+            new Rotation3d(0, Units.degreesToRadians(setPointDegrees - 180), 0)));
+    Logger.recordOutput(
+        "Model/Intake/hopper_position_goal",
+        new Pose3d(
+            MathUtil.clamp((setPointDegrees - 90) / 90, 0, 1) * 0.30188, 0, 0, new Rotation3d()));
+
     // /*
     // Logger.recordOutput("Intake/Intake Current Amps", inputs.intakeCurrentAmps);
     // Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);
@@ -63,7 +75,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void set(double speedDutyCycle) {
-    intakeIO.setSpeedDutyCycle(speedDutyCycle);
+    intakeIO.setIntakeSpeed(speedDutyCycle);
   }
 
   public boolean atGoal() {
