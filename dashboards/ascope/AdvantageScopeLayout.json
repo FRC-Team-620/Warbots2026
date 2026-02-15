@@ -1,10 +1,10 @@
 {
   "hubs": [
     {
-      "x": -12,
-      "y": -12,
-      "width": 1710,
-      "height": 1022,
+      "x": 1914,
+      "y": -348,
+      "width": 1612,
+      "height": 1030,
       "state": {
         "sidebar": {
           "width": 300,
@@ -33,20 +33,18 @@
             "/AdvantageKit/SystemStats",
             "/AdvantageKit/RealOutputs/Odometry",
             "/AdvantageKit/RealOutputs/MyStates",
-            "/AdvantageKit/RealOutputs/Shooter",
-            "/AdvantageKit/climber",
-            "/AdvantageKit/indexer"
+            "/AdvantageKit/RealOutputs/test"
           ]
         },
         "tabs": {
-          "selected": 10,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
               "title": "",
               "controller": null,
               "controllerUUID": "csaqkhtq7lw6gvzv0g7470f920t6ggd0",
-              "renderer": "#/",
+              "renderer": "",
               "controlsHeight": 0
             },
             {
@@ -60,26 +58,67 @@
                     "logType": "Pose2d",
                     "visible": true,
                     "options": {
-                      "model": "2025 KitBot"
+                      "model": "Warbots2026"
                     }
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/test/slapdown",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/test/hopper",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/test/climber_right",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/test/climber_left",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/test/climber_left_hook",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/test/climber_right_hook",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
                   }
                 ],
-                "game": "2025 Field (Welded)",
-                "origin": "blue"
+                "game": "FRC:Axes"
               },
               "controllerUUID": "7psjncpawnwtv3v5k8pk7oi92xwelwb6",
               "renderer": {
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  12.97083716727887,
-                  15.41814794436949,
-                  2.5526239677172455
+                  -1.2640826725486491,
+                  0.6595506438788008,
+                  1.1118953568794514
                 ],
                 "cameraTarget": [
-                  0.6194950458295301,
-                  3.130580265238844,
-                  -1.2943091418683783
+                  -0.44085318891494596,
+                  0.48011493669889205,
+                  0.22791909457008336
                 ]
               },
               "controlsHeight": 256
@@ -172,8 +211,50 @@
               "type": 1,
               "title": "Intake",
               "controller": {
-                "leftSources": [],
-                "rightSources": [],
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Intake/Intake Speed RPM",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Intake/Slap Down Position Degrees",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Intake/Intake Current Amps",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Intake/Slap Down Current Amps",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  }
+                ],
                 "discreteSources": [],
                 "leftLockedRange": null,
                 "rightLockedRange": null,
@@ -270,62 +351,6 @@
             },
             {
               "type": 1,
-              "title": "Climber",
-              "controller": {
-                "leftSources": [
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit//climber/MotorPositionCM",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#af2437",
-                      "size": "normal"
-                    }
-                  }
-                ],
-                "rightSources": [
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit//climber/CurrentAMPS",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e5b31b",
-                      "size": "normal"
-                    }
-                  }
-                ],
-                "discreteSources": [
-                  {
-                    "type": "stripes",
-                    "logKey": "NT:/AdvantageKit//climber/AreHooksExtended",
-                    "logType": "Boolean",
-                    "visible": true,
-                    "options": {
-                      "color": "#2b66a2"
-                    }
-                  }
-                ],
-                "leftLockedRange": null,
-                "rightLockedRange": null,
-                "leftUnitConversion": {
-                  "type": null,
-                  "factor": 1
-                },
-                "rightUnitConversion": {
-                  "type": null,
-                  "factor": 1
-                },
-                "leftFilter": 0,
-                "rightFilter": 0
-              },
-              "controllerUUID": "q0ncwzgha10sauhukxpj26q5nn50wbc8",
-              "renderer": null,
-              "controlsHeight": 200
-            },
-            {
-              "type": 1,
               "title": "Power",
               "controller": {
                 "leftSources": [
@@ -389,71 +414,6 @@
               "controllerUUID": "iih08zoedfdlowjep2tdvsm4pve2ok23",
               "renderer": null,
               "controlsHeight": 200
-            },
-            {
-              "type": 1,
-              "title": "Indexer",
-              "controller": {
-                "leftSources": [
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit//indexer/MotorRPM",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#2b66a2",
-                      "size": "normal"
-                    }
-                  }
-                ],
-                "rightSources": [
-                  {
-                    "type": "stepped",
-                    "logKey": "NT:/AdvantageKit//indexer/CurrentAMPS",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#80588e",
-                      "size": "normal"
-                    }
-                  }
-                ],
-                "discreteSources": [
-                  {
-                    "type": "stripes",
-                    "logKey": "NT:/AdvantageKit//indexer/OutputSpeedDutyCycle",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#e5b31b"
-                    }
-                  },
-                  {
-                    "type": "stripes",
-                    "logKey": "NT:/AdvantageKit//indexer/MotorTemperatureCelcius",
-                    "logType": "Number",
-                    "visible": true,
-                    "options": {
-                      "color": "#af2437"
-                    }
-                  }
-                ],
-                "leftLockedRange": null,
-                "rightLockedRange": null,
-                "leftUnitConversion": {
-                  "type": null,
-                  "factor": 1
-                },
-                "rightUnitConversion": {
-                  "type": null,
-                  "factor": 1
-                },
-                "leftFilter": 0,
-                "rightFilter": 0
-              },
-              "controllerUUID": "b3k5da4q6pcwujhz1vq0nqh2bjoltn4k",
-              "renderer": null,
-              "controlsHeight": 200
             }
           ]
         }
@@ -461,5 +421,5 @@
     }
   ],
   "satellites": [],
-  "version": "4.1.0"
+  "version": "26.0.0"
 }
