@@ -1,8 +1,12 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.CheckTolerance;
@@ -32,16 +36,30 @@ public class Intake extends SubsystemBase {
 
     intakeIO.updateInputs(inputs);
 
-    Logger.processInputs("/Intake", inputs);
-    /*
-    Logger.recordOutput("Intake/Intake Current Amps", inputs.intakeCurrentAmps);
-    Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);
-    Logger.recordOutput("Intake/SlapDown Position Degrees", inputs.slapDownPositionDegrees);
-    Logger.recordOutput("Intake/SlapDown Current Amps", inputs.slapDownCurrentAmps);
-    Logger.recordOutput("Intake/Intake Temperature Celcius", inputs.intakeMotorTemperatureCelcius);
-    */
+    Logger.processInputs("Intake", inputs);
+    Logger.recordOutput(
+        "Model/Intake/arm_position",
+        new Pose3d(
+            0.252,
+            0,
+            0.204730,
+            new Rotation3d(0, Units.degreesToRadians(inputs.slapDownPositionDegrees - 180), 0)));
+    Logger.recordOutput(
+        "Model/Intake/hopper_position",
+        new Pose3d(
+            MathUtil.clamp((inputs.slapDownPositionDegrees - 90) / 90, 0, 1) * 0.30188,
+            0,
+            0,
+            new Rotation3d()));
 
-    Logger.recordOutput("Intake/Goal Angle", setPointDegrees);
+    // /*
+    // Logger.recordOutput("Intake/Intake Current Amps", inputs.intakeCurrentAmps);
+    // Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);
+    // Logger.recordOutput("Intake/SlapDown Position Degrees", inputs.slapDownPositionDegrees);
+    // Logger.recordOutput("Intake/SlapDown Current Amps", inputs.slapDownCurrentAmps);
+    // Logger.recordOutput("Intake/Intake Temperature Celcius",
+    // inputs.intakeMotorTemperatureCelcius);
+    // */
   }
 
   public void set(double speedDutyCycle) {

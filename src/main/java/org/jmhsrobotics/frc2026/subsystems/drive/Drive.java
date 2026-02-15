@@ -146,11 +146,6 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Gyro/Gyro Heading", gyroInputs.yawPosition);
 
     Logger.recordOutput(
-        "test/slapdown",
-        new Pose3d(0.252, 0, 0.204730, new Rotation3d(0, Math.sin(test += 0.01) - Math.PI / 4, 0)));
-    Logger.recordOutput(
-        "test/hopper", new Pose3d(cycle * 0.30188, 0, 0, new Rotation3d())); // *0.30188
-    Logger.recordOutput(
         "test/climber_right", new Pose3d(0, 0, -cycle * 0.55, new Rotation3d())); // *0.30188
     Logger.recordOutput(
         "test/climber_left", new Pose3d(0, 0, cycle * 0.55, new Rotation3d())); // *0.30188

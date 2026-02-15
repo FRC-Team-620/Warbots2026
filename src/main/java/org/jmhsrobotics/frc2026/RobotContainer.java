@@ -160,7 +160,7 @@ public class RobotContainer {
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
-    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 1));
+    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 30));
     SmartDashboard.putData("Climber Down", new ClimberMove(climber, 0));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
