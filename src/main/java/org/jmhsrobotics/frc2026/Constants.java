@@ -86,5 +86,10 @@ public final class Constants {
     public static final double kSlapDownUpPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownDownPositionDegrees = 0; // TODO update this (IMPORTANT)
     public static final double kSlapDownToleranceDegrees = 5; // TODO update this (IMPORTANT)
+    public static final double kSpeedDutyCycle = 0.3;
+  }
+
+  public static class Indexer {
+    public static final double kSpeedDutyCycle = 0.4;
   }
 }
