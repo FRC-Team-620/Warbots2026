@@ -1,7 +1,6 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 
 public class IntakeMove extends Command {
