@@ -220,7 +220,7 @@ public class DriveConstants {
             moduleTranslations);
   }
 
-    public static class DoryThriftyConstants {
+  public static class DoryThriftyConstants {
     public static final DCMotor driveGearbox = DCMotor.getNEO(1);
     public static final DCMotor turnGearbox = DCMotor.getNEO(1);
     public static final double trackWidth = Units.inchesToMeters(22.5); // make this a variable?
