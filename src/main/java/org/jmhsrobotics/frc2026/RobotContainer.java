@@ -10,7 +10,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -52,6 +54,7 @@ import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import static edu.wpi.first.units.Units.Seconds;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -226,6 +229,9 @@ public class RobotContainer {
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
     led.setDefaultCommand(new LEDToControlMode(this.led));
+
+    new Trigger(intake::getIntakeOn).onTrue(Commands.run(() -> led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))), led).withTimeout(1.5));
+    new Trigger(DriverStation.getMatchtime())
   }
 
   /**
