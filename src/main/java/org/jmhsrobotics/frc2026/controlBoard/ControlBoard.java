@@ -31,6 +31,8 @@ public interface ControlBoard {
 
   public Trigger intakeToggle();
 
+  public Trigger intakeEnable();
+
   public Trigger climberUp();
 
   public Trigger climberDown();

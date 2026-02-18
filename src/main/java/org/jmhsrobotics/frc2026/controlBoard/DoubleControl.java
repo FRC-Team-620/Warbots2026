@@ -98,4 +98,9 @@ public class DoubleControl implements ControlBoard {
   public Trigger intakeIndexOn() {
     return operator.y();
   }
+
+  @Override
+  public Trigger intakeEnable() {
+    return operator.a();
+  }
 }

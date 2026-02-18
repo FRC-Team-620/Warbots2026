@@ -97,4 +97,9 @@ public class SingleControl implements ControlBoard {
   public Trigger intakeIndexOn() {
     return driver.y();
   }
+
+  @Override
+  public Trigger intakeEnable() {
+    return driver.a();
+  }
 }
