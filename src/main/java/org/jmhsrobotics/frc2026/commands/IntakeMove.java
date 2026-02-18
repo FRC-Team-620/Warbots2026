@@ -1,26 +1,27 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 
 public class IntakeMove extends Command {
   private Intake intake;
+  private double speedDutyCycle;
 
-  public IntakeMove(Intake intake) {
+  public IntakeMove(Intake intake, double speedDutyCycle) {
     this.intake = intake;
+    this.speedDutyCycle = speedDutyCycle;
 
     addRequirements(intake);
   }
 
   @Override
   public void initialize() {
-    intake.set(0);
+    intake.set(speedDutyCycle);
   }
 
   @Override
   public void execute() {
-    intake.set(Constants.Intake.kBaseRPM);
+    intake.set(speedDutyCycle);
   }
 
   @Override

@@ -70,18 +70,46 @@ public class DriveCommand extends Command {
 
   @Override
   public void execute() {
-    double xSpeed =
-        MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationY()) * DriveConstants.maxSpeedMetersPerSec,
-            DriveConstants.deadBand);
-    double ySpeed =
-        MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationX()) * DriveConstants.maxSpeedMetersPerSec,
-            DriveConstants.deadBand);
-    double rotationSpeed =
-        MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.rotation()) * DriveConstants.maxSpeedMetersPerSec,
-            DriveConstants.deadBand);
+    double xSpeed, ySpeed, rotationSpeed;
+    if (drive.getTurboMode()) {
+      xSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationY())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.turboCoefficient,
+              DriveConstants.deadBand);
+      ySpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationX())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.turboCoefficient,
+              DriveConstants.deadBand);
+      rotationSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.rotation())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * 0.8,
+              DriveConstants.deadBand);
+    } else {
+      xSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationY())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.nonTurboCoefficient,
+              DriveConstants.deadBand);
+      ySpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationX())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.nonTurboCoefficient,
+              DriveConstants.deadBand);
+      rotationSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.rotation())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * 0.6,
+              DriveConstants.deadBand);
+    }
 
     ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
     this.drive.runVelocity(speeds);

@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -16,11 +17,12 @@ import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
+import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterMove;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
-import org.jmhsrobotics.frc2026.controlBoard.SingleControl;
+import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
 import org.jmhsrobotics.frc2026.subsystems.climber.ClimberIO;
 import org.jmhsrobotics.frc2026.subsystems.climber.NeoClimberIO;
@@ -125,7 +127,7 @@ public class RobotContainer {
         break;
     }
 
-    this.control = new SingleControl();
+    this.control = new DoubleControl();
 
     led = new LED();
 
@@ -149,13 +151,34 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    // default commands
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
     // climber.setDefaultCommand(new ClimberMove(climber, 0)); // TODO figure out real parameters
     // for climber move
 
+    // Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
+    control.shoot().onFalse(new ShooterMove(shooter, 0));
+
+    // Slapdown Bindings
+    control.SlapdownMoveDown()
+        .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownDownPositionDegrees));
+    control.SlapdownMoveUp()
+        .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
+
+    // Intake Bindings
+    control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    control.intakeOff().onTrue(new IntakeMove(intake, 0));
+    control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
+
+    // Indexer Binding
+    control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
+    control.indexOn().onFalse(new IndexerMove(indexer, 0));
+
+    control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
+    control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
 
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
@@ -167,6 +190,7 @@ public class RobotContainer {
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
         "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
+    SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(intake, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(intake, 90.0));
