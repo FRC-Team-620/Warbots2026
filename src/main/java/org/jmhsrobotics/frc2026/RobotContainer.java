@@ -8,7 +8,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -151,36 +150,28 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    //default commands
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
     climber.setDefaultCommand(
         new ClimberMove(climber, 0)); // TODO figure out real parameters for climber move
 
+    //Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
-    control
-        .intakeEnable()
-        .onTrue(
-            new SlapdownMove(intake, 180)
-                .andThen(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
-    control.SlapdownMoveDown()
-        .onTrue(new SlapdownMove(intake, 180))
-        .onFalse(new SlapdownMove(intake, 90));
-    control.SlapdownMoveUp()
-        .onTrue(new SlapdownMove(intake, 90))
-        .onFalse(new SlapdownMove(intake, 180));
+    
+    //Slapdown Bindings
+    control.SlapdownMoveDown().onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownDownPositionDegrees));
+    control.SlapdownMoveUp().onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
+    
+    //Intake Bindings
+    control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
-    control
-        .indexToggle()
-        .onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle))
-        .onFalse(new IndexerMove(indexer, 0));
-    control
-        .intakeIndexOn()
-        .onTrue(
-            new ParallelCommandGroup(
-                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle),
-                new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle)));
+    //Indexer Binding
+    control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
+    control.indexOn().onFalse(new IndexerMove(indexer, 0));
 
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));

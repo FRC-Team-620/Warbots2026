@@ -27,17 +27,15 @@ public interface ControlBoard {
 
   public Trigger SlapdownMoveDown();
 
-  public Trigger indexToggle();
+  public Trigger indexOn();
 
-  public Trigger intakeToggle();
+  public Trigger intakeOn();
 
-  public Trigger intakeEnable();
+  public Trigger intakeOff();
 
   public Trigger climberUp();
 
   public Trigger climberDown();
 
   public Trigger extakeFuel();
-
-  public Trigger intakeIndexOn();
 }
