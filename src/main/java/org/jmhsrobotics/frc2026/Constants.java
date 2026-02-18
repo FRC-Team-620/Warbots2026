@@ -92,8 +92,4 @@ public final class Constants {
   public static class Indexer {
     public static final double kSpeedDutyCycle = 0.4;
   }
-
-  public static class Indexer {
-    public static final double kBaseRPM = 1000;
-  }
 }

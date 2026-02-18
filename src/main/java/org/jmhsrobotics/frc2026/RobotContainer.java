@@ -159,6 +159,7 @@ public class RobotContainer {
 
     // Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
+    control.shoot().onFalse(new ShooterMove(shooter, 0));
 
     // Slapdown Bindings
     control.SlapdownMoveDown()
