@@ -150,26 +150,28 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    //default commands
+    // default commands
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
     climber.setDefaultCommand(
         new ClimberMove(climber, 0)); // TODO figure out real parameters for climber move
 
-    //Shooter Bindings
+    // Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
-    
-    //Slapdown Bindings
-    control.SlapdownMoveDown().onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownDownPositionDegrees));
-    control.SlapdownMoveUp().onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
-    
-    //Intake Bindings
+
+    // Slapdown Bindings
+    control.SlapdownMoveDown()
+        .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownDownPositionDegrees));
+    control.SlapdownMoveUp()
+        .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
+
+    // Intake Bindings
     control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
-    //Indexer Binding
+    // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     control.indexOn().onFalse(new IndexerMove(indexer, 0));
 
