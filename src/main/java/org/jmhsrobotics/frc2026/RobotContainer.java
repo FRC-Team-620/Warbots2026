@@ -5,6 +5,11 @@
 package org.jmhsrobotics.frc2026;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.reduxrobotics.canand.CanandEventLoop;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -70,6 +75,9 @@ public class RobotContainer {
   public RobotContainer() {
     SmartDashboard.putString("/CurrentSimMode", Constants.currentMode.toString());
     SmartDashboard.putData(CommandScheduler.getInstance());
+
+    CanandEventLoop.getInstance();
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -179,6 +187,21 @@ public class RobotContainer {
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
+
+    control
+        .resetForward()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  boolean isRed =
+                      DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == Alliance.Red;
+                  drive.setPose(
+                      new Pose2d(
+                          drive.getPose().getTranslation(),
+                          Rotation2d.fromDegrees(isRed ? 180 : 0)));
+                },
+                drive));
 
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
