@@ -16,7 +16,6 @@ public class Intake extends SubsystemBase {
   private IntakeIO intakeIO;
   private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   private double setPointDegrees = Constants.Intake.kSlapDownUpPositionDegrees;
-  private boolean isIntakeActive = false;
   private State calcluatedState = new State(Constants.Intake.kSlapDownUpPositionDegrees, 0);
   private TrapezoidProfile trapezoidProfile =
       new TrapezoidProfile(new Constraints(100, 200)); // TODO update these values
@@ -73,6 +72,10 @@ public class Intake extends SubsystemBase {
         Constants.Intake.kSlapDownToleranceDegrees);
   }
 
+  public boolean isActive() {
+    return inputs.outputSpeedDutyCycle == 0;
+  }
+
   public void setPositionDegrees(double setPointDegrees) {
     this.setPointDegrees = setPointDegrees;
     intakeIO.setPositionDegrees(setPointDegrees);
@@ -88,9 +91,5 @@ public class Intake extends SubsystemBase {
 
   public double getPositionDegrees() {
     return inputs.slapDownPositionDegrees;
-  }
-
-  public boolean getIntakeOn(){
-    return this.isIntakeActive;
   }
 }

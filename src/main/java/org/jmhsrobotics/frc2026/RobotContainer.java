@@ -4,6 +4,8 @@
 
 package org.jmhsrobotics.frc2026;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.reduxrobotics.canand.CanandEventLoop;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -54,7 +56,6 @@ import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import static edu.wpi.first.units.Units.Seconds;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -230,8 +231,12 @@ public class RobotContainer {
   private void configureDriverFeedback() {
     led.setDefaultCommand(new LEDToControlMode(this.led));
 
-    new Trigger(intake::getIntakeOn).onTrue(Commands.run(() -> led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))), led).withTimeout(1.5));
-    new Trigger(DriverStation.getMatchtime())
+    new Trigger(intake::isActive)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
   }
 
   /**
