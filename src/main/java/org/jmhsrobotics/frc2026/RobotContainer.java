@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -175,6 +176,9 @@ public class RobotContainer {
     // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     control.indexOn().onFalse(new IndexerMove(indexer, 0));
+
+    control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
+    control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
 
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
