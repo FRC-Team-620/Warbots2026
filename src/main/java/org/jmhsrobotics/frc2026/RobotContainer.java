@@ -34,14 +34,14 @@ import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
-import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerDoryIO;
+import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
-import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeDoryIO;
+import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
-import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterDoryIO;
+import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
@@ -80,9 +80,9 @@ public class RobotContainer {
                 new ModuleIOThrifty(2),
                 new ModuleIOThrifty(3));
 
-        shooter = new Shooter(new NeoShooterDoryIO());
-        intake = new Intake(new NeoIntakeDoryIO());
-        indexer = new Indexer(new NeoIndexerDoryIO());
+        shooter = new Shooter(new NeoShooterIO());
+        intake = new Intake(new NeoIntakeIO());
+        indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
         break;
 
@@ -154,8 +154,8 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    climber.setDefaultCommand(
-        new ClimberMove(climber, 0)); // TODO figure out real parameters for climber move
+    // climber.setDefaultCommand(new ClimberMove(climber, 0)); // TODO figure out real parameters
+    // for climber move
 
     // Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
@@ -178,7 +178,7 @@ public class RobotContainer {
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
-    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 1));
+    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 30));
     SmartDashboard.putData("Climber Down", new ClimberMove(climber, 0));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));

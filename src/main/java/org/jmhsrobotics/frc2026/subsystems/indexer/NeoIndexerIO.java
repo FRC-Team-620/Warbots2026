@@ -23,7 +23,7 @@ public class NeoIndexerIO implements IndexerIO {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(20)
         .voltageCompensation(12)
-        .inverted(false);
+        .inverted(true);
 
     SparkUtil.tryUntilOk(
         motor,

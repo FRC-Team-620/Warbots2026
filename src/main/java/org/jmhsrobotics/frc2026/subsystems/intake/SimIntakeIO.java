@@ -28,8 +28,8 @@ public class SimIntakeIO implements IntakeIO {
   private static final DCMotor SLAPDOWN_MOTOR = DCMotor.getNEO(1);
   private static final double SLAPDOWN_GEAR_RATIO = 40.0;
   private static final double SLAPDOWN_ARM_LENGTH_METERS = 0.4;
-  private static final double SLAPDOWN_MIN_ANGLE_RAD = Math.toRadians(-10);
-  private static final double SLAPDOWN_MAX_ANGLE_RAD = Math.toRadians(110);
+  private static final double SLAPDOWN_MIN_ANGLE_RAD = Math.toRadians(0);
+  private static final double SLAPDOWN_MAX_ANGLE_RAD = Math.toRadians(180);
 
   private static final double SLAPDOWN_MOI = 0.4 * IN_TO_KG_MOI; // TODO: Real MOI
 
