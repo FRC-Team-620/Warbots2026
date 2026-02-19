@@ -44,7 +44,7 @@ public class NeoShooterIO implements ShooterIO {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .voltageCompensation(12)
-        .inverted(false)
+        .inverted(true)
         .closedLoop
         .pid(
             Constants.ShooterConstants.kP,
