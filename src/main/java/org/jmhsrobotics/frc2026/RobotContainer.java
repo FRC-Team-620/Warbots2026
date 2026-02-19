@@ -29,7 +29,6 @@ import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
-import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
@@ -185,8 +184,8 @@ public class RobotContainer {
         .shooterSpinup()
         .onTrue(
             shooter.isActive()
-                ? new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM)
-                : new ShooterSpinup(shooter, 0));
+                ? new ShooterSpinup(shooter, 0)
+                : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
 
     control
         .runFeeder()
@@ -260,7 +259,12 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
-    led.setDefaultCommand(new LEDToControlMode(this.led));
+    new Trigger(shooter::isActive)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
   }
 
   /**

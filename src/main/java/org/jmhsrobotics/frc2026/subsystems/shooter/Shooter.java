@@ -1,6 +1,7 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -25,6 +26,8 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("/Shooter", shooterInputs);
 
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
+
+    Logger.recordOutput("Shooter Active", isActive);
   }
 
   public void setRPM(double velocityRPM) {
