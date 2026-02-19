@@ -185,6 +185,16 @@ public class RobotContainer {
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     control.indexOn().onFalse(new IndexerMove(indexer, 0));
 
+    // Climber Bindings
+    control
+        .climberUp()
+        .onTrue(new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle))
+        .onFalse(new ClimberMove(climber, 0));
+    control
+        .climberDown()
+        .onTrue(new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle))
+        .onFalse(new ClimberMove(climber, 0));
+
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
 
