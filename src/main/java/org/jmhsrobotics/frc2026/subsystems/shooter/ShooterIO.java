@@ -20,6 +20,8 @@ public interface ShooterIO {
 
   public default void setBrakeMode(boolean enable) {}
 
+  public default void setFeederSpeed(double dutyCycle) {}
+
   public default void stop() {}
   ;
 }

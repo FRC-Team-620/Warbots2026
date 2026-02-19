@@ -2,6 +2,7 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.jmhsrobotics.frc2026.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -10,7 +11,7 @@ public class Shooter extends SubsystemBase {
 
   private Timer accelerationTimer = new Timer();
 
-  private boolean isAccelerating;
+  private boolean isActive = false;
 
   private double goalSpeedRPM;
 
@@ -41,6 +42,15 @@ public class Shooter extends SubsystemBase {
     }
     goalSpeedRPM = velocityRPM;
     shooterIO.setRPM(velocityRPM);
+    if (velocityRPM > 0) {
+      isActive = true;
+    } else {
+      isActive = false;
+    }
+  }
+
+  public void setFeederSpeed(double dutyCycle) {
+    shooterIO.setFeederSpeed(dutyCycle);
   }
 
   public void stop() {
@@ -51,7 +61,12 @@ public class Shooter extends SubsystemBase {
     shooterIO.setBrakeMode(enable);
   }
 
-  private boolean atRPMGoal() {
-    return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM) < 100;
+  public boolean atRPMGoal() {
+    return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
+        < Constants.ShooterConstants.kShooterTolerance;
+  }
+
+  public boolean isActive() {
+    return isActive;
   }
 }

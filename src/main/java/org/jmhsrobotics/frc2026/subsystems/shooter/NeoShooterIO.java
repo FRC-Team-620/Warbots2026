@@ -20,11 +20,15 @@ public class NeoShooterIO implements ShooterIO {
       new SparkMax(Constants.CAN.kCenterFlywheelMotorID, MotorType.kBrushless);
   private SparkMax rightFlywheelMotor =
       new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
+
+  private SparkMax feeder = new SparkMax(53, MotorType.kBrushless);
+
   private SparkMaxConfig motorConfigLeader;
   private SparkMaxConfig motorConfigFollower;
   private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
   private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
+
   private SparkClosedLoopController leftFlywheelPIDController =
       leftFlywheelMotorLeader.getClosedLoopController();
   private SparkClosedLoopController centerFlywheelPIDController =
@@ -39,9 +43,9 @@ public class NeoShooterIO implements ShooterIO {
     motorConfigLeader = new SparkMaxConfig();
     motorConfigLeader
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(90)
+        .smartCurrentLimit(50)
         .voltageCompensation(12)
-        .inverted(true)
+        .inverted(false)
         .closedLoop
         .pid(
             Constants.ShooterConstants.kP,
@@ -60,7 +64,7 @@ public class NeoShooterIO implements ShooterIO {
     motorConfigFollower = new SparkMaxConfig();
     motorConfigFollower
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(90)
+        .smartCurrentLimit(50)
         .voltageCompensation(12)
         .follow(leftFlywheelMotorLeader)
         .inverted(true);
@@ -130,6 +134,10 @@ public class NeoShooterIO implements ShooterIO {
   @Override
   public void setRPM(double velocityRPM) {
     leftFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
+  }
+
+  public void setFeederSpeed(double dutyCycle) {
+    feeder.set(dutyCycle);
   }
 
   @Override

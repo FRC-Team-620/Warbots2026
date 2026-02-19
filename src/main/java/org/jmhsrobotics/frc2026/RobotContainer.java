@@ -24,7 +24,8 @@ import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
-import org.jmhsrobotics.frc2026.commands.ShooterMove;
+import org.jmhsrobotics.frc2026.commands.Shoot;
+import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
@@ -167,13 +168,24 @@ public class RobotContainer {
     // for climber move
 
     // Shooter Bindings
-    control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
-    control.shoot().onFalse(new ShooterMove(shooter, 0));
+    control
+        .shooterSpinup()
+        .onTrue(
+            shooter.isActive()
+                ? new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM)
+                : new ShooterSpinup(shooter, 0));
+
+    control
+        .runFeeder()
+        .onTrue(new Shoot(shooter, Constants.ShooterConstants.kSpeedDutyCycle))
+        .onFalse(new Shoot(shooter, 0));
 
     // Slapdown Bindings
-    control.SlapdownMoveDown()
+    control
+        .slapdownMoveDown()
         .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownDownPositionDegrees));
-    control.SlapdownMoveUp()
+    control
+        .slapdownMoveUp()
         .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
 
     // Intake Bindings
@@ -212,9 +224,9 @@ public class RobotContainer {
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
-        "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
+        "Shooter Run", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
+    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(intake, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(intake, 90.0));
   }
