@@ -63,7 +63,7 @@ public class NeoShooterIO implements ShooterIO {
         .smartCurrentLimit(90)
         .voltageCompensation(12)
         .follow(leftFlywheelMotorLeader)
-        .inverted(true);
+        .inverted(false);
     SparkUtil.tryUntilOk(
         centerFlywheelMotor,
         5,
