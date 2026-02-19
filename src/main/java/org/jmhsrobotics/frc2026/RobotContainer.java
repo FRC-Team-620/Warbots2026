@@ -21,10 +21,10 @@ import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
-import org.jmhsrobotics.frc2026.commands.Shoot;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
@@ -177,8 +177,8 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new Shoot(shooter, Constants.ShooterConstants.kSpeedDutyCycle))
-        .onFalse(new Shoot(shooter, 0));
+        .onTrue(new Feed(shooter, Constants.ShooterConstants.kSpeedDutyCycle))
+        .onFalse(new Feed(shooter, 0));
 
     // Slapdown Bindings
     control
@@ -224,7 +224,9 @@ public class RobotContainer {
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
-        "Shooter Run", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+        "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
+    SmartDashboard.putData("Feed", new Feed(shooter, Constants.ShooterConstants.kSpeedDutyCycle));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(intake, 180));

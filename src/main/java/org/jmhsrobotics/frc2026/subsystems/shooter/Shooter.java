@@ -63,7 +63,7 @@ public class Shooter extends SubsystemBase {
 
   public boolean atRPMGoal() {
     return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
-        < Constants.ShooterConstants.kShooterTolerance;
+        < Constants.ShooterConstants.kShooterTolerance && goalSpeedRPM > 0;
   }
 
   public boolean isActive() {

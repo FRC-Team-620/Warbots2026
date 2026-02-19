@@ -21,7 +21,7 @@ public class NeoShooterIO implements ShooterIO {
   private SparkMax rightFlywheelMotor =
       new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
 
-  private SparkMax feeder = new SparkMax(53, MotorType.kBrushless);
+  private SparkMax feederMotor = new SparkMax(53, MotorType.kBrushless);
 
   private SparkMaxConfig motorConfigLeader;
   private SparkMaxConfig motorConfigFollower;
@@ -36,6 +36,7 @@ public class NeoShooterIO implements ShooterIO {
   private SparkClosedLoopController rightFlywheelPIDController =
       rightFlywheelMotor.getClosedLoopController();
   private double velocityRPM;
+  private double feederSpeedDutyCycle;
 
   public NeoShooterIO() {
 
@@ -129,6 +130,16 @@ public class NeoShooterIO implements ShooterIO {
         leftFlywheelMotorLeader,
         leftFlywheelMotorLeader::getMotorTemperature,
         (value) -> inputs.tempC = value);
+
+    SparkUtil.ifOk(
+        feederMotor, feederMotor::getOutputCurrent, (value) -> inputs.feederCurrentAMPS = value);
+    SparkUtil.ifOk(
+        feederMotor, feederMotor::getBusVoltage, (value) -> inputs.feederVoltage = value);
+    SparkUtil.ifOk(
+        feederMotor,
+        feederMotor::getMotorTemperature,
+        (value) -> inputs.feederTemperatureCelcius = value);
+    inputs.feederSpeedDutyCycle = this.feederSpeedDutyCycle;
   }
 
   @Override
@@ -137,7 +148,8 @@ public class NeoShooterIO implements ShooterIO {
   }
 
   public void setFeederSpeed(double dutyCycle) {
-    feeder.set(dutyCycle);
+    this.feederSpeedDutyCycle = dutyCycle;
+    feederMotor.set(dutyCycle);
   }
 
   @Override
