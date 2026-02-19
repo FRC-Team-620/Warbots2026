@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -181,7 +182,7 @@ public class RobotContainer {
         .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
 
     // Intake Bindings
-    control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    control.intakeOn().onTrue( new ParallelCommandGroup( new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle), Commands.run(() -> led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1)))) .withTimeout(1.5) ) );    
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
@@ -230,13 +231,6 @@ public class RobotContainer {
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
     led.setDefaultCommand(new LEDToControlMode(this.led));
-
-    new Trigger(intake::isActive)
-        .onTrue(
-            Commands.run(
-                    () -> led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))),
-                    led)
-                .withTimeout(1.5));
   }
 
   /**

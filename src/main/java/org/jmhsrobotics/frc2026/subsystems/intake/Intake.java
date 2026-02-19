@@ -71,11 +71,7 @@ public class Intake extends SubsystemBase {
         inputs.slapDownPositionDegrees,
         Constants.Intake.kSlapDownToleranceDegrees);
   }
-
-  public boolean isActive() {
-    return inputs.outputSpeedDutyCycle == 0;
-  }
-
+  
   public void setPositionDegrees(double setPointDegrees) {
     this.setPointDegrees = setPointDegrees;
     intakeIO.setPositionDegrees(setPointDegrees);
