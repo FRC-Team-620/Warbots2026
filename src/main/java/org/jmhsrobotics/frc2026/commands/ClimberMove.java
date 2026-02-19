@@ -24,9 +24,9 @@ public class ClimberMove extends Command {
   @Override
   public void execute() {
     climber.setSpeedDutyCycle(speedDutyCycle);
-    if(climber.getCurrentAmps() > 40) {
+    if (climber.getCurrentAmps() > 40) {
       timer.start();
-    }else{
+    } else {
       timer.reset();
     }
   }
@@ -35,6 +35,4 @@ public class ClimberMove extends Command {
   public boolean isFinished() {
     return timer.get() > 0.25;
   }
-
-  
 }
