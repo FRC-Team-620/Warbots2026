@@ -65,8 +65,7 @@ public class NeoShooterIO implements ShooterIO {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .voltageCompensation(12)
-        .follow(leftFlywheelMotorLeader)
-        .inverted(true);
+        .follow(leftFlywheelMotorLeader, true);
     SparkUtil.tryUntilOk(
         centerFlywheelMotor,
         5,
