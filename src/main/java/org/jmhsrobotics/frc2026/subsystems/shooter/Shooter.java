@@ -27,7 +27,9 @@ public class Shooter extends SubsystemBase {
 
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
 
-    Logger.recordOutput("Shooter Active", isActive);
+    Logger.recordOutput("Shooter/Active", isActive);
+
+    SmartDashboard.putNumber("Shooter velocity", goalSpeedRPM);
   }
 
   public void setRPM(double velocityRPM) {
@@ -63,5 +65,14 @@ public class Shooter extends SubsystemBase {
 
   public boolean isActive() {
     return isActive;
+  }
+
+  public boolean atMaxRPM() {
+    // make it 100 rpm less than the max, so we get a buffer
+    return this.goalSpeedRPM > Constants.ShooterConstants.kBaseRPM - 100;
+  }
+
+  public boolean notMaxRPM() {
+    return this.isActive && !this.atMaxRPM();
   }
 }

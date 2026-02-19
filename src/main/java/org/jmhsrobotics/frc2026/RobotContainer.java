@@ -259,10 +259,18 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
-    new Trigger(shooter::isActive)
+    // turns purple when the shooter is active, but not at the max RPM
+    new Trigger(shooter::notMaxRPM)
         .onTrue(
             Commands.run(
                     () -> led.setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
+    // turns green when the shooter is active and at the max RPM
+    new Trigger(shooter::atMaxRPM)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.1))),
                     led)
                 .withTimeout(1.5));
   }
