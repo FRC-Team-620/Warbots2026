@@ -71,7 +71,7 @@ public class Intake extends SubsystemBase {
         inputs.slapDownPositionDegrees,
         Constants.Intake.kSlapDownToleranceDegrees);
   }
-  
+
   public void setPositionDegrees(double setPointDegrees) {
     this.setPointDegrees = setPointDegrees;
     intakeIO.setPositionDegrees(setPointDegrees);

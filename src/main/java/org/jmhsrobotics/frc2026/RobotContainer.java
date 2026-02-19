@@ -182,7 +182,15 @@ public class RobotContainer {
         .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
 
     // Intake Bindings
-    control.intakeOn().onTrue( new ParallelCommandGroup( new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle), Commands.run(() -> led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1)))) .withTimeout(1.5) ) );    
+    control
+        .intakeOn()
+        .onTrue(
+            new ParallelCommandGroup(
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle),
+                Commands.run(
+                        () ->
+                            led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
+                    .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
