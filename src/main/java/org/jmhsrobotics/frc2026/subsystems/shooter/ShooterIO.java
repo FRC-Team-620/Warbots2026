@@ -10,11 +10,6 @@ public interface ShooterIO {
     public double voltage;
     public double currentAMPS;
     public double tempC;
-
-    public double feederSpeedDutyCycle;
-    public double feederCurrentAMPS;
-    public double feederVoltage;
-    public double feederTemperatureCelcius;
   }
 
   public default void updateInputs(ShooterIOInputs inputs) {}
@@ -24,8 +19,6 @@ public interface ShooterIO {
   public default void setPIDF(double p, double i, double d, double f) {}
 
   public default void setBrakeMode(boolean enable) {}
-
-  public default void setFeederSpeed(double dutyCycle) {}
 
   public default void stop() {}
   ;

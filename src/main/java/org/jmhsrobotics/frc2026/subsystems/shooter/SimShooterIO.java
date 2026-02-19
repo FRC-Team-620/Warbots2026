@@ -15,19 +15,13 @@ public class SimShooterIO implements ShooterIO {
   public static final DCMotor MOTOR = DCMotor.getNEO(3);
   public static final double GEEARING = 1;
 
-  public static final DCMotor FEEDER_MOTOR = DCMotor.getNEO(1);
-  public static final double FEEDER_MOI = 0.1; // TODO: Find actual MOI of feeder wheel
-
   FlywheelSim flywheelSim =
       new FlywheelSim(LinearSystemId.createFlywheelSystem(MOTOR, MOI, GEEARING), MOTOR);
 
-  FlywheelSim feederSim =
-      new FlywheelSim(LinearSystemId.createFlywheelSystem(FEEDER_MOTOR, FEEDER_MOI, 1), FEEDER_MOTOR);
   PIDController pid;
   public boolean isOpenLoop = false;
   public double outputVolts = 0;
-  public double feederSpeedDutyCycle = 0;
-  public double feederOutputVolts = 0;
+  public double goalRPM = 0;
 
   public SimShooterIO(
       double k, double i, double d) { // TODO: This should prob be stored elsewhere (pid gains)
@@ -49,30 +43,18 @@ public class SimShooterIO implements ShooterIO {
     this.flywheelSim.setInputVoltage(outvolts);
     this.flywheelSim.update(Constants.ksimTimestep);
 
-    double feederOutputVolts = this.feederSpeedDutyCycle * RobotController.getBatteryVoltage();
-    this.feederSim.setInputVoltage(feederOutputVolts);
-    this.feederSim.update(Constants.ksimTimestep);
-
     inputs.currentAMPS = flywheelSim.getCurrentDrawAmps();
     inputs.velocityRPM = flywheelSim.getAngularVelocityRPM();
     inputs.voltage = flywheelSim.getInputVoltage();
     inputs.tempC = 20;
-
-
-    inputs.feederCurrentAMPS = feederSim.getCurrentDrawAmps();
-    inputs.feederSpeedDutyCycle = this.feederSpeedDutyCycle;
-    inputs.feederVoltage = feederSim.getInputVoltage();
-    inputs.feederTemperatureCelcius = 20;
+    inputs.goalRPM = this.goalRPM;
   }
 
   @Override
   public void setRPM(double RPM) {
+    this.goalRPM = RPM;
     isOpenLoop = false;
     pid.setSetpoint(RPM);
-  }
-
-  public void setFeederSpeed(double dutyCycle) {
-    this.feederSpeedDutyCycle = dutyCycle;
   }
 
   @Override

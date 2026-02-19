@@ -12,8 +12,7 @@ public class Shooter extends SubsystemBase {
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
-
-  private double goalSpeedRPM;
+  private double goalSpeedRPM = 0;
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
@@ -25,11 +24,6 @@ public class Shooter extends SubsystemBase {
 
     Logger.processInputs("/Shooter", shooterInputs);
 
-    Logger.recordOutput("Shooter/Shooter Current Amps", shooterInputs.currentAMPS);
-    Logger.recordOutput("Shooter/Shooter Voltage", shooterInputs.voltage);
-    Logger.recordOutput("Shooter/Shooter Goal RPM", shooterInputs.goalRPM);
-    Logger.recordOutput("Shooter/Shooter RPM", shooterInputs.velocityRPM);
-    Logger.recordOutput("Shooter/Shooter Motor Temperature", shooterInputs.tempC);
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }
 
@@ -42,15 +36,12 @@ public class Shooter extends SubsystemBase {
     }
     goalSpeedRPM = velocityRPM;
     shooterIO.setRPM(velocityRPM);
+
     if (velocityRPM > 0) {
       isActive = true;
     } else {
       isActive = false;
     }
-  }
-
-  public void setFeederSpeed(double dutyCycle) {
-    shooterIO.setFeederSpeed(dutyCycle);
   }
 
   public void stop() {
@@ -63,7 +54,8 @@ public class Shooter extends SubsystemBase {
 
   public boolean atRPMGoal() {
     return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
-        < Constants.ShooterConstants.kShooterTolerance && goalSpeedRPM > 0;
+            < Constants.ShooterConstants.kShooterTolerance
+        && goalSpeedRPM > 0;
   }
 
   public boolean isActive() {

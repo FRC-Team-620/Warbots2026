@@ -39,6 +39,10 @@ import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
+import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
+import org.jmhsrobotics.frc2026.subsystems.feeder.NeoFeederIO;
+import org.jmhsrobotics.frc2026.subsystems.feeder.SimFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
@@ -69,6 +73,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Indexer indexer;
   private final Climber climber;
+  private final Feeder feeder;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -94,6 +99,7 @@ public class RobotContainer {
         intake = new Intake(new NeoIntakeIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
+        feeder = new Feeder(new NeoFeederIO());
         break;
 
       case SIM:
@@ -117,6 +123,7 @@ public class RobotContainer {
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
         climber = new Climber(new SimClimberIO());
+        feeder = new Feeder(new SimFeederIO());
         break;
 
       default:
@@ -133,6 +140,7 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         indexer = new Indexer(new IndexerIO() {});
         climber = new Climber(new ClimberIO() {});
+        feeder = new Feeder(new FeederIO() {});
         break;
     }
 
@@ -177,8 +185,8 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new Feed(shooter, Constants.ShooterConstants.kSpeedDutyCycle))
-        .onFalse(new Feed(shooter, 0));
+        .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+        .onFalse(new Feed(feeder, 0, shooter));
 
     // Slapdown Bindings
     control
@@ -226,7 +234,7 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
-    SmartDashboard.putData("Feed", new Feed(shooter, Constants.ShooterConstants.kSpeedDutyCycle));
+    SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(intake, 180));
