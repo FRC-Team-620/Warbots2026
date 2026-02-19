@@ -180,8 +180,8 @@ public class RobotContainer {
         .shooterSpinup()
         .onTrue(
             shooter.isActive()
-                ? new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM)
-                : new ShooterSpinup(shooter, 0));
+                ? new ShooterSpinup(shooter, 0)
+                : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
 
     control
         .runFeeder()
