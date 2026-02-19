@@ -216,8 +216,10 @@ public class RobotContainer {
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
-    SmartDashboard.putData("Climber Up", new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle));
-    SmartDashboard.putData("Climber Down", new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData(
+        "Climber Up", new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData(
+        "Climber Down", new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
