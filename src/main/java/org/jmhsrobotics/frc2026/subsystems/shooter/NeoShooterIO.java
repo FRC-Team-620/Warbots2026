@@ -20,11 +20,15 @@ public class NeoShooterIO implements ShooterIO {
       new SparkMax(Constants.CAN.kCenterFlywheelMotorID, MotorType.kBrushless);
   private SparkMax rightFlywheelMotor =
       new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
+
+  private SparkMax feederMotor = new SparkMax(53, MotorType.kBrushless);
+
   private SparkMaxConfig motorConfigLeader;
   private SparkMaxConfig motorConfigFollower;
   private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
   private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
+
   private SparkClosedLoopController leftFlywheelPIDController =
       leftFlywheelMotorLeader.getClosedLoopController();
   private SparkClosedLoopController centerFlywheelPIDController =
@@ -32,6 +36,7 @@ public class NeoShooterIO implements ShooterIO {
   private SparkClosedLoopController rightFlywheelPIDController =
       rightFlywheelMotor.getClosedLoopController();
   private double velocityRPM;
+  private double feederSpeedDutyCycle;
 
   public NeoShooterIO() {
 
@@ -41,7 +46,7 @@ public class NeoShooterIO implements ShooterIO {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .voltageCompensation(12)
-        .inverted(true)
+        .inverted(false)
         .closedLoop
         .pid(
             Constants.ShooterConstants.kP,
@@ -125,11 +130,26 @@ public class NeoShooterIO implements ShooterIO {
         leftFlywheelMotorLeader,
         leftFlywheelMotorLeader::getMotorTemperature,
         (value) -> inputs.tempC = value);
+
+    SparkUtil.ifOk(
+        feederMotor, feederMotor::getOutputCurrent, (value) -> inputs.feederCurrentAMPS = value);
+    SparkUtil.ifOk(
+        feederMotor, feederMotor::getBusVoltage, (value) -> inputs.feederVoltage = value);
+    SparkUtil.ifOk(
+        feederMotor,
+        feederMotor::getMotorTemperature,
+        (value) -> inputs.feederTemperatureCelcius = value);
+    inputs.feederSpeedDutyCycle = this.feederSpeedDutyCycle;
   }
 
   @Override
   public void setRPM(double velocityRPM) {
     leftFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
+  }
+
+  public void setFeederSpeed(double dutyCycle) {
+    this.feederSpeedDutyCycle = dutyCycle;
+    feederMotor.set(dutyCycle);
   }
 
   @Override
