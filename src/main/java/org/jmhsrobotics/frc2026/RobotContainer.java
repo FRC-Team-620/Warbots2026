@@ -201,9 +201,11 @@ public class RobotContainer {
         .onFalse(new Feed(feeder, 0, shooter));
 
     // Slapdown Bindings
-    control.SlapdownMoveDown()
+    control
+        .slapdownMoveDown()
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
-    control.SlapdownMoveUp()
+    control
+        .slapdownMoveUp()
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
 
     // Intake Bindings
@@ -267,7 +269,7 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
+    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
   }
