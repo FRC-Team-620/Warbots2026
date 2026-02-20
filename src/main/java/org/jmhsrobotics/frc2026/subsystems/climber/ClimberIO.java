@@ -7,6 +7,7 @@ public interface ClimberIO {
   @AutoLog
   public static class ClimberIOInputs {
     public double motorPositionCM;
+    public double motorSpeedDutyCycle;
     public double currentAMPS;
     public double motorTemperatureCelcius;
     public boolean areHooksExtended;
@@ -15,6 +16,8 @@ public interface ClimberIO {
   public default void updateInputs(ClimberIOInputs inputs) {}
 
   public default void setPositionCM(double positionCM) {}
+
+  public default void setSpeedDutyCycle(double speedDutyCycle) {}
 
   public default void setBrakeMode(boolean enable) {}
 

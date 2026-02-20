@@ -41,7 +41,7 @@ public final class Constants {
     // TODO update CANIds
     public static final int kCanAndGyroID = 60;
     public static final int kIntakeMotorID = 41;
-    public static final int kSlapDownMotorID = 40;
+    public static final int kSlapdownMotorID = 40;
     public static final int kIndexerMotorID = 2;
     public static final int kClimberMotorID = 30;
     public static final int kShooterIntakeMotorID = 53;
@@ -79,15 +79,19 @@ public final class Constants {
   }
 
   public static class Intake {
+    public static final double kBaseRPM = 3000;
+
+    public static final double kSpeedDutyCycle = 0.7;
+  }
+
+  public static class Slapdown {
+    public static final double kSlapdownUpPositionDegrees = 60; // TODO update this (IMPORTANT)
+    public static final double kSlapdownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
+    public static final double kSlapdownToleranceDegrees = 5; // TODO update this (IMPORTANT)
+
     public static final double kSlapdownP = 0.0225 / 2;
     public static final double kSlapdownI = 0.0;
     public static final double kSlapdownD = 0.0;
-
-    public static final double kBaseRPM = 000;
-    public static final double kSlapDownUpPositionDegrees = 90; // TODO update this (IMPORTANT)
-    public static final double kSlapDownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
-    public static final double kSlapDownToleranceDegrees = 5; // TODO update this (IMPORTANT)
-    public static final double kSpeedDutyCycle = 0.3;
   }
 
   public static class Indexer {
@@ -96,5 +100,10 @@ public final class Constants {
 
   public static class Feeder {
     public static final double kSpeedDutyCycle = 0.8;
+  }
+
+  public static class Climber {
+    public static final double kCMPerRotation = 1.0; // TODO update this (IMPORTANT)
+    public static final double kSpeedDutyCycle = 0.4;
   }
 }
