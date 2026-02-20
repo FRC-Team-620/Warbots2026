@@ -1,10 +1,10 @@
 {
   "hubs": [
     {
-      "x": 1914,
-      "y": -348,
-      "width": 1612,
-      "height": 1030,
+      "x": -8,
+      "y": -8,
+      "width": 1616,
+      "height": 1034,
       "state": {
         "sidebar": {
           "width": 424,
@@ -27,7 +27,8 @@
             "/AdvantageKit/RealOutputs",
             "/AdvantageKit/RealOutputs/Odometry",
             "/AdvantageKit/RealOutputs/Model",
-            "/AdvantageKit/RealOutputs/Model/Intake"
+            "/AdvantageKit/RealOutputs/Model/Intake",
+            "/AdvantageKit/RealOutputs/Model/Slapdown"
           ]
         },
         "tabs": {
@@ -57,14 +58,14 @@
                   },
                   {
                     "type": "component",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Intake/arm_position",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/arm_position",
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
                   },
                   {
                     "type": "component",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Intake/hopper_position",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/hopper_position",
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
@@ -109,37 +110,37 @@
                   },
                   {
                     "type": "component",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Intake/arm_position_goal",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/arm_position_goal",
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
                   },
                   {
                     "type": "component",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Intake/hopper_position_goal",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/hopper_position_goal",
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
                   }
                 ],
-                "game": "FRC:Axes"
+                "game": "FRC:2026 Field"
               },
               "controllerUUID": "7psjncpawnwtv3v5k8pk7oi92xwelwb6",
               "renderer": {
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.46188907059674555,
-                  0.49100433793324516,
-                  1.3057859923471775
+                  1.7336490745616449,
+                  1.1716020692903544,
+                  -0.6241062090480345
                 ],
                 "cameraTarget": [
-                  -0.25319275411887693,
-                  0.2368874076599244,
-                  -0.19187286013140475
+                  0.31767516029068843,
+                  0.32864749188604636,
+                  0.08540744133995594
                 ]
               },
-              "controlsHeight": 613
+              "controlsHeight": 370
             },
             {
               "type": 9,

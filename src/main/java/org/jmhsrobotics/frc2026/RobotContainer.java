@@ -51,6 +51,10 @@ import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
+import org.jmhsrobotics.frc2026.subsystems.slapdown.NeoSlapdownIO;
+import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
+import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
+import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -66,6 +70,7 @@ public class RobotContainer {
   private final LED led;
   private final ControlBoard control;
   private final Intake intake;
+  private final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
 
@@ -91,6 +96,7 @@ public class RobotContainer {
 
         shooter = new Shooter(new NeoShooterIO());
         intake = new Intake(new NeoIntakeIO());
+        slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
         break;
@@ -115,6 +121,7 @@ public class RobotContainer {
         // FIXME:add SimIntakeIO
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
+        slapdown = new Slapdown(new SimSlapdownIO());
         climber = new Climber(new SimClimberIO());
         break;
 
@@ -130,6 +137,7 @@ public class RobotContainer {
 
         shooter = new Shooter(new ShooterIO() {});
         intake = new Intake(new IntakeIO() {});
+        slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
         climber = new Climber(new ClimberIO() {});
         break;
@@ -172,9 +180,9 @@ public class RobotContainer {
 
     // Slapdown Bindings
     control.SlapdownMoveDown()
-        .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownDownPositionDegrees));
+        .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
     control.SlapdownMoveUp()
-        .onTrue(new SlapdownMove(intake, Constants.Intake.kSlapDownUpPositionDegrees));
+        .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
 
     // Intake Bindings
     control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
@@ -184,6 +192,16 @@ public class RobotContainer {
     // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     control.indexOn().onFalse(new IndexerMove(indexer, 0));
+
+    // Climber Bindings
+    control
+        .climberUp()
+        .onTrue(new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle))
+        .onFalse(new ClimberMove(climber, 0));
+    control
+        .climberDown()
+        .onTrue(new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle))
+        .onFalse(new ClimberMove(climber, 0));
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
@@ -206,8 +224,11 @@ public class RobotContainer {
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
-    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 30));
-    SmartDashboard.putData("Climber Down", new ClimberMove(climber, 0));
+    SmartDashboard.putData(
+        "Climber Up", new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData(
+        "Climber Down", new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData("Climber Stop", new ClimberMove(climber, 0));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
@@ -215,8 +236,8 @@ public class RobotContainer {
         "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
-    SmartDashboard.putData("Slapdown Down", new SlapdownMove(intake, 180));
-    SmartDashboard.putData("Slapdown Up", new SlapdownMove(intake, 90.0));
+    SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
+    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
   }
 
   /**
