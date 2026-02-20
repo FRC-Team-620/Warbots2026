@@ -10,11 +10,6 @@ public interface IntakeIO {
     public double intakeMotorTemperatureCelcius;
     public double RPM;
     public double outputSpeedDutyCycle;
-
-    public double slapDownPositionDegrees;
-    public double slapDownCurrentAmps;
-    public double slapDownSpeedDegPerSec;
-    public double PIDSetpoint;
   }
 
   public default void setPIDF(
@@ -25,8 +20,6 @@ public interface IntakeIO {
 
   // motors
 
-  public default void setPositionDegrees(double degrees) {}
-
   public default void setSpeedDutyCycle(double dutyCycle) {}
 
   public default void stop() {}
@@ -34,7 +27,4 @@ public interface IntakeIO {
   public default void updateInputs(IntakeIOInputs inputs) {}
 
   public default void setIntakeBrakeMode(boolean enable) {}
-
-  public default void setSlapDownBrakeMode(boolean enable) {}
-  ;
 }
