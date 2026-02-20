@@ -69,13 +69,18 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
-  public Trigger indexToggle() {
+  public Trigger indexOn() {
     return driver.leftBumper();
   }
 
   @Override
-  public Trigger intakeToggle() {
-    return driver.rightBumper();
+  public Trigger intakeOn() {
+    return driver.b();
+  }
+
+  @Override
+  public Trigger intakeOff() {
+    return driver.a();
   }
 
   @Override
@@ -91,10 +96,5 @@ public class SingleControl implements ControlBoard {
   @Override
   public Trigger extakeFuel() {
     return driver.x();
-  }
-
-  @Override
-  public Trigger intakeIndexOn() {
-    return driver.y();
   }
 }

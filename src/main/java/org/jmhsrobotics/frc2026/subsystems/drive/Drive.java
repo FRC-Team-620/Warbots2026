@@ -181,6 +181,8 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveChassisSpeeds/Measured Velocity", driveVelocity);
     Logger.recordOutput("SwerveChassisSpeeds/Measured Acceleration", driveAcceleration);
 
+    Logger.recordOutput("Drive/TurboModeEnabled", turboMode);
+
     for (var module : modules) {
       module.periodic();
     }

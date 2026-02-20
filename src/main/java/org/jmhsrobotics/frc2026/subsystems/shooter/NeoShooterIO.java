@@ -39,7 +39,7 @@ public class NeoShooterIO implements ShooterIO {
     motorConfigLeader = new SparkMaxConfig();
     motorConfigLeader
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(25)
+        .smartCurrentLimit(90)
         .voltageCompensation(12)
         .inverted(true)
         .closedLoop
@@ -60,7 +60,7 @@ public class NeoShooterIO implements ShooterIO {
     motorConfigFollower = new SparkMaxConfig();
     motorConfigFollower
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(25)
+        .smartCurrentLimit(90)
         .voltageCompensation(12)
         .follow(leftFlywheelMotorLeader)
         .inverted(true);

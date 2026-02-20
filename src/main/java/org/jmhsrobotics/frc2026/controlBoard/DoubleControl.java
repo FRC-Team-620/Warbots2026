@@ -61,22 +61,27 @@ public class DoubleControl implements ControlBoard {
 
   @Override
   public Trigger SlapdownMoveDown() {
-    return operator.povLeft();
-  }
-
-  @Override
-  public Trigger SlapdownMoveUp() {
-    return operator.povRight();
-  }
-
-  @Override
-  public Trigger indexToggle() {
     return operator.leftBumper();
   }
 
   @Override
-  public Trigger intakeToggle() {
+  public Trigger SlapdownMoveUp() {
     return operator.rightBumper();
+  }
+
+  @Override
+  public Trigger indexOn() {
+    return operator.leftTrigger();
+  }
+
+  @Override
+  public Trigger intakeOn() {
+    return operator.b();
+  }
+
+  @Override
+  public Trigger intakeOff() {
+    return operator.a();
   }
 
   @Override
@@ -92,10 +97,5 @@ public class DoubleControl implements ControlBoard {
   @Override
   public Trigger extakeFuel() {
     return operator.x();
-  }
-
-  @Override
-  public Trigger intakeIndexOn() {
-    return operator.y();
   }
 }
