@@ -4,16 +4,21 @@
 
 package org.jmhsrobotics.frc2026;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.reduxrobotics.canand.CanandEventLoop;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -21,10 +26,10 @@ import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
-import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
-import org.jmhsrobotics.frc2026.commands.ShooterMove;
+import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
@@ -38,6 +43,10 @@ import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
+import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
+import org.jmhsrobotics.frc2026.subsystems.feeder.NeoFeederIO;
+import org.jmhsrobotics.frc2026.subsystems.feeder.SimFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
@@ -73,6 +82,7 @@ public class RobotContainer {
   private final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
+  private final Feeder feeder;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -99,6 +109,7 @@ public class RobotContainer {
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
+        feeder = new Feeder(new NeoFeederIO());
         break;
 
       case SIM:
@@ -123,6 +134,7 @@ public class RobotContainer {
         indexer = new Indexer(new SimIndexerIO());
         slapdown = new Slapdown(new SimSlapdownIO());
         climber = new Climber(new SimClimberIO());
+        feeder = new Feeder(new SimFeederIO());
         break;
 
       default:
@@ -140,6 +152,7 @@ public class RobotContainer {
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
         climber = new Climber(new ClimberIO() {});
+        feeder = new Feeder(new FeederIO() {});
         break;
     }
 
@@ -175,17 +188,36 @@ public class RobotContainer {
     // for climber move
 
     // Shooter Bindings
-    control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
-    control.shoot().onFalse(new ShooterMove(shooter, 0));
+    control
+        .shooterSpinup()
+        .onTrue(
+            shooter.isActive()
+                ? new ShooterSpinup(shooter, 0)
+                : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+
+    control
+        .runFeeder()
+        .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+        .onFalse(new Feed(feeder, 0, shooter));
 
     // Slapdown Bindings
-    control.SlapdownMoveDown()
+    control
+        .slapdownMoveDown()
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
-    control.SlapdownMoveUp()
+    control
+        .slapdownMoveUp()
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
 
     // Intake Bindings
-    control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    control
+        .intakeOn()
+        .onTrue(
+            new ParallelCommandGroup(
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle),
+                Commands.run(
+                        () ->
+                            led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
+                    .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
@@ -233,9 +265,11 @@ public class RobotContainer {
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
-        "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
+        "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
+    SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
+    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
   }
@@ -246,7 +280,20 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
-    led.setDefaultCommand(new LEDToControlMode(this.led));
+    // turns purple when the shooter is active, but not at the max RPM
+    new Trigger(shooter::notMaxRPM)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
+    // turns green when the shooter is active and at the max RPM
+    new Trigger(shooter::atMaxRPM)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
   }
 
   /**

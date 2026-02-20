@@ -54,17 +54,22 @@ public class SingleControl implements ControlBoard {
   // ========Operator Controls========
 
   @Override
-  public Trigger shoot() {
+  public Trigger shooterSpinup() {
     return driver.rightTrigger();
   }
 
   @Override
-  public Trigger SlapdownMoveDown() {
+  public Trigger runFeeder() {
+    return driver.leftTrigger();
+  }
+
+  @Override
+  public Trigger slapdownMoveDown() {
     return driver.povLeft();
   }
 
   @Override
-  public Trigger SlapdownMoveUp() {
+  public Trigger slapdownMoveUp() {
     return driver.povRight();
   }
 

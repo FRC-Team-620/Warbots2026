@@ -55,17 +55,22 @@ public class DoubleControl implements ControlBoard {
   // ========Operator Controls========
 
   @Override
-  public Trigger shoot() {
+  public Trigger shooterSpinup() {
+    return operator.y();
+  }
+
+  @Override
+  public Trigger runFeeder() {
     return operator.rightTrigger();
   }
 
   @Override
-  public Trigger SlapdownMoveDown() {
+  public Trigger slapdownMoveDown() {
     return operator.leftBumper();
   }
 
   @Override
-  public Trigger SlapdownMoveUp() {
+  public Trigger slapdownMoveUp() {
     return operator.rightBumper();
   }
 

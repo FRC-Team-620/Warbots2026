@@ -3,11 +3,11 @@ package org.jmhsrobotics.frc2026.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 
-public class ShooterMove extends Command {
+public class ShooterSpinup extends Command {
   private Shooter shooter;
   private double goalRPM;
 
-  public ShooterMove(Shooter shooter, double goalRPM) {
+  public ShooterSpinup(Shooter shooter, double goalRPM) {
     this.shooter = shooter;
     this.goalRPM = goalRPM;
 
@@ -36,6 +36,5 @@ public class ShooterMove extends Command {
   @Override
   public void end(boolean interrupted) {
     this.shooter.stop(); // Do not use Power to Spindown flywheels
-    // this.shooter.setRPM(0);
   }
 }
