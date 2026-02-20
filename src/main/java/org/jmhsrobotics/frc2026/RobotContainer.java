@@ -220,6 +220,7 @@ public class RobotContainer {
         "Climber Up", new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle));
     SmartDashboard.putData(
         "Climber Down", new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData("Climber Stop", new ClimberMove(climber, 0));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
