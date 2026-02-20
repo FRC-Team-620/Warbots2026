@@ -42,8 +42,8 @@ public class Climber extends SubsystemBase {
             new Rotation3d())); // *0.30188
   }
 
-  public void setPositionCM(double positionCM) {
-    climberIO.setPositionCM(positionCM);
+  public void setSpeedDutyCycle(double speedDutyCycle) {
+    climberIO.setSpeedDutyCycle(speedDutyCycle);
   }
 
   public void setBrakeMode(boolean enable) {
@@ -60,5 +60,9 @@ public class Climber extends SubsystemBase {
 
   public void extendHooks() {
     climberIO.extendHooks();
+  }
+
+  public double getCurrentAmps() {
+    return inputs.currentAMPS;
   }
 }
