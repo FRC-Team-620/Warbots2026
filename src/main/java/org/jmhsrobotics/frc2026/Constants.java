@@ -80,11 +80,11 @@ public final class Constants {
   public static class Intake {
     public static final double kBaseRPM = 3000;
 
-    public static final double kSpeedDutyCycle = 0.3;
+    public static final double kSpeedDutyCycle = 0.7;
   }
 
   public static class Slapdown {
-    public static final double kSlapdownUpPositionDegrees = 90; // TODO update this (IMPORTANT)
+    public static final double kSlapdownUpPositionDegrees = 60; // TODO update this (IMPORTANT)
     public static final double kSlapdownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
     public static final double kSlapdownToleranceDegrees = 5; // TODO update this (IMPORTANT)
 
@@ -94,6 +94,6 @@ public final class Constants {
   }
 
   public static class Indexer {
-    public static final double kSpeedDutyCycle = 0.4;
+    public static final double kSpeedDutyCycle = 0.8;
   }
 }
