@@ -197,9 +197,11 @@ public class RobotContainer {
         .onFalse(new Feed(feeder, 0, shooter));
 
     // Slapdown Bindings
-    control.SlapdownMoveDown()
+    control
+        .slapdownMoveDown()
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
-    control.SlapdownMoveUp()
+    control
+        .slapdownMoveUp()
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
 
     // Intake Bindings
