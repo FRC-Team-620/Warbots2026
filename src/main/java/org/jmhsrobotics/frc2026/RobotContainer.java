@@ -193,6 +193,16 @@ public class RobotContainer {
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     control.indexOn().onFalse(new IndexerMove(indexer, 0));
 
+    // Climber Bindings
+    control
+        .climberUp()
+        .onTrue(new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle))
+        .onFalse(new ClimberMove(climber, 0));
+    control
+        .climberDown()
+        .onTrue(new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle))
+        .onFalse(new ClimberMove(climber, 0));
+
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
 
@@ -214,8 +224,11 @@ public class RobotContainer {
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
-    SmartDashboard.putData("Climber Up", new ClimberMove(climber, 30));
-    SmartDashboard.putData("Climber Down", new ClimberMove(climber, 0));
+    SmartDashboard.putData(
+        "Climber Up", new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData(
+        "Climber Down", new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle));
+    SmartDashboard.putData("Climber Stop", new ClimberMove(climber, 0));
     SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));

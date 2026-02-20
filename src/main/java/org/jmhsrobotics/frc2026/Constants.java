@@ -96,4 +96,9 @@ public final class Constants {
   public static class Indexer {
     public static final double kSpeedDutyCycle = 0.8;
   }
+
+  public static class Climber {
+    public static final double kCMPerRotation = 1.0; // TODO update this (IMPORTANT)
+    public static final double kSpeedDutyCycle = 0.4;
+  }
 }
