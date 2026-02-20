@@ -237,7 +237,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
-    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 90.0));
+    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
   }
 
   /**
