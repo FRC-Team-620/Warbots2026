@@ -169,8 +169,12 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    // climber.setDefaultCommand(new ClimberMove(climber, 0)); // TODO figure out real parameters
-    // for climber move
+    // TODO figure out real parameters
+
+    //extend climber
+    climber.setDefaultCommand(new ClimberExtendHooks(climber, 0));
+    // retract climber
+    climber.setDefaultCommand(new ClimberRetractHooks(climber, 0));
 
     // Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
