@@ -75,6 +75,7 @@ public final class Constants {
     public static final double kD = 0.0;
 
     public static final double kBaseRPM = 3000;
+    public static final double kShooterTolerance = 500;
   }
 
   public static class Intake {
@@ -94,6 +95,10 @@ public final class Constants {
   }
 
   public static class Indexer {
+    public static final double kSpeedDutyCycle = 1;
+  }
+
+  public static class Feeder {
     public static final double kSpeedDutyCycle = 0.8;
   }
 
