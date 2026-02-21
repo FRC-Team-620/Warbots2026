@@ -23,6 +23,7 @@ public class SimFeederIO implements FeederIO {
     inputs.feederSpeedDutyCycle = this.feederSpeedDutyCycle;
     inputs.feederVoltage = feederSim.getInputVoltage();
     inputs.feederTemperatureCelcius = 20;
+    inputs.feederVelocityRPM = feederSim.getAngularVelocityRPM();
 
     feederOutputVolts = this.feederSpeedDutyCycle * RobotController.getBatteryVoltage();
     this.feederSim.setInputVoltage(feederOutputVolts);
