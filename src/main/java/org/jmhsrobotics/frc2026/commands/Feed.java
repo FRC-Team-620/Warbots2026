@@ -23,7 +23,8 @@ public class Feed extends Command {
 
   @Override
   public void execute() {
-    if (shooter.atRPMGoal()) {
+    // if (shooter.atRPMGoal()) {
+    if (shooter.isActive()) {
       this.feeder.setFeederSpeed(this.speed);
     } else {
       this.feeder.setFeederSpeed(0);

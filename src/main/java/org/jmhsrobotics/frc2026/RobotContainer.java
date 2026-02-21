@@ -26,6 +26,7 @@ import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
+import org.jmhsrobotics.frc2026.commands.ShooterSpinupCopy;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
@@ -182,12 +183,17 @@ public class RobotContainer {
     // for climber move
 
     // Shooter Bindings
+    // control
+    //     .shooterSpinup()
+    //     .onTrue(
+    //         shooter.isActive()
+    //             ? new ShooterSpinup(shooter, 0)
+    //             : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+
     control
         .shooterSpinup()
-        .onTrue(
-            shooter.isActive()
-                ? new ShooterSpinup(shooter, 0)
-                : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+        .onTrue(new ShooterSpinupCopy(shooter, 0.5))
+        .onFalse(new ShooterSpinupCopy(shooter, 0));
 
     control
         .runFeeder()
@@ -203,7 +209,8 @@ public class RobotContainer {
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
 
     // Intake Bindings
-    control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    // control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    control.intakeOn().onTrue(new IntakeMove(intake, 1));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 

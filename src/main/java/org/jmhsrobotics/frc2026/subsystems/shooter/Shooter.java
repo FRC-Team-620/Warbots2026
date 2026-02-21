@@ -44,6 +44,15 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public void setSpeed(double speed) {
+    if (Math.abs(speed) > 0) {
+      isActive = true;
+    } else {
+      isActive = false;
+    }
+    shooterIO.setSpeed(speed);
+  }
+
   public void stop() {
     shooterIO.stop();
   }

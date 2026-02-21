@@ -138,6 +138,11 @@ public class NeoShooterIO implements ShooterIO {
   }
 
   @Override
+  public void setSpeed(double speed) {
+    leftFlywheelMotorLeader.set(speed);
+  }
+
+  @Override
   public void setPIDF(double p, double i, double d, double f) {
     // TODO: Implement ff term
     // FIXME:
