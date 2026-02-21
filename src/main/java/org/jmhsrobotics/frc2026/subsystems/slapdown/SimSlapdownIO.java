@@ -3,6 +3,7 @@ package org.jmhsrobotics.frc2026.subsystems.slapdown;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import org.jmhsrobotics.frc2026.Constants;
 
@@ -16,6 +17,8 @@ public class SimSlapdownIO implements SlapdownIO {
   private static final double SLAPDOWN_MAX_ANGLE_RAD = Math.toRadians(180);
 
   private static final double SLAPDOWN_MOI = 0.4 * IN_TO_KG_MOI; // TODO: Real MOI
+
+  private double PIDSetpoint;
 
   private final SingleJointedArmSim slapDownSim =
       new SingleJointedArmSim(
@@ -48,6 +51,7 @@ public class SimSlapdownIO implements SlapdownIO {
     inputs.slapdownPositionDegrees = Math.toDegrees(slapDownSim.getAngleRads());
     inputs.slapdownSpeedDegPerSec = Math.toDegrees(slapDownSim.getVelocityRadPerSec());
     inputs.slapdownCurrentAmps = slapDownSim.getCurrentDrawAmps();
+    inputs.PIDSetpoint = Units.radiansToDegrees(slapDownPID.getSetpoint());
     // inputs.slapDownAccelerationRPMPerSec =
     //     Units.radiansPerSecondToRotationsPerMinute(
     //             slapDownSim.getAccelerationRadPerSecSq())

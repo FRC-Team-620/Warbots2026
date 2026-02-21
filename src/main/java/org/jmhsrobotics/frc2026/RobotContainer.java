@@ -114,9 +114,7 @@ public class RobotContainer {
         shooter =
             new Shooter(
                 new SimShooterIO(
-                    Constants.ShooterConstants.kP,
-                    Constants.ShooterConstants.kI,
-                    Constants.ShooterConstants.kD) {});
+                    0.06, Constants.ShooterConstants.kI, Constants.ShooterConstants.kD) {});
 
         // FIXME:add SimIntakeIO
         intake = new Intake(new SimIntakeIO());
