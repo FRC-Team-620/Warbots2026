@@ -11,7 +11,7 @@ public class SimIndexerIO implements IndexerIO {
 
   private FlywheelSim indexerSim =
       new FlywheelSim(
-          LinearSystemId.createFlywheelSystem(DCMotor.getNEO(1), 0.01, 3), DCMotor.getNEO(0));
+          LinearSystemId.createFlywheelSystem(DCMotor.getNEO(1), 0.01, 3), DCMotor.getNEO(1));
   private double outputVolts;
 
   @Override
