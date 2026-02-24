@@ -171,10 +171,10 @@ public class RobotContainer {
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
     // TODO figure out real parameters
 
-    //extend climber
-    climber.setDefaultCommand(new ClimberExtendHooks(climber, 0));
+    // extend climber
+    climber.setDefaultCommand(new ClimberExtendHooks(climber));
     // retract climber
-    climber.setDefaultCommand(new ClimberRetractHooks(climber, 0));
+    climber.setDefaultCommand(new ClimberRetractHooks(climber));
 
     // Shooter Bindings
     control.shoot().onTrue(new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
