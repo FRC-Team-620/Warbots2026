@@ -26,6 +26,7 @@ TODO: Ascope Custom Assets configurations
 
 # Driver and Operator Competition Controls
 [Controls Document](https://docs.google.com/document/d/15Jkrab26Lnp2WN2_DIrBzKSFo-tVKhKQ2jnwQdINcyA/edit?tab=t.0)
+[Detailed Control Document](https://docs.google.com/document/d/1xO8T9W-RT8Sr_g6wulEiTy04_EeWa1I-H3vwEWQH71w/edit?usp=sharing)
 
 # Preflight Procedure
 [Preflight Document](https://docs.google.com/document/d/1y8YTlZKGIjjIhhPViNVR2rbAraMHBm-Do5bom_juSBM/edit?tab=t.0)
