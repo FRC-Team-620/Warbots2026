@@ -97,4 +97,14 @@ public class SingleControl implements ControlBoard {
   public Trigger extakeFuel() {
     return driver.x();
   }
+
+  @Override
+  public Trigger ClimberRetractHooks() {
+    return driver.povRight();
+  }
+
+  @Override
+  public Trigger ClimberExtendHooks() {
+    return driver.povLeft();
+  }
 }
