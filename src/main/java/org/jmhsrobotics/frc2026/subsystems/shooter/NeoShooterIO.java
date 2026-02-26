@@ -22,7 +22,8 @@ public class NeoShooterIO implements ShooterIO {
       new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
 
   private SparkMaxConfig motorConfigLeader;
-  private SparkMaxConfig motorConfigFollower;
+  private SparkMaxConfig motorConfigFollowerRight;
+  private SparkMaxConfig motorConfigMiddleFollower;
   private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
   private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
@@ -60,28 +61,38 @@ public class NeoShooterIO implements ShooterIO {
             leftFlywheelMotorLeader.configure(
                 motorConfigLeader, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-    motorConfigFollower = new SparkMaxConfig();
-    motorConfigFollower
+    motorConfigFollowerRight = new SparkMaxConfig();
+    motorConfigMiddleFollower = new SparkMaxConfig();
+
+    motorConfigFollowerRight
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .voltageCompensation(12)
         .follow(leftFlywheelMotorLeader, true);
     SparkUtil.tryUntilOk(
-        centerFlywheelMotor,
-        5,
-        () ->
-            centerFlywheelMotor.configure(
-                motorConfigFollower,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters));
-    SparkUtil.tryUntilOk(
         rightFlywheelMotor,
         5,
         () ->
             rightFlywheelMotor.configure(
-                motorConfigFollower,
+                motorConfigFollowerRight,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
+
+    motorConfigMiddleFollower = new SparkMaxConfig();
+    motorConfigMiddleFollower
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit(50)
+        .voltageCompensation(12)
+        .follow(leftFlywheelMotorLeader, false);
+    SparkUtil.tryUntilOk(
+        centerFlywheelMotor,
+        5,
+        () ->
+            centerFlywheelMotor.configure(
+                motorConfigMiddleFollower,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters));
+
     // TODO set motorConfig values
     // Initialize the closed loop controller
     // motorConfig.follow(leftFlywheelMotorLeader)

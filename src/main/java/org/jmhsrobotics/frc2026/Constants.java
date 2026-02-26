@@ -39,7 +39,7 @@ public final class Constants {
 
   public static class CAN {
     // TODO update CANIds
-    public static final int kCanAndGyroID = 60;
+    public static final int kCanAndGyroID = 0;
     public static final int kIntakeMotorID = 41;
     public static final int kSlapdownMotorID = 40;
     public static final int kIndexerMotorID = 2;
