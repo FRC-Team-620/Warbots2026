@@ -17,7 +17,6 @@ import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import java.util.Queue;
-
 import org.jmhsrobotics.frc2026.Constants;
 
 /** IO implementation for NavX. */
