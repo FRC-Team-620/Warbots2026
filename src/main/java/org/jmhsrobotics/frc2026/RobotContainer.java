@@ -55,6 +55,11 @@ import org.jmhsrobotics.frc2026.subsystems.slapdown.NeoSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
+import org.jmhsrobotics.frc2026.subsystems.vision.Vision;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -73,6 +78,7 @@ public class RobotContainer {
   private final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
+  private final Vision vision;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -99,6 +105,11 @@ public class RobotContainer {
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVision(
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0) {});
         break;
 
       case SIM:
@@ -116,11 +127,15 @@ public class RobotContainer {
                 new SimShooterIO(
                     0.06, Constants.ShooterConstants.kI, Constants.ShooterConstants.kD) {});
 
-        // FIXME:add SimIntakeIO
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
         slapdown = new Slapdown(new SimSlapdownIO());
         climber = new Climber(new SimClimberIO());
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose));
         break;
 
       default:
@@ -138,6 +153,7 @@ public class RobotContainer {
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
         climber = new Climber(new ClimberIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         break;
     }
 
