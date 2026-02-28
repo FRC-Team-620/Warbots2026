@@ -3,11 +3,11 @@
     {
       "x": -8,
       "y": -8,
-      "width": 1616,
-      "height": 1034,
+      "width": 1296,
+      "height": 816,
       "state": {
         "sidebar": {
-          "width": 424,
+          "width": 351,
           "expanded": [
             "/LiveWindow/.status",
             "/Shuffleboard/.metadata",
@@ -32,11 +32,18 @@
             "/AdvantageKit/climber",
             "/AdvantageKit/Intake",
             "/AdvantageKit/indexer",
-            "/AdvantageKit/Slapdown"
+            "/AdvantageKit/Slapdown",
+            "/AdvantageKit/Vision",
+            "/AdvantageKit/RealOutputs/Vision",
+            "/AdvantageKit/RealOutputs/Vision/Summary",
+            "/AdvantageKit/RealOutputs/Vision/Summary/RobotPoses",
+            "/AdvantageKit/RealOutputs/Vision/Summary/TagPoses",
+            "/AdvantageKit/RealOutputs/Vision/Summary/RobotPosesAccepted",
+            "/AdvantageKit/RealOutputs/Vision/Camera0"
           ]
         },
         "tabs": {
-          "selected": 9,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
@@ -103,6 +110,16 @@
                     "options": {}
                   },
                   {
+                    "type": "vision",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Vision/Summary/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "color": "#00ff00",
+                      "size": "normal"
+                    }
+                  },
+                  {
                     "type": "ghost",
                     "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
                     "logType": "Pose2d",
@@ -125,6 +142,25 @@
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
+                  },
+                  {
+                    "type": "aprilTag",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Vision/Summary/TagPoses",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "variant": "36h11-6.5in"
+                    }
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Vision/Camera0/RobotPosesAccepted",
+                    "logType": "Pose3d[]",
+                    "visible": true,
+                    "options": {
+                      "model": "Warbots2026",
+                      "color": "#ff0000"
+                    }
                   }
                 ],
                 "game": "FRC:Axes"
@@ -134,9 +170,9 @@
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.015069653254866255,
-                  -0.00662032695729442,
-                  1.5980045160522154
+                  2.945342136955292,
+                  2.7997248139621482,
+                  -1.7581591939427006
                 ],
                 "cameraTarget": [
                   -0.2337800331374477,
@@ -144,7 +180,7 @@
                   -0.7409598102400381
                 ]
               },
-              "controlsHeight": 370
+              "controlsHeight": 359
             },
             {
               "type": 9,
