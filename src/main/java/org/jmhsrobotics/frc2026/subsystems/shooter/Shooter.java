@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
 
-    Logger.processInputs("/Shooter", shooterInputs);
+    Logger.processInputs("Shooter", shooterInputs);
 
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }

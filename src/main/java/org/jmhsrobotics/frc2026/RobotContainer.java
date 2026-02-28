@@ -192,7 +192,7 @@ public class RobotContainer {
 
     control
         .shooterSpinup()
-        .onTrue(new ShooterSpinupCopy(shooter, 0.5))
+        .onTrue(new ShooterSpinupCopy(shooter, Constants.ShooterConstants.kShooterDutyCycle))
         .onFalse(new ShooterSpinupCopy(shooter, 0));
 
     control
@@ -265,6 +265,7 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
+    SmartDashboard.putData("Shooter Duty Cycle", new ShooterSpinupCopy(shooter, 0.5));
   }
 
   /**
