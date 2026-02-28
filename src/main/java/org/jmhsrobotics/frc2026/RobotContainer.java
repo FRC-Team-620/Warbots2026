@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
@@ -220,6 +221,8 @@ public class RobotContainer {
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
 
+    control.autoAim().whileTrue(new AlignToHub(drive, control));
+
     control
         .resetForward()
         .onTrue(
@@ -252,6 +255,7 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
+    SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
   }
 
   /**

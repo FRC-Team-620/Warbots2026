@@ -55,9 +55,7 @@ public class VisionConstants {
           0.84,
           0.218,
           -0.181,
-          new Rotation3d(
-              new Quaternion(
-                  0.310, -0.120, 0.042, -0.942))); // 0.824, 0.187, -0.028, new Rotation3d());
+          new Rotation3d(0, 0, Math.PI)); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
