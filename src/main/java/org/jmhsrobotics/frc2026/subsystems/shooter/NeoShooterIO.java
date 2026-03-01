@@ -171,6 +171,11 @@ public class NeoShooterIO implements ShooterIO {
   }
 
   @Override
+  public void setVoltage(double voltage) {
+    centerFlywheelMotor.setVoltage(voltage);
+  }
+
+  @Override
   public void setPIDF(double p, double i, double d, double f) {
     // TODO: Implement ff term
     // FIXME:
