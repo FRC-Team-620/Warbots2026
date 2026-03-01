@@ -14,11 +14,14 @@ public class SimShooterIO implements ShooterIO {
   public static final double MOI = 19.479 * IN_TO_KG_MOI; // TODO add units to var name
   public static final DCMotor MOTOR = DCMotor.getNEO(3);
   public static final double GEEARING = 1;
+
   FlywheelSim flywheelSim =
       new FlywheelSim(LinearSystemId.createFlywheelSystem(MOTOR, MOI, GEEARING), MOTOR);
+
   PIDController pid;
   public boolean isOpenLoop = false;
   public double outputVolts = 0;
+  public double goalRPM = 0;
 
   public SimShooterIO(
       double k, double i, double d) { // TODO: This should prob be stored elsewhere (pid gains)
@@ -44,10 +47,12 @@ public class SimShooterIO implements ShooterIO {
     inputs.velocityRPM = flywheelSim.getAngularVelocityRPM();
     inputs.voltage = flywheelSim.getInputVoltage();
     inputs.tempC = 20;
+    inputs.goalRPM = this.goalRPM;
   }
 
   @Override
   public void setRPM(double RPM) {
+    this.goalRPM = RPM;
     isOpenLoop = false;
     pid.setSetpoint(RPM);
   }
