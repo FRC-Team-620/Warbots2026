@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
-    SmartDashboard.putData("ShooterFlywheel/pid",rpmController);
+    SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
   }
 
   @Override

@@ -87,6 +87,10 @@ public class AlignToHub extends Command {
     this.drive.runVelocity(speeds);
 
     Logger.recordOutput("Align/GoalAngleDegrees", thetaController.getSetpoint());
+    Logger.recordOutput(
+        "Align/Distance",
+        getAutoAlignDistance(
+            FieldConstants.Hub.topCenterPoint.toTranslation2d(), drive.getPose().getTranslation()));
   }
 
   public Pose2d calculateSetpoints() {
@@ -129,5 +133,14 @@ public class AlignToHub extends Command {
 
   private double getSquareInput(double input) {
     return Math.pow(input, 2) * Math.signum(input);
+  }
+
+  public double getAutoAlignDistance(Translation2d goalTrans, Translation2d robotTranslation) {
+    double currentDistance;
+    currentDistance =
+        Math.sqrt(
+            Math.pow(goalTrans.getX() - robotTranslation.getX(), 2)
+                + Math.pow(goalTrans.getY() - robotTranslation.getY(), 2));
+    return currentDistance;
   }
 }
