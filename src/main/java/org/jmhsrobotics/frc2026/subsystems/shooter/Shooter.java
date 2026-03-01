@@ -1,6 +1,9 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -9,48 +12,95 @@ public class Shooter extends SubsystemBase {
   private ShooterIO shooterIO;
   private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
 
+  private PIDController rpmController = new PIDController(0, 0, 0);
+
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
   private double goalSpeedRPM = 0;
+  private double rpmPidOutput = 0;
+  private boolean isClosedLoop = false;
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
+    SmartDashboard.putData("ShooterFlywheel/pid",rpmController);
   }
 
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
 
+    if (isClosedLoop) {
+      final double maxPercentOutput = 1;
+      // calculate PID output
+      double pidControllerOutput =
+          this.rpmController.calculate(shooterInputs.velocityRPM, this.goalSpeedRPM);
+      double clampedOutput =
+          MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
+
+      shooterIO.setSpeed(clampedOutput);
+    }
+
+    /* ----------------RPM Control------------------------ TODO: move to dedicated util method*/
+    // TODO: move to constants
+    // final double maxVoltageOutput = 15.0;
+
+    // clamp the output to settable motor voltage limits
+    // double clampedVoltageOutput = MathUtil.clamp(
+    //     pidControllerOutput,
+    //     -maxVoltageOutput,
+    //     maxVoltageOutput);
+
+    // clamp the output to settable motor percent limits
+
+    // this.rpmPidOutput = clampedOutput;
+
     Logger.processInputs("Shooter", shooterInputs);
 
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }
 
-  public void setRPM(double velocityRPM) {
-    if (velocityRPM > 0) {
+  public void setRPM(double velocityTargetRPM) {
+    // TODO: what and why?
+    if (velocityTargetRPM > 0) {
       accelerationTimer.start();
     } else {
       accelerationTimer.reset();
       accelerationTimer.stop();
     }
-    goalSpeedRPM = velocityRPM;
-    shooterIO.setRPM(velocityRPM);
+    this.isClosedLoop = true;
+    // set global RPM goal
+    this.goalSpeedRPM = velocityTargetRPM;
 
-    if (velocityRPM > 0) {
-      isActive = true;
-    } else {
-      isActive = false;
-    }
+    // // set speed to clamped calculated PID output
+    // // this.setVoltage(clampedVoltageOutput);
+    // this.setSpeed(this.rpmPidOutput);
+
+    // update active state TODO: move to periodic update
+    updateActiveState(this.goalSpeedRPM);
+  }
+
+  private boolean updateActiveState(double velocityRPM) {
+    // if (velocityRPM > 0) {
+    // isActive = true;
+    // } else {
+    // isActive = false;
+    // }
+    return isActive = velocityRPM > 0;
   }
 
   public void setSpeed(double speed) {
+    this.isClosedLoop = false;
     if (Math.abs(speed) > 0) {
       isActive = true;
     } else {
       isActive = false;
     }
     shooterIO.setSpeed(speed);
+  }
+
+  public void setVoltage(double voltage) {
+    shooterIO.setVoltage(voltage);
   }
 
   public void stop() {

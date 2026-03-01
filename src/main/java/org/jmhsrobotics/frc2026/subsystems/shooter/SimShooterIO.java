@@ -51,6 +51,12 @@ public class SimShooterIO implements ShooterIO {
   }
 
   @Override
+  public void setSpeed(double speed) {
+    isOpenLoop = true;
+    outputVolts = MathUtil.clamp(speed * RobotController.getBatteryVoltage(), -13, 13);
+  }
+
+  @Override
   public void setRPM(double RPM) {
     this.goalRPM = RPM;
     isOpenLoop = false;
