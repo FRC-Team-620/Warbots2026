@@ -29,7 +29,7 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   // TODO: Confirm and Identify which camera is on which side, update camera names
-  public static String camera0Name = "Camera0";
+  public static String camera0Name = "rex";
   public static String camera1Name = "Camera1";
   public static String camera2Name = "Camera2";
   public static String camera3Name = "Camera3";
@@ -57,9 +57,7 @@ public class VisionConstants {
           0.000,
           0.507,
           new Rotation3d(
-              0,
-              Units.degreesToRadians(-55),
-              0)); // 0.824, 0.187, -0.028, new Rotation3d());
+              0, Units.degreesToRadians(-35), 0)); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
@@ -82,8 +80,7 @@ public class VisionConstants {
   public static final Pose3d camera3ToRobot =
       calibrationOffset.transformBy(camera3Calibration.inverse());
 
-  public static final Transform3d robotToCamera0 =
-      new Transform3d(rexToRobot.getTranslation(), rexToRobot.getRotation());
+  public static final Transform3d robotToCamera0 = rexCalibration;
   public static final Transform3d robotToCamera1 =
       new Transform3d(codyToRobot.getTranslation(), codyToRobot.getRotation());
   public static final Transform3d robotToCamera2 =

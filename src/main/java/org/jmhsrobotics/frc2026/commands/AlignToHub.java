@@ -20,7 +20,7 @@ public class AlignToHub extends Command {
 
   private final Drive drive;
   private final ControlBoard control;
-  private final PIDController thetaController = new PIDController(0.4, 0, 0);
+  private final PIDController thetaController = new PIDController(0.1, 0, 0);
 
   private boolean isRedAlliance;
   private boolean isTeleop;
