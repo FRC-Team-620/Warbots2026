@@ -52,9 +52,9 @@ public class VisionConstants {
 
   public static Transform3d rexCalibration =
       new Transform3d(
-          0.84,
-          0.218,
-          -0.181,
+          0.018,
+          0.000,
+          0.507,
           new Rotation3d(0, 0, Math.PI)); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
       new Transform3d(
