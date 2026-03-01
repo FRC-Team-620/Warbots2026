@@ -21,11 +21,13 @@ public interface ControlBoard {
 
   // =======Operator Controls=======
 
-  public Trigger shoot();
+  public Trigger shooterSpinup();
 
-  public Trigger SlapdownMoveUp();
+  public Trigger runFeeder();
 
-  public Trigger SlapdownMoveDown();
+  public Trigger slapdownMoveUp();
+
+  public Trigger slapdownMoveDown();
 
   public Trigger indexOn();
 
