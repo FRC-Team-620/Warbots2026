@@ -55,6 +55,8 @@ import org.jmhsrobotics.frc2026.subsystems.slapdown.NeoSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
+import org.jmhsrobotics.frc2026.util.BallTracker;
+import org.jmhsrobotics.frc2026.util.FuelSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -70,11 +72,14 @@ public class RobotContainer {
   private final LED led;
   private final ControlBoard control;
   private final Intake intake;
-  private final Slapdown slapdown;
+  public final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
 
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  public FuelSim fuelSim = new FuelSim("FuelSim");
+  public BallTracker ballTracker;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -151,6 +156,10 @@ public class RobotContainer {
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
 
     // Configure the trigger bindings
+
+
+
+    ballTracker = new BallTracker(drive::getPose, 10, 3);
     configureBindings();
     configureDriverFeedback();
   }
@@ -234,7 +243,8 @@ public class RobotContainer {
         "Shooter Run", new ShooterMove(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData("Shooter Stop", new ShooterMove(shooter, 0));
-    SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
+    SmartDashboard.putData(
+        "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
   }
 
