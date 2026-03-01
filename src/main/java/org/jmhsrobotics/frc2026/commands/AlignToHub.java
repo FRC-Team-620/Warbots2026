@@ -5,9 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -76,7 +74,8 @@ public class AlignToHub extends Command {
 
     double thetaOutput =
         thetaController.calculate(
-            drive.getPose().getRotation().getDegrees(), drive.getPose().getRotation().getDegrees() + goalRotation.getDegrees());
+            drive.getPose().getRotation().getDegrees(),
+            drive.getPose().getRotation().getDegrees() + goalRotation.getDegrees());
 
     ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, thetaOutput);
 
@@ -93,42 +92,39 @@ public class AlignToHub extends Command {
   public Pose2d calculateSetpoints() {
 
     Translation2d tagTranslation = new Translation2d();
-    
-    
+
     Logger.recordOutput("Align/hubPoint", FieldConstants.Hub.topCenterPoint);
     if (isFlipped) {
       tagTranslation = FieldConstants.Hub.topCenterPoint.toTranslation2d();
     } else {
       tagTranslation = FieldConstants.Hub.topCenterPoint.toTranslation2d();
-    };
+    }
+    ;
 
-
-    //Pose2d tagPose = new Pose2d(tagTranslation, new Rotation2d());
+    // Pose2d tagPose = new Pose2d(tagTranslation, new Rotation2d());
 
     Logger.recordOutput("Align/HubTagPose", tagPose);
-
-
 
     Translation2d robotTranslation2d = drive.getPose().getTranslation();
     Rotation2d robotRotation2d = drive.getPose().getRotation();
 
-    //Takes the xy position of the tag and subtracts the xy position of the robot to find the   
+    // Takes the xy position of the tag and subtracts the xy position of the robot to find the
     Rotation2d targetAngle = tagTranslation.minus(robotTranslation2d).getAngle();
 
     Logger.recordOutput("Align/TargetAngle", targetAngle);
 
-    Rotation2d rotationRequired = targetAngle.minus(robotRotation2d); 
+    Rotation2d rotationRequired = targetAngle.minus(robotRotation2d);
 
     // Logger.recordOutput("Feeder/Hub", tagPose);
 
     return new Pose2d(drive.getPose().getX(), drive.getPose().getY(), rotationRequired);
     /*return (isRedAlliance)
-        ? new Pose2d(
-            drive.getPose().getX(),
-            drive.getPose().getY(),
-            rotationRequired.plus(new Rotation2d(180)))
-        : new Pose2d(drive.getPose().getX(), drive.getPose().getY(), rotationRequired);
-      */
+      ? new Pose2d(
+          drive.getPose().getX(),
+          drive.getPose().getY(),
+          rotationRequired.plus(new Rotation2d(180)))
+      : new Pose2d(drive.getPose().getX(), drive.getPose().getY(), rotationRequired);
+    */
   }
 
   private double getSquareInput(double input) {

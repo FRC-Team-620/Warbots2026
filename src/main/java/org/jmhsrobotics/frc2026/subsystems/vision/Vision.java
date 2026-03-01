@@ -163,7 +163,6 @@ public class Vision extends SubsystemBase {
           "Vision/Camera" + Integer.toString(cameraIndex) + "/VisionTagPoses",
           inputs[cameraIndex].tagPoses);
 
-      Logger.recordOutput("Vision/CameraPosition", VisionConstants.rexCalibration.getTranslation());
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);

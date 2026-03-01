@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
   // AprilTag layout
@@ -55,7 +56,10 @@ public class VisionConstants {
           0.018,
           0.000,
           0.507,
-          new Rotation3d(0, 0, Math.PI)); // 0.824, 0.187, -0.028, new Rotation3d());
+          new Rotation3d(
+              0,
+              Units.degreesToRadians(-55),
+              0)); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
