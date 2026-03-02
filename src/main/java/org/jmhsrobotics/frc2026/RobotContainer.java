@@ -179,8 +179,6 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    // climber.setDefaultCommand(new ClimberMove(climber, 0)); // TODO figure out real parameters
-    // for climber move
 
     // Shooter Bindings
     // control
@@ -229,6 +227,10 @@ public class RobotContainer {
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
+    // extend climber
+    control.ClimberExtendHooks().onTrue(new ClimberExtendHooks(climber));
+    // retract climber
+    control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
     control
         .resetForward()
