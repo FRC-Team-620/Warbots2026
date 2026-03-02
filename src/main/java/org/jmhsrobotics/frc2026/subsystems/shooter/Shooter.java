@@ -37,8 +37,9 @@ public class Shooter extends SubsystemBase {
     if (isClosedLoop) {
       final double maxPercentOutput = 1;
       // calculate PID output
-      double pidControllerOutput =
-          this.rpmController.calculate(shooterInputs.velocityRPM, this.goalSpeedRPM);
+      double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
+      double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
+      double pidControllerOutput = this.rpmController.calculate(centiVeloctiyRPM);
       double clampedOutput =
           MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
 
@@ -127,8 +128,11 @@ public class Shooter extends SubsystemBase {
   }
 
   public void createInterpolatingDoubleTreeMap(InterpolatingDoubleTreeMap map) {
-    map.put(1.255, 3500.0);
-    map.put(4.00, 4000.0);
+    // map.put(1.255, 3500.0);
+    // map.put(4.00, 4000.0);
+    map.put(2.0, 3200.0);
+    map.put(3.148, 4100.0);
+    map.put(1.25, 2900.0);
   }
 
   public boolean isActive() {

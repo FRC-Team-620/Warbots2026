@@ -4,11 +4,11 @@
 
 package org.jmhsrobotics.frc2026;
 
+import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,8 +30,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
-  Spark forward = new Spark(0);
-  Spark back = new Spark(1);
 
   private final RobotContainer m_robotContainer;
 
@@ -42,6 +40,7 @@ public class Robot extends LoggedRobot {
   public Robot() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    StatusLogger.disableAutoLogging();
     m_robotContainer = new RobotContainer();
     // Get Default Log and Log Git Data into it.
     DataLog dataLog = DataLogManager.getLog();
@@ -129,10 +128,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    forward.set(1);
-    back.set(-1);
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

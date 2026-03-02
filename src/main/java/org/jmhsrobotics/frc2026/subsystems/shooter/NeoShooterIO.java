@@ -22,7 +22,7 @@ public class NeoShooterIO implements ShooterIO {
 
   private SparkMaxConfig motorConfigLeft;
   private SparkMaxConfig motorConfigFollowerRight;
-  private SparkMaxConfig motorConfigMiddleFollower;
+  private SparkMaxConfig motorConfigMiddleLeader;
   private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
   private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
@@ -56,7 +56,7 @@ public class NeoShooterIO implements ShooterIO {
     // .minOutput(0);
 
     motorConfigFollowerRight = new SparkMaxConfig();
-    motorConfigMiddleFollower = new SparkMaxConfig();
+    motorConfigMiddleLeader = new SparkMaxConfig();
 
     motorConfigFollowerRight
         .idleMode(IdleMode.kCoast)
@@ -71,8 +71,8 @@ public class NeoShooterIO implements ShooterIO {
     // .voltageCompensation(12);
     //    .follow(leftFlywheelMotorLeader, true);
 
-    motorConfigMiddleFollower = new SparkMaxConfig();
-    motorConfigMiddleFollower
+    motorConfigMiddleLeader = new SparkMaxConfig();
+    motorConfigMiddleLeader
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .inverted(true)
@@ -83,6 +83,7 @@ public class NeoShooterIO implements ShooterIO {
             Constants.ShooterConstants.kD);
     // .voltageCompensation(12);
     // .follow(leftFlywheelMotorLeader, false);
+    motorConfigMiddleLeader.encoder.quadratureMeasurementPeriod(10).quadratureAverageDepth(2);
 
     SparkUtil.tryUntilOk(
         leftFlywheelMotorLeader,
@@ -96,7 +97,7 @@ public class NeoShooterIO implements ShooterIO {
         5,
         () ->
             centerFlywheelMotor.configure(
-                motorConfigMiddleFollower,
+                motorConfigMiddleLeader,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
 

@@ -22,6 +22,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +36,9 @@ public class Vision extends SubsystemBase {
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
+
+  private Servo leftServo = new Servo(0);
+  private Servo rightServo = new Servo(1);
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -52,6 +57,8 @@ public class Vision extends SubsystemBase {
           new Alert(
               "Vision camera " + Integer.toString(i) + " is disconnected.", AlertType.kWarning);
     }
+
+    SmartDashboard.putNumber("Hood Position", 0);
   }
 
   /**
@@ -69,6 +76,10 @@ public class Vision extends SubsystemBase {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
     }
+
+    double hoodPosition = SmartDashboard.getNumber("Hood Position", 0);
+    leftServo.set(hoodPosition);
+    rightServo.set(hoodPosition);
 
     // Initialize logging values
     List<Pose3d> allTagPoses = new LinkedList<>();
