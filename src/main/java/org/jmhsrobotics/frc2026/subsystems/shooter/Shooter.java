@@ -2,6 +2,7 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,9 +21,12 @@ public class Shooter extends SubsystemBase {
   private double goalSpeedRPM = 0;
   private double rpmPidOutput = 0;
   private boolean isClosedLoop = false;
+  private InterpolatingDoubleTreeMap map;
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
+    this.map = new InterpolatingDoubleTreeMap();
+    createInterpolatingDoubleTreeMap(map);
     SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
   }
 
@@ -62,6 +66,7 @@ public class Shooter extends SubsystemBase {
 
   public void setRPM(double velocityTargetRPM) {
     // TODO: what and why?
+    Logger.recordOutput("Shooter/velocityTarget", velocityTargetRPM);
     if (velocityTargetRPM > 0) {
       accelerationTimer.start();
     } else {
@@ -115,6 +120,15 @@ public class Shooter extends SubsystemBase {
     return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
             < Constants.ShooterConstants.kShooterTolerance
         && goalSpeedRPM > 0;
+  }
+
+  public double calculateEstimatedRPM(double distance) {
+    return map.get(distance);
+  }
+
+  public void createInterpolatingDoubleTreeMap(InterpolatingDoubleTreeMap map) {
+    map.put(1.255, 3500.0);
+    map.put(4.00, 4000.0);
   }
 
   public boolean isActive() {

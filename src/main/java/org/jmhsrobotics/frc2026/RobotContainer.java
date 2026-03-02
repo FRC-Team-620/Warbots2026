@@ -20,6 +20,7 @@ import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
+import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
@@ -200,17 +201,15 @@ public class RobotContainer {
     // for climber move
 
     // Shooter Bindings
-    // control
-    //     .shooterSpinup()
-    //     .onTrue(
-    //         shooter.isActive()
-    //             ? new ShooterSpinup(shooter, 0)
-    //             : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
-
     control
         .shooterSpinup()
-        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
+        .onTrue(new DistanceAdjustingShoot(shooter, drive))
         .onFalse(new ShooterSetDutyCycle(shooter, 0));
+
+    // control
+    //     .shooterSpinup()
+    //     .onTrue(new DistanceAdjustingShoot(shooter, drive))
+    //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
         .runFeeder()
@@ -280,11 +279,12 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
+
+    SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
   }
 
   /**
