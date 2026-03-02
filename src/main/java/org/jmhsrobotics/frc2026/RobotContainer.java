@@ -4,16 +4,21 @@
 
 package org.jmhsrobotics.frc2026;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.reduxrobotics.canand.CanandEventLoop;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -24,7 +29,6 @@ import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
-import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
@@ -207,7 +211,15 @@ public class RobotContainer {
         .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
 
     // Intake Bindings
-    control.intakeOn().onTrue(new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    control
+        .intakeOn()
+        .onTrue(
+            new ParallelCommandGroup(
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle),
+                Commands.run(
+                        () ->
+                            led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
+                    .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
     control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
@@ -275,7 +287,20 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
-    led.setDefaultCommand(new LEDToControlMode(this.led));
+    // turns purple when the shooter is active, but not at the max RPM
+    new Trigger(shooter::notMaxRPM)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kPurple).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
+    // turns green when the shooter is active and at the max RPM
+    new Trigger(shooter::atMaxRPM)
+        .onTrue(
+            Commands.run(
+                    () -> led.setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.1))),
+                    led)
+                .withTimeout(1.5));
   }
 
   /**
