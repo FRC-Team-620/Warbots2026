@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
+import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
@@ -65,6 +67,11 @@ import org.jmhsrobotics.frc2026.subsystems.slapdown.NeoSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
+import org.jmhsrobotics.frc2026.subsystems.vision.Vision;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -83,6 +90,7 @@ public class RobotContainer {
   private final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
+  private final Vision vision;
   private final Feeder feeder;
 
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -110,6 +118,11 @@ public class RobotContainer {
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVision(
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0) {});
         feeder = new Feeder(new NeoFeederIO());
         break;
 
@@ -128,11 +141,15 @@ public class RobotContainer {
                 new SimShooterIO(
                     0.06, Constants.ShooterConstants.kI, Constants.ShooterConstants.kD) {});
 
-        // FIXME:add SimIntakeIO
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
         slapdown = new Slapdown(new SimSlapdownIO());
         climber = new Climber(new SimClimberIO());
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose));
         feeder = new Feeder(new SimFeederIO());
         break;
 
@@ -151,6 +168,7 @@ public class RobotContainer {
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
         climber = new Climber(new ClimberIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
         feeder = new Feeder(new FeederIO() {});
         break;
     }
@@ -187,10 +205,8 @@ public class RobotContainer {
     // Shooter Bindings
     // control
     //     .shooterSpinup()
-    //     .onTrue(
-    //         shooter.isActive()
-    //             ? new ShooterSpinup(shooter, 0)
-    //             : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    //     .onTrue(new DistanceAdjustingShoot(shooter, drive))
+    //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
         .shooterSpinup()
@@ -244,6 +260,8 @@ public class RobotContainer {
     // retract climber
     control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
+    control.autoAim().whileTrue(new AlignToHub(drive, control));
+
     control
         .resetForward()
         .onTrue(
@@ -275,10 +293,12 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
+    SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
+
+    SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
   }
 
   /**

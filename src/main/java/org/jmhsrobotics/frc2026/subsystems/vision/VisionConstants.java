@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
   // AprilTag layout
@@ -28,7 +29,7 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   // TODO: Confirm and Identify which camera is on which side, update camera names
-  public static String camera0Name = "Camera0";
+  public static String camera0Name = "rex";
   public static String camera1Name = "Camera1";
   public static String camera2Name = "Camera2";
   public static String camera3Name = "Camera3";
@@ -50,15 +51,14 @@ public class VisionConstants {
   //           0.185,
   //           new Rotatio(0.0, Units.degreesToRadians(-10), Units.degreesToRadians(35)));
 
-  public static Transform3d blackbirdCalibration =
+  public static Transform3d rexCalibration =
       new Transform3d(
-          0.84,
-          0.218,
-          -0.181,
+          0.018,
+          0.000,
+          0.507,
           new Rotation3d(
-              new Quaternion(
-                  0.310, -0.120, 0.042, -0.942))); // 0.824, 0.187, -0.028, new Rotation3d());
-  public static Transform3d overtureCalibration =
+              0, Units.degreesToRadians(-35), 0)); // 0.824, 0.187, -0.028, new Rotation3d());
+  public static Transform3d codyCalibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
   // 0.795, -0.224, -0.139, new Rotation3d());
@@ -73,19 +73,16 @@ public class VisionConstants {
 
   public static Pose3d calibrationOffset =
       new Pose3d(1, 0, 0.25, new Rotation3d(Rotation2d.fromDegrees(180)));
-  public static final Pose3d blackbirdToRobot =
-      calibrationOffset.transformBy(blackbirdCalibration.inverse());
-  public static final Pose3d overtureToRobot =
-      calibrationOffset.transformBy(overtureCalibration.inverse());
+  public static final Pose3d rexToRobot = calibrationOffset.transformBy(rexCalibration.inverse());
+  public static final Pose3d codyToRobot = calibrationOffset.transformBy(codyCalibration.inverse());
   public static final Pose3d camera2ToRobot =
       calibrationOffset.transformBy(camera2Calibration.inverse());
   public static final Pose3d camera3ToRobot =
       calibrationOffset.transformBy(camera3Calibration.inverse());
 
-  public static final Transform3d robotToCamera0 =
-      new Transform3d(blackbirdToRobot.getTranslation(), blackbirdToRobot.getRotation());
+  public static final Transform3d robotToCamera0 = rexCalibration;
   public static final Transform3d robotToCamera1 =
-      new Transform3d(overtureToRobot.getTranslation(), overtureToRobot.getRotation());
+      new Transform3d(codyToRobot.getTranslation(), codyToRobot.getRotation());
   public static final Transform3d robotToCamera2 =
       new Transform3d(camera2ToRobot.getTranslation(), camera2ToRobot.getRotation());
   public static final Transform3d robotToCamera3 =

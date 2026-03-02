@@ -16,12 +16,12 @@ public class ShooterSpinup extends Command {
 
   @Override
   public void initialize() {
-    this.shooter.setRPM(0);
+    // this.shooter.setRPM(0);
+    this.shooter.setRPM(goalRPM);
   }
 
   @Override
   public void execute() {
-    this.shooter.setRPM(goalRPM);
     // if (goalRPM > 0) {
     //   this.shooter.setRPM(goalRPM);
     // } else {
