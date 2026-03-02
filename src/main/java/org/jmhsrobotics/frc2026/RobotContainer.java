@@ -125,9 +125,7 @@ public class RobotContainer {
         shooter =
             new Shooter(
                 new SimShooterIO(
-                    Constants.ShooterConstants.kP,
-                    Constants.ShooterConstants.kI,
-                    Constants.ShooterConstants.kD) {});
+                    0.06, Constants.ShooterConstants.kI, Constants.ShooterConstants.kD) {});
 
         // FIXME:add SimIntakeIO
         intake = new Intake(new SimIntakeIO());
@@ -184,16 +182,19 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    // climber.setDefaultCommand(new ClimberMove(climber, 0)); // TODO figure out real parameters
-    // for climber move
 
     // Shooter Bindings
+    // control
+    //     .shooterSpinup()
+    //     .onTrue(
+    //         shooter.isActive()
+    //             ? new ShooterSpinup(shooter, 0)
+    //             : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+
     control
         .shooterSpinup()
-        .onTrue(
-            shooter.isActive()
-                ? new ShooterSpinup(shooter, 0)
-                : new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
+        .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
         .runFeeder()
@@ -237,6 +238,10 @@ public class RobotContainer {
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
+    // extend climber
+    control.ClimberExtendHooks().onTrue(new ClimberExtendHooks(climber));
+    // retract climber
+    control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
     control
         .resetForward()
@@ -272,6 +277,7 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
+    SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
   }
 
   /**

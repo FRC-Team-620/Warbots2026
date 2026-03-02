@@ -1,31 +1,35 @@
 package org.jmhsrobotics.frc2026.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 
-public class ShooterSpinup extends Command {
+public class ShooterSetDutyCycle extends Command {
   private Shooter shooter;
-  private double goalRPM;
 
-  public ShooterSpinup(Shooter shooter, double goalRPM) {
+  private double speed;
+  public static double jankSpeed = 0.6;
+
+  public ShooterSetDutyCycle(Shooter shooter, double speed) {
     this.shooter = shooter;
-    this.goalRPM = goalRPM;
+    this.speed = speed;
+    SmartDashboard.putNumber("jankSpeed", jankSpeed);
 
     addRequirements(this.shooter);
   }
 
   @Override
   public void initialize() {
-    this.shooter.setRPM(0);
+    // this.shooter.setRPM(0);
   }
 
   @Override
   public void execute() {
-    this.shooter.setRPM(goalRPM);
-    // if (goalRPM > 0) {
-    //   this.shooter.setRPM(goalRPM);
+    // jankSpeed = SmartDashboard.getNumber("jankSpeed", 0.6);
+    // if (this.speed != 0) {
+    //   this.shooter.setSpeed(jankSpeed);
     // } else {
-    //   this.shooter.stop(); // Do not use Power to Spindown flywheels
+    this.shooter.setSpeed(this.speed);
     // }
   }
 

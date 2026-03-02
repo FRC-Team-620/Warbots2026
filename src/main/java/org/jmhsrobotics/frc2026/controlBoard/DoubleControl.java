@@ -103,4 +103,14 @@ public class DoubleControl implements ControlBoard {
   public Trigger extakeFuel() {
     return operator.x();
   }
+
+  @Override
+  public Trigger ClimberRetractHooks() {
+    return operator.povRight();
+  }
+
+  @Override
+  public Trigger ClimberExtendHooks() {
+    return operator.povLeft();
+  }
 }

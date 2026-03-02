@@ -39,7 +39,7 @@ public final class Constants {
 
   public static class CAN {
     // TODO update CANIds
-    public static final int kCanAndGyroID = 60;
+    public static final int kCanAndGyroID = 0;
     public static final int kIntakeMotorID = 41;
     public static final int kSlapdownMotorID = 40;
     public static final int kIndexerMotorID = 2;
@@ -70,18 +70,19 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.008;
+    public static final double kP = 0.0005;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kBaseRPM = 4000;
+    public static final double kBaseRPM = 3000;
     public static final double kShooterTolerance = 500;
+    public static final double kShooterDutyCycle = 0.6;
   }
 
   public static class Intake {
     public static final double kBaseRPM = 3000;
 
-    public static final double kSpeedDutyCycle = 0.7;
+    public static final double kSpeedDutyCycle = 1;
   }
 
   public static class Slapdown {

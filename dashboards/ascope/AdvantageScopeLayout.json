@@ -1,15 +1,14 @@
 {
   "hubs": [
     {
-      "x": 3512,
-      "y": -9,
-      "width": 1936,
-      "height": 1048,
+      "x": -8,
+      "y": -8,
+      "width": 1616,
+      "height": 1034,
       "state": {
         "sidebar": {
           "width": 424,
           "expanded": [
-            "/SmartDashboard",
             "/LiveWindow/.status",
             "/Shuffleboard/.metadata",
             "/Shuffleboard/.recording",
@@ -26,12 +25,18 @@
             "/AdvantageKit/RealOutputs/Gyro/Gyro Heading",
             "/AdvantageKit/DriverStation/Joystick0",
             "/AdvantageKit/RealOutputs",
-            "/AdvantageKit/RealOutputs/Model/climber",
-            "/AdvantageKit/climber"
+            "/AdvantageKit/RealOutputs/Odometry",
+            "/AdvantageKit/RealOutputs/Model",
+            "/AdvantageKit/RealOutputs/Model/Intake",
+            "/AdvantageKit/RealOutputs/Model/Slapdown",
+            "/AdvantageKit/climber",
+            "/AdvantageKit/Intake",
+            "/AdvantageKit/indexer",
+            "/AdvantageKit/Slapdown"
           ]
         },
         "tabs": {
-          "selected": 1,
+          "selected": 9,
           "tabs": [
             {
               "type": 0,
@@ -57,14 +62,14 @@
                   },
                   {
                     "type": "component",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Intake/arm_position",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/arm_position",
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
                   },
                   {
                     "type": "component",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Intake/hopper_position",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/hopper_position",
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
@@ -96,6 +101,30 @@
                     "logType": "Pose3d",
                     "visible": true,
                     "options": {}
+                  },
+                  {
+                    "type": "ghost",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Odometry/Robot",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "Warbots2026",
+                      "color": "#00ff00"
+                    }
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/arm_position_goal",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Model/Slapdown/hopper_position_goal",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
                   }
                 ],
                 "game": "FRC:Axes"
@@ -105,17 +134,17 @@
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  1.0856928969534296,
-                  0.6156833329148963,
-                  0.4523401989828501
+                  -0.015069653254866255,
+                  -0.00662032695729442,
+                  1.5980045160522154
                 ],
                 "cameraTarget": [
-                  -0.25319275411887693,
-                  0.2368874076599244,
-                  -0.19187286013140475
+                  -0.2337800331374477,
+                  0.8466816719631195,
+                  -0.7409598102400381
                 ]
               },
-              "controlsHeight": 613
+              "controlsHeight": 370
             },
             {
               "type": 9,
@@ -203,12 +232,12 @@
             },
             {
               "type": 1,
-              "title": "Intake",
+              "title": "Slapdown",
               "controller": {
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/Intake/SlapDownPositionDegrees",
+                    "logKey": "NT:/AdvantageKit/Slapdown/PIDSetpoint",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -218,7 +247,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/Intake/PIDSetpoint",
+                    "logKey": "NT:/AdvantageKit/Slapdown/SlapdownPositionDegrees",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -230,9 +259,141 @@
                 "rightSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/Intake/SlapDownCurrentAmps",
+                    "logKey": "NT:/AdvantageKit/Slapdown/SlapdownCurrentAmps",
                     "logType": "Number",
                     "visible": false,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/SlapdownSpeedDegPerSec",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "pg5hl0i8k73xc4mn9ee7bpp54finx3d3",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Intake",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Intake/RPM",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Intake/OutputSpeedDutyCycle",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Intake/IntakeCurrentAmps",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Intake/IntakeMotorTemperatureCelcius",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "ogydaw70s5en4pmp3ug298egm0f94f9z",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Indexer",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit//indexer/MotorRPM",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit//indexer/CurrentAMPS",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit//indexer/MotorTemperatureCelcius",
+                    "logType": "Number",
+                    "visible": true,
                     "options": {
                       "color": "#e5b31b",
                       "size": "normal"
@@ -253,7 +414,7 @@
                 "leftFilter": 0,
                 "rightFilter": 0
               },
-              "controllerUUID": "ogydaw70s5en4pmp3ug298egm0f94f9z",
+              "controllerUUID": "oqdq69z44thfcjym8kxux2vqwbk0kl5c",
               "renderer": null,
               "controlsHeight": 200
             },
@@ -288,7 +449,7 @@
                     "type": "stepped",
                     "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Current Amps",
                     "logType": "Number",
-                    "visible": true,
+                    "visible": false,
                     "options": {
                       "color": "#80588e",
                       "size": "normal"
@@ -298,7 +459,7 @@
                     "type": "stepped",
                     "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Voltage",
                     "logType": "Number",
-                    "visible": false,
+                    "visible": true,
                     "options": {
                       "color": "#e48b32",
                       "size": "normal"

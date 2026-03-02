@@ -38,6 +38,17 @@ public class Slapdown extends SubsystemBase {
 
     Logger.processInputs("Slapdown", inputs);
     Logger.recordOutput(
+        "Model/Slapdown/arm_position_goal",
+        new Pose3d(
+            0.252,
+            0,
+            0.204730,
+            new Rotation3d(0, Units.degreesToRadians(setPointDegrees - 180), 0)));
+    Logger.recordOutput(
+        "Model/Slapdown/hopper_position_goal",
+        new Pose3d(
+            MathUtil.clamp((setPointDegrees - 90) / 90, 0, 1) * 0.30188, 0, 0, new Rotation3d()));
+    Logger.recordOutput(
         "Model/Slapdown/arm_position",
         new Pose3d(
             0.252,

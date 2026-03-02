@@ -40,4 +40,8 @@ public interface ControlBoard {
   public Trigger climberDown();
 
   public Trigger extakeFuel();
+
+  public Trigger ClimberExtendHooks();
+
+  public Trigger ClimberRetractHooks();
 }
