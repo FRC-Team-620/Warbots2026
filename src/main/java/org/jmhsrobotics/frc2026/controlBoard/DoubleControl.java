@@ -66,12 +66,12 @@ public class DoubleControl implements ControlBoard {
 
   @Override
   public Trigger slapdownMoveDown() {
-    return operator.leftBumper();
+    return operator.rightBumper();
   }
 
   @Override
   public Trigger slapdownMoveUp() {
-    return operator.rightBumper();
+    return operator.leftBumper();
   }
 
   @Override

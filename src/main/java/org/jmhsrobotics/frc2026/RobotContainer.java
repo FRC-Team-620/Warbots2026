@@ -202,6 +202,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
+    // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
     control
@@ -229,13 +230,14 @@ public class RobotContainer {
         .slapdownMoveDown()
         .onTrue(
             new SequentialCommandGroup(
-                new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees),
+                new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees)
+                    .withTimeout(1.5),
                 new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
     control
         .slapdownMoveUp()
         .onTrue(
             new SequentialCommandGroup(
-                new IntakeMove(intake, 0),
+                new IntakeMove(intake, 0).withTimeout(0.2),
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
 
     // Intake Bindings
