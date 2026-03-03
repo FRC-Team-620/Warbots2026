@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
@@ -221,10 +222,16 @@ public class RobotContainer {
     // Slapdown Bindings
     control
         .slapdownMoveDown()
-        .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
+        .onTrue(
+            new SequentialCommandGroup(
+                new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees),
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
     control
         .slapdownMoveUp()
-        .onTrue(new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
+        .onTrue(
+            new SequentialCommandGroup(
+                new IntakeMove(intake, 0),
+                new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
 
     // Intake Bindings
     control
