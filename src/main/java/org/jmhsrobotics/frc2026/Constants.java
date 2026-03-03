@@ -76,13 +76,18 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.0005;
+    // PID
+    public static final double kP = 0.08;
     public static final double kI = 0.0;
-    public static final double kD = 0.0;
+    public static final double kD = 0.005;
 
-    public static final double kBaseRPM = 3500;
-    public static final double kShooterTolerance = 1000;
-    public static final double kShooterDutyCycle = 0.6;
+    // FeedForward Constants - These are just guesses, will need to be tuned
+    public static final double kS = 0.2; // Static Component of Friction
+    public static final double kV = 0.0002; // Velocity Gain
+    public static final double kA = 0;
+
+    public static final double kBaseRPM = 3000;
+    public static final double kShooterTolerance = 500;
   }
 
   public static class Intake {

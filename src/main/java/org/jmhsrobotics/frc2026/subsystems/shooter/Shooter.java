@@ -3,8 +3,10 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -24,6 +26,7 @@ public class Shooter extends SubsystemBase {
   private InterpolatingDoubleTreeMap map;
 
   public Shooter(ShooterIO shooterIO) {
+
     this.shooterIO = shooterIO;
     this.map = new InterpolatingDoubleTreeMap();
     createInterpolatingDoubleTreeMap(map);
@@ -63,6 +66,12 @@ public class Shooter extends SubsystemBase {
 
     Logger.processInputs("Shooter", shooterInputs);
 
+    Logger.recordOutput("Shooter/Goal RPM", shooterInputs.goalRPM);
+    Logger.recordOutput("Shooter/Velocity RPM", shooterInputs.velocityRPM);
+    Logger.recordOutput("Shooter/Voltage", shooterInputs.voltage);
+    Logger.recordOutput("Shooter/Current", shooterInputs.currentAMPS);
+    Logger.recordOutput("Shooter/Temperature C", shooterInputs.tempC);
+    Logger.recordOutput("Shooter/Position", shooterInputs.position);
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
 
     Logger.recordOutput("Shooter/Active", isActive);
@@ -118,8 +127,22 @@ public class Shooter extends SubsystemBase {
     shooterIO.setVoltage(voltage);
   }
 
+  public void setVoltage(Voltage voltage) {
+    shooterIO.setVoltage(voltage.baseUnitMagnitude());
+  }
+
   public void stop() {
     shooterIO.stop();
+  }
+
+  public void LogData(SysIdRoutineLog log) {
+    // log.record("Shooter/Goal RPM", shooterInputs.goalRPM);
+    // log.record("Shooter/Velocity RPM", shooterInputs.velocityRPM);
+    // log.record("Shooter/Voltage", shooterInputs.voltage);
+    // log.record("Shooter/Current", shooterInputs.currentAMPS);
+    // log.record("Shooter/Temperature C", shooterInputs.tempC);
+    Logger.recordOutput("Shooter/Position", shooterInputs.position);
+    Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }
 
   public void setBrakeMode(boolean enable) {
