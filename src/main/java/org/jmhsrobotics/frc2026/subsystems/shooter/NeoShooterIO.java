@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
 
@@ -33,11 +34,17 @@ public class NeoShooterIO implements ShooterIO {
       centerFlywheelMotor.getClosedLoopController();
   private SparkClosedLoopController rightFlywheelPIDController =
       rightFlywheelMotor.getClosedLoopController();
+
+  private SimpleMotorFeedforward leftFlywheelFeedForward =
+      new SimpleMotorFeedforward(
+          Constants.ShooterConstants.kS,
+          Constants.ShooterConstants.kV,
+          Constants.ShooterConstants.kA);
+
   private double velocityRPM;
   private double goalRPM;
 
   public NeoShooterIO() {
-
     // leftFlywheelMotor
     motorConfigLeft = new SparkMaxConfig();
     motorConfigLeft

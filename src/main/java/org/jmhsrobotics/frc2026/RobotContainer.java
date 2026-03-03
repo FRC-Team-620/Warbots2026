@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
@@ -74,6 +76,7 @@ import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -94,6 +97,7 @@ public class RobotContainer {
   private final Climber climber;
   private final Vision vision;
   private final Feeder feeder;
+  private final SysIdRoutine routine;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -175,6 +179,14 @@ public class RobotContainer {
         break;
     }
 
+    routine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(
+                shooter::setVoltage,
+                (state) -> Logger.recordOutput("SysID/SysIdState", state.toString()),
+                shooter));
+    // routine.
     this.control = new DoubleControl();
 
     led = new LED();
@@ -318,6 +330,11 @@ public class RobotContainer {
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
+
+    SmartDashboard.putData("SysID/DynamicTestF", routine.dynamic(Direction.kForward));
+    SmartDashboard.putData("SysID/QuasistaticTestF", routine.quasistatic(Direction.kForward));
+    SmartDashboard.putData("SysID/DynamicTestR", routine.dynamic(Direction.kReverse));
+    SmartDashboard.putData("SysID/QuasistaticTestR", routine.quasistatic(Direction.kReverse));
   }
 
   /**
