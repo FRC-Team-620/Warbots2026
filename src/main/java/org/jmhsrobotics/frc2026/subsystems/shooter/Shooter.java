@@ -66,7 +66,9 @@ public class Shooter extends SubsystemBase {
 
     Logger.recordOutput("Shooter/Active", isActive);
 
-    SmartDashboard.putNumber("Shooter velocity", goalSpeedRPM);
+    Logger.recordOutput("Shooter/GoalSpeedRpm", goalSpeedRPM);
+
+    Logger.recordOutput("Shooter/isClosedLoop", this.isClosedLoop);
   }
 
   public void setRPM(double velocityTargetRPM) {
