@@ -7,9 +7,11 @@ public class Feeder extends SubsystemBase {
 
   public FeederIO feederIO;
   private FeederIOInputsAutoLogged feederInputs = new FeederIOInputsAutoLogged();
+  private double GoalDutyCycle;
 
   public Feeder(FeederIO feederIO) {
     this.feederIO = feederIO;
+    GoalDutyCycle = 0;
   }
 
   @Override
@@ -17,9 +19,11 @@ public class Feeder extends SubsystemBase {
     feederIO.updateInputs(feederInputs);
 
     Logger.processInputs("/Feeder", feederInputs);
+    Logger.recordOutput("Feeder/GoalDutyCycle", GoalDutyCycle);
   }
 
   public void setFeederSpeed(double dutyCycle) {
+    this.GoalDutyCycle = dutyCycle;
     feederIO.setFeederSpeed(dutyCycle);
   }
 }

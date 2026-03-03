@@ -66,7 +66,9 @@ public class Shooter extends SubsystemBase {
 
     Logger.recordOutput("Shooter/Active", isActive);
 
-    SmartDashboard.putNumber("Shooter velocity", goalSpeedRPM);
+    Logger.recordOutput("Shooter/GoalSpeedRpm", goalSpeedRPM);
+
+    Logger.recordOutput("Shooter/isClosedLoop", this.isClosedLoop);
   }
 
   public void setRPM(double velocityTargetRPM) {
@@ -122,7 +124,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean atRPMGoal() {
-    return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
+    return Math.abs(this.goalSpeedRPM - goalSpeedRPM)
             < Constants.ShooterConstants.kShooterTolerance
         && goalSpeedRPM > 0;
   }
