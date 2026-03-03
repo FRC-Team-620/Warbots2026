@@ -69,6 +69,8 @@ public class Shooter extends SubsystemBase {
 
     Logger.recordOutput("Shooter/GoalSpeedRpm", goalSpeedRPM);
 
+    Logger.recordOutput("Shooter/RPS", shooterInputs.velocityRPM / 60);
+
     Logger.recordOutput("Shooter/isClosedLoop", this.isClosedLoop);
   }
 
