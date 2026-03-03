@@ -76,7 +76,6 @@ import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -182,10 +181,7 @@ public class RobotContainer {
     routine =
         new SysIdRoutine(
             new SysIdRoutine.Config(),
-            new SysIdRoutine.Mechanism(
-                shooter::setVoltage,
-                (state) -> Logger.recordOutput("SysID/SysIdState", state.toString()),
-                shooter));
+            new SysIdRoutine.Mechanism(shooter::setVoltage, (null), shooter));
     // routine.
     this.control = new DoubleControl();
 
