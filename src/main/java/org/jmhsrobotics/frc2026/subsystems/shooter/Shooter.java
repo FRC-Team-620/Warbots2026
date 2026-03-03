@@ -2,6 +2,7 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,7 +14,7 @@ public class Shooter extends SubsystemBase {
   private ShooterIO shooterIO;
   private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
 
-  private PIDController rpmController = new PIDController(0, 0, 0);
+  private PIDController rpmController = new PIDController(0.1, 0, 0);
 
   private Timer accelerationTimer = new Timer();
 
@@ -22,12 +23,18 @@ public class Shooter extends SubsystemBase {
   private double rpmPidOutput = 0;
   private boolean isClosedLoop = false;
   private InterpolatingDoubleTreeMap map;
+  private SimpleMotorFeedforward ff;
 
   public Shooter(ShooterIO shooterIO) {
     this.shooterIO = shooterIO;
     this.map = new InterpolatingDoubleTreeMap();
     createInterpolatingDoubleTreeMap(map);
     SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
+    ff =
+        new SimpleMotorFeedforward(
+            Constants.ShooterConstants.kS,
+            Constants.ShooterConstants.kV,
+            Constants.ShooterConstants.kA);
   }
 
   @Override
@@ -40,8 +47,8 @@ public class Shooter extends SubsystemBase {
       double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
       double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
       double pidControllerOutput = this.rpmController.calculate(centiVeloctiyRPM);
-      double clampedOutput =
-          MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
+      double outvolts = pidControllerOutput + ff.calculate(centiGoalSpeedRPM * 100);
+      double clampedOutput = MathUtil.clamp(outvolts, -maxPercentOutput, maxPercentOutput);
 
       shooterIO.setSpeed(clampedOutput);
     }
