@@ -32,6 +32,7 @@ import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
+import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
@@ -182,6 +183,8 @@ public class RobotContainer {
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
     // (current values 2.2 and 0.3 are from 2025 season)
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
+    autoChooser.addOption(
+        "FrontHubAuto", new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStart));
 
     // Configure the trigger bindings
     configureBindings();
@@ -311,6 +314,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
+    // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
+    // Constants.Auto.hubStart));
   }
 
   /**
@@ -342,6 +347,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return autoChooser.get();
   }
 }

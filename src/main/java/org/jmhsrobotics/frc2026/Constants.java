@@ -6,6 +6,8 @@ package org.jmhsrobotics.frc2026;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -55,6 +57,10 @@ public final class Constants {
     public static final int kIntakeMotorID = 50;
     public static final int kSlapDownMotorID = 40;
     public static final int kShooterMotorID = 55;
+  }
+
+  public static class Auto {
+    public static final Pose2d hubStart = new Pose2d(3.569, 4.051, new Rotation2d(0.0));
   }
 
   public static enum Mode {
