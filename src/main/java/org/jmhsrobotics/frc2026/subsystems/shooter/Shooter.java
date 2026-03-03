@@ -124,7 +124,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean atRPMGoal() {
-    return Math.abs(this.goalSpeedRPM - goalSpeedRPM)
+    return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
             < Constants.ShooterConstants.kShooterTolerance
         && goalSpeedRPM > 0;
   }
