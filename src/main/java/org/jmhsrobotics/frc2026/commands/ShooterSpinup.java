@@ -23,7 +23,7 @@ public class ShooterSpinup extends Command {
   @Override
   public void execute() {
     // if (goalRPM > 0) {
-    //   this.shooter.setRPM(goalRPM);
+    this.shooter.setRPM(goalRPM);
     // } else {
     //   this.shooter.stop(); // Do not use Power to Spindown flywheels
     // }

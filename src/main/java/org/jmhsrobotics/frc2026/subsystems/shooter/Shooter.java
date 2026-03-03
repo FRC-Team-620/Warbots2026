@@ -13,7 +13,7 @@ public class Shooter extends SubsystemBase {
   private ShooterIO shooterIO;
   private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
 
-  private PIDController rpmController = new PIDController(0, 0, 0);
+  private PIDController rpmController = new PIDController(0.08, 0, 0.005);
 
   private Timer accelerationTimer = new Timer();
 
@@ -39,7 +39,8 @@ public class Shooter extends SubsystemBase {
       // calculate PID output
       double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
       double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
-      double pidControllerOutput = this.rpmController.calculate(centiVeloctiyRPM);
+      double pidControllerOutput =
+          this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
       double clampedOutput =
           MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
 
