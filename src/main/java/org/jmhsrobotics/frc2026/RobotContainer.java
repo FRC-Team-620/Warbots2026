@@ -203,15 +203,15 @@ public class RobotContainer {
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
 
     // Shooter Bindings
-    // control
-    //     .shooterSpinup()
-    //     .onTrue(new DistanceAdjustingShoot(shooter, drive))
-    //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
-
     control
         .shooterSpinup()
-        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
+        .onTrue(new DistanceAdjustingShoot(shooter, drive))
         .onFalse(new ShooterSetDutyCycle(shooter, 0));
+
+    // control
+    //     .shooterSpinup()
+    //     .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
+    //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
         .runFeeder()
