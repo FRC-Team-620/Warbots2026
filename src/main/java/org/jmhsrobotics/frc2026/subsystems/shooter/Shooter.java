@@ -3,6 +3,7 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,6 +13,9 @@ import org.littletonrobotics.junction.Logger;
 public class Shooter extends SubsystemBase {
   private ShooterIO shooterIO;
   private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
+
+  private Servo leftServo = new Servo(0);
+  private Servo rightServo = new Servo(1);
 
   private PIDController rpmController = new PIDController(0.08, 0, 0.005);
 
@@ -28,6 +32,7 @@ public class Shooter extends SubsystemBase {
     this.map = new InterpolatingDoubleTreeMap();
     createInterpolatingDoubleTreeMap(map);
     SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
+    SmartDashboard.putNumber("Hood Position", 0);
   }
 
   @Override
@@ -45,6 +50,10 @@ public class Shooter extends SubsystemBase {
           MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
 
       shooterIO.setSpeed(clampedOutput);
+
+      double hoodPosition = SmartDashboard.getNumber("Hood Position", 0);
+      leftServo.setPosition(hoodPosition);
+      rightServo.setPosition(hoodPosition);
     }
 
     /* ----------------RPM Control------------------------ TODO: move to dedicated util method*/
@@ -146,6 +155,15 @@ public class Shooter extends SubsystemBase {
 
   public boolean isActive() {
     return isActive;
+  }
+
+  public void setServoPosition(double position) {
+    leftServo.setPosition(position);
+    rightServo.setPosition(position);
+  }
+
+  public double getServoPosition() {
+    return leftServo.getPosition();
   }
 
   public boolean atMaxRPM() {
