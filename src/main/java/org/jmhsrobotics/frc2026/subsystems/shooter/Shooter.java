@@ -17,7 +17,6 @@ public class Shooter extends SubsystemBase {
   private Servo leftServo = new Servo(0);
   private Servo rightServo = new Servo(1);
 
-
   private PIDController rpmController = new PIDController(0.08, 0, 0.005);
 
   private Timer accelerationTimer = new Timer();
@@ -157,6 +156,7 @@ public class Shooter extends SubsystemBase {
   public boolean isActive() {
     return isActive;
   }
+
   public void setServoPosition(double position) {
     leftServo.setPosition(position);
     rightServo.setPosition(position);
