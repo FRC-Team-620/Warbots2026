@@ -219,7 +219,12 @@ public class RobotContainer {
     //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
-        .runFeeder()
+        .dutyCycleShoot()
+        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
+        .onFalse(new ShooterSetDutyCycle(shooter, 0));
+
+    control
+        .feedAndShoot()
         .onTrue(
             new ParallelCommandGroup(
                 new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
@@ -227,6 +232,11 @@ public class RobotContainer {
         .onFalse(
             new ParallelCommandGroup(
                 new Feed(feeder, 0, shooter), new ShooterSetDutyCycle(shooter, 0)));
+
+    control
+        .runFeeder()
+        .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+        .onFalse(new Feed(feeder, 0, shooter));
 
     // Slapdown Bindings
     control

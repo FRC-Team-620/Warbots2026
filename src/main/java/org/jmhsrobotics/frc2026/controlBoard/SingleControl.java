@@ -59,7 +59,7 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
-  public Trigger runFeeder() {
+  public Trigger feedAndShoot() {
     return driver.leftTrigger();
   }
 
@@ -111,5 +111,15 @@ public class SingleControl implements ControlBoard {
   @Override
   public Trigger ClimberExtendHooks() {
     return driver.povLeft();
+  }
+
+  @Override
+  public Trigger dutyCycleShoot() {
+    return driver.leftStick();
+  }
+
+    @Override 
+  public Trigger runFeeder() {
+    return driver.rightStick();
   }
 }

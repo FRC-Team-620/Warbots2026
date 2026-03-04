@@ -59,9 +59,19 @@ public class DoubleControl implements ControlBoard {
     return operator.y();
   }
 
+    @Override
+  public Trigger dutyCycleShoot() {
+    return driver.leftStick();
+  }
+
   @Override
-  public Trigger runFeeder() {
+  public Trigger feedAndShoot() {
     return operator.rightTrigger();
+  }
+
+  @Override 
+  public Trigger runFeeder() {
+    return operator.rightStick();
   }
 
   @Override

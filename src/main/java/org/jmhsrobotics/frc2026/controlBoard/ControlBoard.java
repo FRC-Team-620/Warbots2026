@@ -23,6 +23,10 @@ public interface ControlBoard {
 
   public Trigger shooterSpinup();
 
+  public Trigger dutyCycleShoot();
+
+  public Trigger feedAndShoot();
+
   public Trigger runFeeder();
 
   public Trigger slapdownMoveUp();
