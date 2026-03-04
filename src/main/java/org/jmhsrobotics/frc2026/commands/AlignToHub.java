@@ -99,7 +99,7 @@ public class AlignToHub extends Command {
 
     Logger.recordOutput("Align/hubPoint", FieldConstants.Hub.topCenterPoint);
     if (isFlipped) {
-      tagTranslation = FieldConstants.Hub.topCenterPoint.toTranslation2d();
+      tagTranslation = FieldConstants.Hub.oppTopCenterPoint.toTranslation2d();
     } else {
       tagTranslation = FieldConstants.Hub.topCenterPoint.toTranslation2d();
     }
