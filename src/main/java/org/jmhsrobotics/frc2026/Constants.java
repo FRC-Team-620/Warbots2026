@@ -65,8 +65,6 @@ public final class Constants {
     public static final Pose2d rightTrenchStart = new Pose2d(3.250, 0.6, new Rotation2d(0));
     public static final Pose2d leftBumpStart = new Pose2d(3.250, 2.5, new Rotation2d(0));
     public static final Pose2d rightBumpStart = new Pose2d(3.250, 5.5, new Rotation2d(0));
-
-
   }
 
   public static enum Mode {
