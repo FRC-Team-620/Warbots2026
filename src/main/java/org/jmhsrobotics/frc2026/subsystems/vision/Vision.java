@@ -37,8 +37,6 @@ public class Vision extends SubsystemBase {
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  private Servo leftServo = new Servo(0);
-  private Servo rightServo = new Servo(1);
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -57,8 +55,6 @@ public class Vision extends SubsystemBase {
           new Alert(
               "Vision camera " + Integer.toString(i) + " is disconnected.", AlertType.kWarning);
     }
-
-    SmartDashboard.putNumber("Hood Position", 0);
   }
 
   /**
@@ -76,10 +72,6 @@ public class Vision extends SubsystemBase {
       io[i].updateInputs(inputs[i]);
       Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
     }
-
-    double hoodPosition = SmartDashboard.getNumber("Hood Position", 0);
-    leftServo.set(hoodPosition);
-    rightServo.set(hoodPosition);
 
     // Initialize logging values
     List<Pose3d> allTagPoses = new LinkedList<>();
