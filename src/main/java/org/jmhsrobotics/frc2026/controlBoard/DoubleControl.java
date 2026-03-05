@@ -52,6 +52,11 @@ public class DoubleControl implements ControlBoard {
     return driver.leftBumper();
   }
 
+  @Override
+  public Trigger hoodDown() {
+    return driver.rightStick();
+  }
+
   // ========Operator Controls========
 
   @Override
@@ -59,7 +64,7 @@ public class DoubleControl implements ControlBoard {
     return operator.y();
   }
 
-    @Override
+  @Override
   public Trigger dutyCycleShoot() {
     return driver.leftStick();
   }
@@ -69,7 +74,7 @@ public class DoubleControl implements ControlBoard {
     return operator.rightTrigger();
   }
 
-  @Override 
+  @Override
   public Trigger runFeeder() {
     return operator.rightStick();
   }

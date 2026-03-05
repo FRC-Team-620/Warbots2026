@@ -51,6 +51,11 @@ public class SingleControl implements ControlBoard {
     return driver.leftBumper();
   }
 
+  @Override
+  public Trigger hoodDown() {
+    return driver.rightStick();
+  }
+
   // ========Operator Controls========
 
   @Override
@@ -118,7 +123,7 @@ public class SingleControl implements ControlBoard {
     return driver.leftStick();
   }
 
-    @Override 
+  @Override
   public Trigger runFeeder() {
     return driver.rightStick();
   }
