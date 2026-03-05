@@ -1,6 +1,7 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 
@@ -24,7 +25,8 @@ public class Feed extends Command {
   @Override
   public void execute() {
     if (shooter.atRPMGoal()) {
-      if (shooter.isActive()) {
+      if (shooter.getServoGoal() - shooter.getServoPosition()
+          <= Constants.ShooterConstants.kHoodTolerance) {
         this.feeder.setFeederSpeed(this.speed);
       } else {
         this.feeder.setFeederSpeed(0);

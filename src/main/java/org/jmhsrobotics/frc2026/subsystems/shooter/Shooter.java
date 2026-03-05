@@ -17,7 +17,7 @@ public class Shooter extends SubsystemBase {
   private Servo leftServo = new Servo(0);
   private Servo rightServo = new Servo(1);
 
-  private PIDController rpmController = new PIDController(0.08, 0, 0.005);
+  private PIDController rpmController = new PIDController(0.097, 0, 0.007);
 
   private Timer accelerationTimer = new Timer();
 
@@ -27,6 +27,7 @@ public class Shooter extends SubsystemBase {
   private boolean isClosedLoop = false;
   private InterpolatingDoubleTreeMap rpmMap;
   private InterpolatingDoubleTreeMap hoodMap;
+  private double hoodRealPosition = 0.0;
 
   private double hoodPosition = 0.2;
 
@@ -152,7 +153,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double calculateEstimatedRPM(double distance) {
-    return rpmMap.get(distance);
+    return rpmMap.get(distance) - 300;
   }
 
   public double calculateHoodPosition(double distance) {
@@ -196,6 +197,10 @@ public class Shooter extends SubsystemBase {
 
   public double getServoPosition() {
     return leftServo.getPosition();
+  }
+
+  public double getServoGoal() {
+    return hoodPosition;
   }
 
   public boolean atMaxRPM() {
