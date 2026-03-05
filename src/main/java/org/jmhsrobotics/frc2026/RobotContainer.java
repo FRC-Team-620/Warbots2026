@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.AimingAuto;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
@@ -185,6 +186,18 @@ public class RobotContainer {
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
     autoChooser.addOption(
         "FrontHubAuto", new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStart));
+    autoChooser.addOption(
+        "LeftTrenchAuto",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStart, control));
+    autoChooser.addOption(
+        "LeftBumpAuto",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStart, control));
+    autoChooser.addOption(
+        "RightTrenchAuto",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStart, control));
+    autoChooser.addOption(
+        "RightBumpAuto",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightBumpStart, control));
 
     // Configure the trigger bindings
     configureBindings();
