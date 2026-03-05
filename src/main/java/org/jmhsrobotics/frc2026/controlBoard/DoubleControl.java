@@ -66,7 +66,7 @@ public class DoubleControl implements ControlBoard {
 
   @Override
   public Trigger dutyCycleShoot() {
-    return driver.leftStick();
+    return operator.leftStick();
   }
 
   @Override
