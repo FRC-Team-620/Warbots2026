@@ -55,8 +55,6 @@ public class Shooter extends SubsystemBase {
           MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
 
       shooterIO.setSpeed(clampedOutput);
-
-      
     }
 
     leftServo.setPosition(hoodPosition);
@@ -87,6 +85,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/RPS", shooterInputs.velocityRPM / 60);
 
     Logger.recordOutput("Shooter/isClosedLoop", this.isClosedLoop);
+
+    Logger.recordOutput("Shooter/Hood Position", this.hoodPosition);
   }
 
   public void setRPM(double velocityTargetRPM) {
@@ -162,9 +162,15 @@ public class Shooter extends SubsystemBase {
   public void createRPMMap(InterpolatingDoubleTreeMap map) {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(2.0, 3200.0);
-    map.put(3.148, 4100.0);
-    map.put(1.25, 2900.0);
+    map.put(1.3, 3000.0);
+    map.put(1.85, 3300.0);
+    map.put(2.1, 3500.0);
+    map.put(2.55, 3650.0);
+    map.put(3.0, 3700.0);
+    map.put(3.5, 3670.0);
+    map.put(4.0, 3790.0);
+    map.put(4.5, 3870.0);
+    map.put(5.0, 4000.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
@@ -174,10 +180,9 @@ public class Shooter extends SubsystemBase {
     map.put(1.3, 0.2);
     map.put(2.1, 0.35);
     map.put(3.0, 0.5);
-    map.put(4.0,0.63);
+    map.put(4.0, 0.63);
     map.put(5.0, 0.7);
     map.put(5.5, 0.75);
-
   }
 
   public boolean isActive() {
