@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.AimingAuto;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
@@ -184,8 +185,41 @@ public class RobotContainer {
     // (current values 2.2 and 0.3 are from 2025 season)
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
     autoChooser.addOption(
-        "FrontHubAuto", new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStart));
+        "FrontHubAutoBLUE",
+        new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE));
+    autoChooser.addOption(
+        "LeftTrenchAutoBLUE",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartBLUE, control));
+    autoChooser.addOption(
+        "LeftBumpAutoBLUE",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartBLUE, control));
+    autoChooser.addOption(
+        "RightTrenchAutoBLUE",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartBLUE, control));
+    autoChooser.addOption(
+        "RightBumpAutoBLUE",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartBLUE, control));
 
+    autoChooser.addOption(
+        "FrontHubAutoRED",
+        new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStartRED));
+    autoChooser.addOption(
+        "LeftTrenchAutoRED",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartRED, control));
+    autoChooser.addOption(
+        "LeftBumpAutoRED",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartRED, control));
+    autoChooser.addOption(
+        "RightTrenchAutoRED",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartRED, control));
+    autoChooser.addOption(
+        "RightBumpAutoRED",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartRED, control));
     // Configure the trigger bindings
     configureBindings();
     configureDriverFeedback();
