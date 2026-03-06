@@ -41,6 +41,11 @@ public class VisionIOPhotonVision implements VisionIO {
     camera = new PhotonCamera(name);
     this.robotToCamera = robotToCamera;
     this.name = name;
+    // this.robotToCamera = VisonPosition.loadCameraConfig(name, robotToCamera);
+    // new InstantCommand(()->{
+    //   this.robotToCamera = VisonPosition.computeRobotToCamera(null, robotToCamera);
+    // });
+    // SmartDashboard.putData("CamCal/"+name, null);
   }
 
   @Override
