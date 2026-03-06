@@ -157,8 +157,6 @@ public class RobotContainer {
 
     // Configure the trigger bindings
 
-
-
     ballTracker = new BallTracker(drive::getPose, 10, 3);
     configureBindings();
     configureDriverFeedback();

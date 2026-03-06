@@ -161,7 +161,10 @@ public class Robot extends LoggedRobot {
         (DriveConstants.thriftyConstants.wheelBase / 2) + 0.30188,
         -DriveConstants.thriftyConstants.trackWidth / 2,
         DriveConstants.thriftyConstants.trackWidth / 2,
-        m_robotContainer.slapdown::canIntake,m_robotContainer.ballTracker::addFuel);
+        () -> {
+          return m_robotContainer.slapdown.canIntake() && !m_robotContainer.ballTracker.isFull();
+        },
+        m_robotContainer.ballTracker::addFuel);
 
     m_robotContainer.fuelSim.start();
   }
