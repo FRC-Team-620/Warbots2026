@@ -31,6 +31,8 @@ import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
+import org.jmhsrobotics.frc2026.commands.HoodDown;
+import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
@@ -253,7 +255,12 @@ public class RobotContainer {
     //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
-        .runFeeder()
+        .dutyCycleShoot()
+        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
+        .onFalse(new ShooterSetDutyCycle(shooter, 0));
+
+    control
+        .feedAndShoot()
         .onTrue(
             new ParallelCommandGroup(
                 new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
@@ -261,6 +268,13 @@ public class RobotContainer {
         .onFalse(
             new ParallelCommandGroup(
                 new Feed(feeder, 0, shooter), new ShooterSetDutyCycle(shooter, 0)));
+
+    control
+        .runFeeder()
+        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
+        .onFalse(new IndependentFeed(feeder, 0));
+
+    control.hoodDown().onTrue(new HoodDown(shooter));
 
     // Slapdown Bindings
     control

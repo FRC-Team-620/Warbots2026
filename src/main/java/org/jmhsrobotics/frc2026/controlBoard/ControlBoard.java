@@ -19,9 +19,15 @@ public interface ControlBoard {
 
   public Trigger turbo();
 
+  public Trigger hoodDown();
+
   // =======Operator Controls=======
 
   public Trigger shooterSpinup();
+
+  public Trigger dutyCycleShoot();
+
+  public Trigger feedAndShoot();
 
   public Trigger runFeeder();
 
