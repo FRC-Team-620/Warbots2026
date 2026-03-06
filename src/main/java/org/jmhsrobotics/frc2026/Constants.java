@@ -60,11 +60,17 @@ public final class Constants {
   }
 
   public static class Auto {
-    public static final Pose2d hubStart = new Pose2d(3.569, 4.051, new Rotation2d(0.0));
-    public static final Pose2d leftTrenchStart = new Pose2d(3.250, 7.55, new Rotation2d(0));
-    public static final Pose2d rightTrenchStart = new Pose2d(3.250, 0.6, new Rotation2d(0));
-    public static final Pose2d leftBumpStart = new Pose2d(3.250, 2.5, new Rotation2d(0));
-    public static final Pose2d rightBumpStart = new Pose2d(3.250, 5.5, new Rotation2d(0));
+    public static final Pose2d hubStartBLUE = new Pose2d(3.569, 4.051, new Rotation2d(0.0));
+    public static final Pose2d leftTrenchStartBLUE = new Pose2d(3.5, 7.55, new Rotation2d(0));
+    public static final Pose2d rightTrenchStartBLUE = new Pose2d(3.50, 0.6, new Rotation2d(0));
+    public static final Pose2d leftBumpStartBLUE = new Pose2d(3.50, 2.5, new Rotation2d(0));
+    public static final Pose2d rightBumpStartBLUE = new Pose2d(3.50, 5.5, new Rotation2d(0));
+
+    public static final Pose2d hubStartRED = new Pose2d(13.00, 4.051, new Rotation2d(135.0));
+    public static final Pose2d leftTrenchStartRED = new Pose2d(13.00, 0.6, new Rotation2d(180.0));
+    public static final Pose2d rightTrenchStartRED = new Pose2d(13.0, 7.55, new Rotation2d(180.0));
+    public static final Pose2d leftBumpStartRED = new Pose2d(13.0, 2.5, new Rotation2d(180.0));
+    public static final Pose2d rightBumpStartRED = new Pose2d(13.0, 5.5, new Rotation2d(180.0));
   }
 
   public static enum Mode {
