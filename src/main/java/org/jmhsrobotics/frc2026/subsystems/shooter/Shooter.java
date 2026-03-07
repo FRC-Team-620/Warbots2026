@@ -153,7 +153,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double calculateEstimatedRPM(double distance) {
-    return rpmMap.get(distance) - 300;
+    return rpmMap.get(distance) - Constants.ShooterConstants.kShooterRPMOffset;
   }
 
   public double calculateHoodPosition(double distance) {

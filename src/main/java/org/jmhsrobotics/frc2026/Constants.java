@@ -94,6 +94,7 @@ public final class Constants {
     public static final double kShooterTolerance = 1000;
     public static final double kShooterDutyCycle = 0.6;
     public static final double kHoodTolerance = 1;
+    public static final double kShooterRPMOffset = 300.0;
   }
 
   public static class Intake {
