@@ -1,6 +1,7 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.jmhsrobotics.frc2026.FieldConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
@@ -27,9 +28,17 @@ public class DistanceAdjustingShoot extends Command {
 
   @Override
   public void execute() {
-    this.distance =
+    
+
+    if(DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
+      this.distance =
         this.getDistance(
             FieldConstants.Hub.topCenterPoint.toTranslation2d(), drive.getPose().getTranslation());
+    } else {
+      this.distance =
+        this.getDistance(
+            FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(), drive.getPose().getTranslation());
+    }
     double goalRPM = this.shooter.calculateEstimatedRPM(distance);
     Logger.recordOutput("Shooter/DistanceAdjustedGoal", goalRPM);
     double hoodPosition = this.shooter.calculateHoodPosition(distance);
