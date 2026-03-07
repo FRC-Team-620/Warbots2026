@@ -157,6 +157,10 @@ public class Shooter extends SubsystemBase {
     return isActive;
   }
 
+  public void setActive(boolean active) {
+    isActive = active;
+  }
+
   public void setServoPosition(double position) {
     leftServo.setPosition(position);
     rightServo.setPosition(position);

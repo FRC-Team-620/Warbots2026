@@ -271,8 +271,8 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
-        .onFalse(new IndependentFeed(feeder, 0));
+        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+        .onFalse(new IndependentFeed(feeder, 0, shooter));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
 
@@ -362,6 +362,9 @@ public class RobotContainer {
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
+    SmartDashboard.putData("Shooter DS Stop", new ShooterSetDutyCycle(shooter, 0));
+    SmartDashboard.putData(
+        "Idependent Feed", new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,

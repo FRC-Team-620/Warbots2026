@@ -30,6 +30,13 @@ public class ShooterSetDutyCycle extends Command {
     //   this.shooter.setSpeed(jankSpeed);
     // } else {
     this.shooter.setSpeed(this.speed);
+
+    if (this.speed == 0.0) {
+      this.shooter.setActive(false);
+      ;
+    } else {
+      this.shooter.setActive(true);
+    }
     // }
   }
 
