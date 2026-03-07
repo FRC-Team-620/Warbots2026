@@ -257,8 +257,8 @@ public class RobotContainer {
 
     control
         .dutyCycleShoot()
-        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
-        .onFalse(new ShooterSetDutyCycle(shooter, 0));
+        .onTrue(new ShooterSpinup(shooter,3700.0))
+        .onFalse(new ShooterSpinup(shooter, 0.0));
 
     control
         .feedAndShoot()
