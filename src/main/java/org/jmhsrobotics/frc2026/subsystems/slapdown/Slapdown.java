@@ -79,4 +79,8 @@ public class Slapdown extends SubsystemBase {
   public double getPositionDegrees() {
     return inputs.slapdownPositionDegrees;
   }
+
+  public boolean canIntake() {
+    return this.atGoal() && this.setPointDegrees == Constants.Slapdown.kSlapdownDownPositionDegrees;
+  }
 }

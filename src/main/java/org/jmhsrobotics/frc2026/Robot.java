@@ -6,6 +6,7 @@ package org.jmhsrobotics.frc2026;
 
 import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 import org.jmhsrobotics.warcore.util.BuildDataLogger;
@@ -146,9 +148,33 @@ public class Robot extends LoggedRobot {
     DriverStationSim.setFmsAttached(true);
     DriverStationSim.setDsAttached(true);
     DriverStationSim.setEnabled(true);
+
+    m_robotContainer.fuelSim.spawnStartingFuel();
+    m_robotContainer.fuelSim.registerRobot(
+        DriveConstants.thriftyConstants.trackWidth, // from left to right in meters
+        DriveConstants.thriftyConstants.wheelBase, // from front to back in meters
+        Units.inchesToMeters(5), // from floor to top of bumpers in meters
+        m_robotContainer.drive::getPose, // Supplier<Pose2d> of robot pose
+        m_robotContainer.drive
+            ::getChassisSpeeds); // Supplier<ChassisSpeeds> of field-centric chassis speeds
+    m_robotContainer.fuelSim.registerIntake(
+        DriveConstants.thriftyConstants.wheelBase / 2,
+        (DriveConstants.thriftyConstants.wheelBase / 2) + 0.30188,
+        -DriveConstants.thriftyConstants.trackWidth / 2,
+        DriveConstants.thriftyConstants.trackWidth / 2,
+        () -> {
+          return m_robotContainer.slapdown.canIntake() && !m_robotContainer.ballTracker.isFull();
+        },
+        m_robotContainer.ballTracker::addFuel);
+
+    m_robotContainer.fuelSim.start();
   }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    m_robotContainer.fuelSim.updateSim();
+    m_robotContainer.ballTracker.updatelog();
+    // m_robotContainer.fuelSim.logFuels();
+  }
 }
