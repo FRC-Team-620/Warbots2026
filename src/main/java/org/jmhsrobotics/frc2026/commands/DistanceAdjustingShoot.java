@@ -32,7 +32,10 @@ public class DistanceAdjustingShoot extends Command {
             FieldConstants.Hub.topCenterPoint.toTranslation2d(), drive.getPose().getTranslation());
     double goalRPM = this.shooter.calculateEstimatedRPM(distance);
     Logger.recordOutput("Shooter/DistanceAdjustedGoal", goalRPM);
+    double hoodPosition = this.shooter.calculateHoodPosition(distance);
+    Logger.recordOutput("Shooter/Hood Position", hoodPosition);
     this.shooter.setRPM(goalRPM);
+    this.shooter.setHoodPosition(hoodPosition);
     // if (goalRPM > 0) {
     //   this.shooter.setRPM(goalRPM);
     // } else {
