@@ -52,21 +52,41 @@ public class DoubleControl implements ControlBoard {
     return driver.leftBumper();
   }
 
+  @Override
+  public Trigger hoodDown() {
+    return driver.rightStick();
+  }
+
   // ========Operator Controls========
 
   @Override
-  public Trigger shoot() {
+  public Trigger shooterSpinup() {
+    return operator.y();
+  }
+
+  @Override
+  public Trigger dutyCycleShoot() {
+    return operator.leftStick();
+  }
+
+  @Override
+  public Trigger feedAndShoot() {
     return operator.rightTrigger();
   }
 
   @Override
-  public Trigger SlapdownMoveDown() {
-    return operator.leftBumper();
+  public Trigger runFeeder() {
+    return operator.rightStick();
   }
 
   @Override
-  public Trigger SlapdownMoveUp() {
+  public Trigger slapdownMoveDown() {
     return operator.rightBumper();
+  }
+
+  @Override
+  public Trigger slapdownMoveUp() {
+    return operator.leftBumper();
   }
 
   @Override
@@ -97,5 +117,15 @@ public class DoubleControl implements ControlBoard {
   @Override
   public Trigger extakeFuel() {
     return operator.x();
+  }
+
+  @Override
+  public Trigger ClimberRetractHooks() {
+    return operator.povRight();
+  }
+
+  @Override
+  public Trigger ClimberExtendHooks() {
+    return operator.povLeft();
   }
 }

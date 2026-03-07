@@ -51,20 +51,30 @@ public class SingleControl implements ControlBoard {
     return driver.leftBumper();
   }
 
+  @Override
+  public Trigger hoodDown() {
+    return driver.rightStick();
+  }
+
   // ========Operator Controls========
 
   @Override
-  public Trigger shoot() {
+  public Trigger shooterSpinup() {
     return driver.rightTrigger();
   }
 
   @Override
-  public Trigger SlapdownMoveDown() {
+  public Trigger feedAndShoot() {
+    return driver.leftTrigger();
+  }
+
+  @Override
+  public Trigger slapdownMoveDown() {
     return driver.povLeft();
   }
 
   @Override
-  public Trigger SlapdownMoveUp() {
+  public Trigger slapdownMoveUp() {
     return driver.povRight();
   }
 
@@ -96,5 +106,25 @@ public class SingleControl implements ControlBoard {
   @Override
   public Trigger extakeFuel() {
     return driver.x();
+  }
+
+  @Override
+  public Trigger ClimberRetractHooks() {
+    return driver.povRight();
+  }
+
+  @Override
+  public Trigger ClimberExtendHooks() {
+    return driver.povLeft();
+  }
+
+  @Override
+  public Trigger dutyCycleShoot() {
+    return driver.leftStick();
+  }
+
+  @Override
+  public Trigger runFeeder() {
+    return driver.rightStick();
   }
 }

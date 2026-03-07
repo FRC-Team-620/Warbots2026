@@ -19,13 +19,21 @@ public interface ControlBoard {
 
   public Trigger turbo();
 
+  public Trigger hoodDown();
+
   // =======Operator Controls=======
 
-  public Trigger shoot();
+  public Trigger shooterSpinup();
 
-  public Trigger SlapdownMoveUp();
+  public Trigger dutyCycleShoot();
 
-  public Trigger SlapdownMoveDown();
+  public Trigger feedAndShoot();
+
+  public Trigger runFeeder();
+
+  public Trigger slapdownMoveUp();
+
+  public Trigger slapdownMoveDown();
 
   public Trigger indexOn();
 
@@ -38,4 +46,8 @@ public interface ControlBoard {
   public Trigger climberDown();
 
   public Trigger extakeFuel();
+
+  public Trigger ClimberExtendHooks();
+
+  public Trigger ClimberRetractHooks();
 }

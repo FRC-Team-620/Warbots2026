@@ -1,16 +1,11 @@
 package org.jmhsrobotics.frc2026.subsystems.slapdown;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.CheckTolerance;
-import org.littletonrobotics.junction.Logger;
 
 public class Slapdown extends SubsystemBase {
   private SlapdownIO slapdownIO;
@@ -36,32 +31,33 @@ public class Slapdown extends SubsystemBase {
 
     slapdownIO.updateInputs(inputs);
 
-    Logger.processInputs("Slapdown", inputs);
-    Logger.recordOutput(
-        "Model/Slapdown/arm_position_goal",
-        new Pose3d(
-            0.252,
-            0,
-            0.204730,
-            new Rotation3d(0, Units.degreesToRadians(setPointDegrees - 180), 0)));
-    Logger.recordOutput(
-        "Model/Slapdown/hopper_position_goal",
-        new Pose3d(
-            MathUtil.clamp((setPointDegrees - 90) / 90, 0, 1) * 0.30188, 0, 0, new Rotation3d()));
-    Logger.recordOutput(
-        "Model/Slapdown/arm_position",
-        new Pose3d(
-            0.252,
-            0,
-            0.204730,
-            new Rotation3d(0, Units.degreesToRadians(inputs.slapdownPositionDegrees - 180), 0)));
-    Logger.recordOutput(
-        "Model/Slapdown/hopper_position",
-        new Pose3d(
-            MathUtil.clamp((inputs.slapdownPositionDegrees - 90) / 90, 0, 1) * 0.30188,
-            0,
-            0,
-            new Rotation3d()));
+    // Logger.processInputs("Slapdown", inputs);
+    // Logger.recordOutput(
+    //     "Model/Slapdown/arm_position_goal",
+    //     new Pose3d(
+    //         0.252,
+    //         0,
+    //         0.204730,
+    //         new Rotation3d(0, Units.degreesToRadians(setPointDegrees - 180), 0)));
+    // Logger.recordOutput(
+    //     "Model/Slapdown/hopper_position_goal",
+    //     new Pose3d(
+    //         MathUtil.clamp((setPointDegrees - 90) / 90, 0, 1) * 0.30188, 0, 0, new
+    // Rotation3d()));
+    // Logger.recordOutput(
+    //     "Model/Slapdown/arm_position",
+    //     new Pose3d(
+    //         0.252,
+    //         0,
+    //         0.204730,
+    //         new Rotation3d(0, Units.degreesToRadians(inputs.slapdownPositionDegrees - 180), 0)));
+    // Logger.recordOutput(
+    //     "Model/Slapdown/hopper_position",
+    //     new Pose3d(
+    //         MathUtil.clamp((inputs.slapdownPositionDegrees - 90) / 90, 0, 1) * 0.30188,
+    //         0,
+    //         0,
+    //         new Rotation3d()));
   }
 
   public boolean atGoal() {

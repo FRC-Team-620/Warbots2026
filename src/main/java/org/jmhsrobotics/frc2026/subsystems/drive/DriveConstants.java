@@ -189,7 +189,9 @@ public class DriveConstants {
     public static final double turnMotorReduction = 9424.0 / 203.0; // Useless?
 
     // Turn encoder configuration
-    public static final boolean turnEncoderInverted = true;
+    // Redux -                      true
+    // Thrifty (with cut cable) -   false (tested on hardware and removes oscillation)
+    public static final boolean turnEncoderInverted = false;
     public static final double turnEncoderPositionFactor = 2 * Math.PI; // Rotations -> Radians
     public static final double turnEncoderVelocityFactor = (2 * Math.PI) / 60.0; // RPM -> Rad/Sec
 

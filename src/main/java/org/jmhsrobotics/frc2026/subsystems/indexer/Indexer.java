@@ -15,7 +15,7 @@ public class Indexer extends SubsystemBase {
   public void periodic() {
     indexerIO.updateInputs(inputs);
 
-    Logger.processInputs("/indexer", inputs);
+    // Logger.processInputs("/indexer", inputs);
 
     Logger.recordOutput("Indexer/Motor RPM", inputs.motorRPM);
     Logger.recordOutput("Indexer/Motor Current Amps", inputs.currentAMPS);

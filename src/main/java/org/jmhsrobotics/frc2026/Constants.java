@@ -6,6 +6,8 @@ package org.jmhsrobotics.frc2026;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -39,7 +41,7 @@ public final class Constants {
 
   public static class CAN {
     // TODO update CANIds
-    public static final int kCanAndGyroID = 60;
+    public static final int kCanAndGyroID = 0;
     public static final int kIntakeMotorID = 41;
     public static final int kSlapdownMotorID = 40;
     public static final int kIndexerMotorID = 2;
@@ -57,6 +59,20 @@ public final class Constants {
     public static final int kShooterMotorID = 55;
   }
 
+  public static class Auto {
+    public static final Pose2d hubStartBLUE = new Pose2d(3.569, 4.051, new Rotation2d(0.0));
+    public static final Pose2d leftTrenchStartBLUE = new Pose2d(3.5, 7.55, new Rotation2d(0));
+    public static final Pose2d rightTrenchStartBLUE = new Pose2d(3.50, 0.6, new Rotation2d(0));
+    public static final Pose2d leftBumpStartBLUE = new Pose2d(3.50, 2.5, new Rotation2d(0));
+    public static final Pose2d rightBumpStartBLUE = new Pose2d(3.50, 5.5, new Rotation2d(0));
+
+    public static final Pose2d hubStartRED = new Pose2d(13.00, 4.051, new Rotation2d(135.0));
+    public static final Pose2d leftTrenchStartRED = new Pose2d(13.00, 0.6, new Rotation2d(180.0));
+    public static final Pose2d rightTrenchStartRED = new Pose2d(13.0, 7.55, new Rotation2d(180.0));
+    public static final Pose2d leftBumpStartRED = new Pose2d(13.0, 2.5, new Rotation2d(180.0));
+    public static final Pose2d rightBumpStartRED = new Pose2d(13.0, 5.5, new Rotation2d(180.0));
+  }
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
@@ -70,17 +86,19 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.008;
+    public static final double kP = 0.0005;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kBaseRPM = 3000;
+    public static final double kBaseRPM = 3500;
+    public static final double kShooterTolerance = 1000;
+    public static final double kShooterDutyCycle = 0.6;
   }
 
   public static class Intake {
     public static final double kBaseRPM = 3000;
 
-    public static final double kSpeedDutyCycle = 0.7;
+    public static final double kSpeedDutyCycle = 1;
   }
 
   public static class Slapdown {
@@ -94,6 +112,10 @@ public final class Constants {
   }
 
   public static class Indexer {
+    public static final double kSpeedDutyCycle = 1;
+  }
+
+  public static class Feeder {
     public static final double kSpeedDutyCycle = 0.8;
   }
 
