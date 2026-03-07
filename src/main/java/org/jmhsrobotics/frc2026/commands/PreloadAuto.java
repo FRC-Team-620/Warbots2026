@@ -26,7 +26,9 @@ public class PreloadAuto extends SequentialCommandGroup {
         new SequentialCommandGroup(
             Commands.runOnce(() -> drive.setPose(pose), drive),
             new ParallelCommandGroup(
-                new DistanceAdjustingShoot(shooter, drive),
+                new DistanceAdjustingShoot(shooter, drive)
+                    .withTimeout(8)
+                    .andThen(new ShooterSpinup(shooter, 0)),
                 new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle),
                 new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))));
   }
