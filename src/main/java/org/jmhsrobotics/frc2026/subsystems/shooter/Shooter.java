@@ -153,7 +153,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public double calculateEstimatedRPM(double distance) {
-    return rpmMap.get(distance) - Constants.ShooterConstants.kShooterRPMOffset;
+    return rpmMap.get(distance);
   }
 
   public double calculateHoodPosition(double distance) {
@@ -163,15 +163,9 @@ public class Shooter extends SubsystemBase {
   public void createRPMMap(InterpolatingDoubleTreeMap map) {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(1.3, 3000.0);
-    map.put(1.85, 3300.0);
-    map.put(2.1, 3500.0);
-    map.put(2.55, 3650.0);
-    map.put(3.0, 3700.0);
-    map.put(3.5, 3670.0);
-    map.put(4.0, 3790.0);
-    map.put(4.5, 3870.0);
-    map.put(5.0, 4000.0);
+    map.put(1.3, 3700.0);
+    map.put(2.0, 3900.0);
+    map.put(3.0,4800.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
