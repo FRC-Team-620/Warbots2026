@@ -242,20 +242,24 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    shooter.setDefaultCommand(new ShooterSpinup(shooter, 1300));
+    // shooter.setDefaultCommand(new ShooterSpinup(shooter, 1300));
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
-    control.shooterSpinup().whileTrue(new DistanceAdjustingShoot(shooter, drive));
-    // .onFalse(new ShooterSpinup(shooter, 0));
+    control
+        .shooterSpinup()
+        .onTrue(new DistanceAdjustingShoot(shooter, drive))
+        .onFalse(new ShooterSpinup(shooter, 0));
 
     // control
     //     .shooterSpinup()
     //     .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
     //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
-    control.dutyCycleShoot().whileTrue(new ShooterSpinup(shooter, 3700.0));
-    // .onFalse(new ShooterSpinup(shooter, 0.0));
+    control
+        .dutyCycleShoot()
+        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
+        .onFalse(new ShooterSpinup(shooter, 0.0));
 
     control
         .feedAndShoot()
