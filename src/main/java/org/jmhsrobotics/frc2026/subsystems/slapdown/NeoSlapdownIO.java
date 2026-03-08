@@ -71,7 +71,7 @@ public class NeoSlapdownIO implements SlapdownIO {
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
 
-    slapdownEncoder.setPosition(slapdownMotor.getAbsoluteEncoder().getPosition());
+    slapdownMotor.getEncoder().setPosition(slapdownMotor.getAbsoluteEncoder().getPosition());
     slapdownPIDController = slapdownMotor.getClosedLoopController();
   }
 
