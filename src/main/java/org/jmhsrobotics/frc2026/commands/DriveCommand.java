@@ -90,6 +90,25 @@ public class DriveCommand extends Command {
                   * DriveConstants.maxSpeedMetersPerSec
                   * 0.8,
               DriveConstants.deadBand);
+    } else if (drive.getSlowdownMode()) {
+      xSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationY())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.slowdownCoefficient,
+              DriveConstants.deadBand);
+      ySpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationX())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.slowdownCoefficient,
+              DriveConstants.deadBand);
+      rotationSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.rotation())
+                  * DriveConstants.maxSpeedMetersPerSec
+                  * 0.8,
+              DriveConstants.deadBand);
     } else {
       xSpeed =
           MathUtil.applyDeadband(

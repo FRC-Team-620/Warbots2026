@@ -321,6 +321,9 @@ public class RobotContainer {
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
+    control.slowdown().onTrue(Commands.runOnce(() -> drive.setSlowdownMode(true)));
+    control.slowdown().onFalse(Commands.runOnce(() -> drive.setSlowdownMode(false)));
+
     // extend climber
     control.ClimberExtendHooks().onTrue(new ClimberExtendHooks(climber));
     // retract climber

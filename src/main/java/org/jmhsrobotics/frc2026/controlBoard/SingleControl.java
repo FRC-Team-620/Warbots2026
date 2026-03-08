@@ -56,6 +56,11 @@ public class SingleControl implements ControlBoard {
     return driver.rightStick();
   }
 
+  @Override
+  public Trigger slowdown() {
+    return null;
+  }
+
   // ========Operator Controls========
 
   @Override
