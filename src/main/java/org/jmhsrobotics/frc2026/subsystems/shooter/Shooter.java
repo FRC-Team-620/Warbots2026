@@ -165,7 +165,7 @@ public class Shooter extends SubsystemBase {
     // map.put(4.00, 4000.0);
     map.put(1.3, 3700.0);
     map.put(2.0, 3900.0);
-    map.put(3.0,4800.0);
+    map.put(3.0, 4800.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
