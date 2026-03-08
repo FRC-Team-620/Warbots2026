@@ -28,16 +28,17 @@ public class DistanceAdjustingShoot extends Command {
 
   @Override
   public void execute() {
-    
 
-    if(DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
+    if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
       this.distance =
-        this.getDistance(
-            FieldConstants.Hub.topCenterPoint.toTranslation2d(), drive.getPose().getTranslation());
+          this.getDistance(
+              FieldConstants.Hub.topCenterPoint.toTranslation2d(),
+              drive.getPose().getTranslation());
     } else {
       this.distance =
-        this.getDistance(
-            FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(), drive.getPose().getTranslation());
+          this.getDistance(
+              FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(),
+              drive.getPose().getTranslation());
     }
     double goalRPM = this.shooter.calculateEstimatedRPM(distance);
     Logger.recordOutput("Shooter/DistanceAdjustedGoal", goalRPM);

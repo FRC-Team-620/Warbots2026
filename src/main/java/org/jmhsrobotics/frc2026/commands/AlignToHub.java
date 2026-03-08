@@ -94,7 +94,8 @@ public class AlignToHub extends Command {
     Logger.recordOutput(
         "Align/DistanceRed",
         getAutoAlignDistance(
-            FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(), drive.getPose().getTranslation()));
+            FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(),
+            drive.getPose().getTranslation()));
   }
 
   public Pose2d calculateSetpoints() {
