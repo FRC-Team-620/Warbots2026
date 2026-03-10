@@ -175,6 +175,7 @@ public class DriveConstants {
 
     // Drive PID configuration
     public static final double driveKp = 0.025;
+    public static final double driveKi = 0.0;
     public static final double driveKd = 0.0;
     public static final double driveKs = 0.0;
     public static final double driveKv = 0.126;
@@ -199,6 +200,7 @@ public class DriveConstants {
     // Turn PID configuration
     // 14 for p value was too much
     public static final double turnKp = 6;
+    public static final double turnKi = 0.0;
     public static final double turnKd = 0.03;
     public static final double turnSimP = 0.2;
     public static final double turnSimD = 0.0;

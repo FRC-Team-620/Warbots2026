@@ -26,7 +26,6 @@ import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
@@ -101,7 +100,7 @@ public class ModuleIOThrifty implements ModuleIO {
     turnController = turnSpark.getClosedLoopController();
 
     // Configure drive motor
-    var driveConfig = new SparkFlexConfig();
+    var driveConfig = new SparkMaxConfig();
     driveConfig
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(thriftyConstants.driveMotorCurrentLimit)
@@ -112,7 +111,8 @@ public class ModuleIOThrifty implements ModuleIO {
         .velocityConversionFactor(thriftyConstants.driveEncoderVelocityFactor)
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
-    driveConfig.closedLoop.pid(0, 0, 0);
+    driveConfig.closedLoop.pid(
+        thriftyConstants.driveKp, thriftyConstants.driveKi, thriftyConstants.driveKd);
     // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     // .pidf(thriftyConstants.driveKp, 0, thriftyConstants.driveKd, 0, ClosedLoopSlot.kSlot0)
     // .pidf(0, 0, 0, 0.114, ClosedLoopSlot.kSlot1);
@@ -153,7 +153,7 @@ public class ModuleIOThrifty implements ModuleIO {
         .positionWrappingInputRange(
             thriftyConstants.turnPIDMinInput, thriftyConstants.turnPIDMaxInput)
         // .pid(0,0,0).kP(thriftyConstants.turnKp).kD(thriftyConstants.turnKd);
-        .pid(3, 0, 0);
+        .pid(thriftyConstants.turnKp, thriftyConstants.turnKi, thriftyConstants.turnKd);
     turnConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)
