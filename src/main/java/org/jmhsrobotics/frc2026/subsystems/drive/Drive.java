@@ -77,6 +77,7 @@ public class Drive extends SubsystemBase {
   private double maxLinearSpeedMetersPerSec = DriveConstants.maxSpeedMetersPerSec;
   private boolean autoAlignComplete = false;
   private boolean turboMode = false;
+  private boolean slowdownMode = false;
 
   private double driveVelocity = 0;
   private double driveAcceleration = 0;
@@ -182,6 +183,7 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveChassisSpeeds/Measured Acceleration", driveAcceleration);
 
     Logger.recordOutput("Drive/TurboModeEnabled", turboMode);
+    Logger.recordOutput("Drive/SlowdownTModeEnabled", slowdownMode);
 
     for (var module : modules) {
       module.periodic();
@@ -412,6 +414,14 @@ public class Drive extends SubsystemBase {
 
   public boolean getTurboMode() {
     return turboMode;
+  }
+
+  public void setSlowdownMode(boolean slowdownMode) {
+    this.slowdownMode = slowdownMode;
+  }
+
+  public boolean getSlowdownMode() {
+    return slowdownMode;
   }
 
   public ModuleThrifty[] getSwerveModules() {

@@ -53,6 +53,11 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
+  public Trigger slowdown() {
+    return driver.leftStick();
+  }
+
+  @Override
   public Trigger hoodDown() {
     return driver.rightStick();
   }

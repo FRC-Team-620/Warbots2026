@@ -39,6 +39,7 @@ import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
+import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
@@ -241,13 +242,14 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
+    // shooter.setDefaultCommand(new ShooterSpinup(shooter, 1300));
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
     control
         .shooterSpinup()
         .onTrue(new DistanceAdjustingShoot(shooter, drive))
-        .onFalse(new ShooterSetDutyCycle(shooter, 0));
+        .onFalse(new ShooterSpinup(shooter, 0));
 
     // control
     //     .shooterSpinup()
@@ -256,8 +258,8 @@ public class RobotContainer {
 
     control
         .dutyCycleShoot()
-        .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
-        .onFalse(new ShooterSetDutyCycle(shooter, 0));
+        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
+        .onFalse(new ShooterSpinup(shooter, 0.0));
 
     control
         .feedAndShoot()
@@ -320,6 +322,9 @@ public class RobotContainer {
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
+    control.slowdown().onTrue(Commands.runOnce(() -> drive.setSlowdownMode(true)));
+    control.slowdown().onFalse(Commands.runOnce(() -> drive.setSlowdownMode(false)));
+
     // extend climber
     control.ClimberExtendHooks().onTrue(new ClimberExtendHooks(climber));
     // retract climber
@@ -364,6 +369,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
+
+    SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
   }
