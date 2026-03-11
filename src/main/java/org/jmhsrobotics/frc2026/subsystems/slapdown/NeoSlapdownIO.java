@@ -98,4 +98,16 @@ public class NeoSlapdownIO implements SlapdownIO {
             slapdownMotor.configure(
                 brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
+
+  @Override
+  public void setPID(double p, double i, double d) {
+    var setPID = new SparkMaxConfig();
+    setPID.closedLoop.pid(p, i, d);
+    SparkUtil.tryUntilOk(
+        slapdownMotor,
+        5,
+        () ->
+            slapdownMotor.configure(
+                setPID, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+  }
 }
