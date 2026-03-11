@@ -22,7 +22,15 @@ import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
 
-  public static final double maxSpeedMetersPerSec = 5.0;
+  public static final double defaultMaxSpeedMetersPerSec = 1.0;
+  public static final double turboMaxSpeedMetersPerSec = 1.0;
+  public static final double intakeMaxSpeedMetersPerSec = 1.0;
+  public static final double autoMaxSpeedMetersPerSec = 1.0;
+  
+  public static final double defaultMaxRotSpeedRadPerSec = 2.0;
+  public static final double turboMaxRotSpeedRadPerSec = 2.0;
+  public static final double intakeMaxRotSpeedRadPerSec = 2.0;
+  public static final double autoMaxRotSpeedRadPerSec = 2.0;
 
   // change coefficients when we want to implement turbo
   public static final double turboCoefficient = 1;
@@ -53,7 +61,7 @@ public class DriveConstants {
         };
 
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     // Zeroed rotation values for each module, see setup instructions
 
@@ -120,7 +128,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                autoMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,
@@ -135,7 +143,7 @@ public class DriveConstants {
     public static final double wheelBase = Units.inchesToMeters(20); // this too?
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     public static final Translation2d[] moduleTranslations =
         new Translation2d[] {
@@ -217,7 +225,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                defaultMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,
@@ -232,7 +240,7 @@ public class DriveConstants {
     public static final double wheelBase = Units.inchesToMeters(22.5); // this too?
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     public static final Translation2d[] moduleTranslations =
         new Translation2d[] {
@@ -310,7 +318,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                defaultMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,

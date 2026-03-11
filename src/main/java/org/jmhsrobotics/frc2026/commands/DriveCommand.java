@@ -75,20 +75,19 @@ public class DriveCommand extends Command {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.turboMaxSpeedMetersPerSec
                   * DriveConstants.turboCoefficient,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.turboMaxSpeedMetersPerSec
                   * DriveConstants.turboCoefficient,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * 0.8,
+                  * DriveConstants.turboMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
     } else if (drive.getSlowdownMode()) {
       xSpeed =
@@ -113,20 +112,19 @@ public class DriveCommand extends Command {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.defaultMaxSpeedMetersPerSec
                   * DriveConstants.nonTurboCoefficient,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.maxSpeedMetersPerSec
+                  * DriveConstants.defaultMaxSpeedMetersPerSec
                   * DriveConstants.nonTurboCoefficient,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * 0.6,
+                  * DriveConstants.defaultMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
     }
 
@@ -205,8 +203,8 @@ public class DriveCommand extends Command {
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(
-                      linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                      linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getX() * drive.getDefaultMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getY() * drive.getDefaultMaxLinearSpeedMetersPerSec(),
                       omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
