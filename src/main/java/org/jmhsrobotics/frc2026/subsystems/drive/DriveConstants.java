@@ -19,23 +19,37 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveConstants {
 
-  public static final double defaultMaxSpeedMetersPerSec = 1.0;
-  public static final double turboMaxSpeedMetersPerSec = 1.0;
-  public static final double intakeMaxSpeedMetersPerSec = 1.0;
-  public static final double autoMaxSpeedMetersPerSec = 1.0;
-  
-  public static final double defaultMaxRotSpeedRadPerSec = 2.0;
-  public static final double turboMaxRotSpeedRadPerSec = 2.0;
-  public static final double intakeMaxRotSpeedRadPerSec = 2.0;
-  public static final double autoMaxRotSpeedRadPerSec = 2.0;
+  // FIXME: change back to "final" after tuning complete
+  public static double defaultMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+  public static double turboMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/turboMaxSpeedMPS", 4);
+  public static double intakeMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+  public static double autoMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+
+  public static double defaultMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxRotRPS", 3);
+  public static double turboMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/turboMaxRotRPS", 3);
+  public static double intakeMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/intakeMaxRotRPS", 3);
+  public static double autoMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
 
   // change coefficients when we want to implement turbo
   public static final double turboCoefficient = 1;
   public static final double nonTurboCoefficient = 0.9;
   public static final double slowdownCoefficient = 0.6;
+  public static final boolean driveSlewRateEnabled =
+      SmartDashboard.getBoolean("DriveTuning/slewRateEnabled", true);
+  public static final double driveSlewRatePeriodSecs =
+      SmartDashboard.getNumber("DriveTuning/slewRatePeriodSecs", 0.3);
   public static final double deadBand = 0.05;
 
   public static final double odometryFrequency = 100.0; // Hz

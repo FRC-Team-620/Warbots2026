@@ -30,6 +30,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Queue;
 import java.util.function.DoubleSupplier;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
@@ -99,6 +100,27 @@ public class ModuleIOThrifty implements ModuleIO {
     driveController = driveSpark.getClosedLoopController();
     turnController = turnSpark.getClosedLoopController();
 
+    // FIXME: remove and set these after tuning complete
+    SmartDashboard.putNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/turboMaxSpeedMPS", 4);
+    SmartDashboard.putNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+    SmartDashboard.putNumber("DriveTuning/autoMaxSpeedMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/defaultMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/turboMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/intakeMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/autoMaxRotMPS", 3);
+
+    SmartDashboard.putBoolean("DriveTuning/slewRateEnabled", true);
+    SmartDashboard.putNumber("DriveTuning/slewRatePeriodSecs", 0.3);
+
+    SmartDashboard.putNumber("DriveTuning/Speed-Kp", 0);
+    SmartDashboard.putNumber("DriveTuning/Speed-Ki", 0);
+    SmartDashboard.putNumber("DriveTuning/Speed-Kd", 0);
+
+    SmartDashboard.putNumber("DriveTuning/Rot-Kp", 0);
+    SmartDashboard.putNumber("DriveTuning/Rot-Ki", 0);
+    SmartDashboard.putNumber("DriveTuning/Rot-Kd", 0);
+
     // Configure drive motor
     var driveConfig = new SparkMaxConfig();
     driveConfig
@@ -112,10 +134,13 @@ public class ModuleIOThrifty implements ModuleIO {
         .uvwMeasurementPeriod(10)
         .uvwAverageDepth(2);
     driveConfig.closedLoop.pid(
-        thriftyConstants.driveKp, thriftyConstants.driveKi, thriftyConstants.driveKd);
+        // FIXME: switch back to constants after tuning is finished
+        SmartDashboard.getNumber("DriveTuning/Speed-Kp", 0),
+        SmartDashboard.getNumber("DriveTuning/Speed-Ki", 0),
+        SmartDashboard.getNumber("DriveTuning/Speed-Kd", 0));
+    // thriftyConstants.driveKp, thriftyConstants.driveKi, thriftyConstants.driveKd);
+
     // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    // .pidf(thriftyConstants.driveKp, 0, thriftyConstants.driveKd, 0, ClosedLoopSlot.kSlot0)
-    // .pidf(0, 0, 0, 0.114, ClosedLoopSlot.kSlot1);
     driveConfig
         .signals
         .primaryEncoderPositionAlwaysOn(true)
@@ -152,8 +177,12 @@ public class ModuleIOThrifty implements ModuleIO {
         .positionWrappingEnabled(true)
         .positionWrappingInputRange(
             thriftyConstants.turnPIDMinInput, thriftyConstants.turnPIDMaxInput)
-        // .pid(0,0,0).kP(thriftyConstants.turnKp).kD(thriftyConstants.turnKd);
-        .pid(thriftyConstants.turnKp, thriftyConstants.turnKi, thriftyConstants.turnKd);
+        // .pid(thriftyConstants.turnKp, thriftyConstants.turnKi, thriftyConstants.turnKd);
+        // FIXME: switch back to constants after tuning is finished
+        .pid(
+            SmartDashboard.getNumber("DriveTuning/Rot-Kp", 0),
+            SmartDashboard.getNumber("DriveTuning/Rot-Ki", 0),
+            SmartDashboard.getNumber("DriveTuning/Rot-Kd", 0));
     turnConfig
         .signals
         .absoluteEncoderPositionAlwaysOn(true)

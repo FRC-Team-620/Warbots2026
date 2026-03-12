@@ -380,13 +380,14 @@ public class Drive extends SubsystemBase {
   public double getDefaultMaxLinearSpeedMetersPerSec() {
     return DriveConstants.defaultMaxSpeedMetersPerSec;
   }
+
   public double getTurboMaxLinearSpeedMetersPerSec() {
     return DriveConstants.turboMaxSpeedMetersPerSec;
   }
+
   public double getAutoMaxLinearSpeedMetersPerSec() {
     return DriveConstants.autoMaxSpeedMetersPerSec;
   }
-
 
   /** Returns the maximum angular speed in radians per sec. */
   public double getMaxAngularSpeedRadPerSec() {

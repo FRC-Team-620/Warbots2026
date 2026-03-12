@@ -56,6 +56,11 @@ public class DriveCommand extends Command {
   static final PIDController yController = new PIDController(0.6, 0, 0);
   static final PIDController thetaController = new PIDController(0.1, 0, 0);
 
+  static final SlewRateLimiter xFilter =
+      new SlewRateLimiter(DriveConstants.driveSlewRatePeriodSecs);
+  static final SlewRateLimiter yFilter =
+      new SlewRateLimiter(DriveConstants.driveSlewRatePeriodSecs);
+
   private final Drive drive;
   private final ControlBoard control;
 
@@ -71,61 +76,65 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     double xSpeed, ySpeed, rotationSpeed;
+    /* TURBO MODE */
     if (drive.getTurboMode()) {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.turboMaxSpeedMetersPerSec
-                  * DriveConstants.turboCoefficient,
+                  * DriveConstants.turboMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.turboMaxSpeedMetersPerSec
-                  * DriveConstants.turboCoefficient,
+                  * DriveConstants.turboMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
                   * DriveConstants.turboMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
-    } else if (drive.getSlowdownMode()) {
+    }
+    /* INTAKE MODE */
+    else if (drive.getSlowdownMode()) {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.slowdownCoefficient,
+                  * DriveConstants.intakeMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.slowdownCoefficient,
+                  * DriveConstants.intakeMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * 0.8,
+                  * DriveConstants.intakeMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
-    } else {
+    }
+    /* DEFAULT SPEED */
+    else {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.defaultMaxSpeedMetersPerSec
-                  * DriveConstants.nonTurboCoefficient,
+                  * DriveConstants.defaultMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.defaultMaxSpeedMetersPerSec
-                  * DriveConstants.nonTurboCoefficient,
+                  * DriveConstants.defaultMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
                   * DriveConstants.defaultMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
+    }
+
+    /* APPLY SLEW RATE LIMITING */
+    if (DriveConstants.driveSlewRateEnabled) {
+      xSpeed = xFilter.calculate(xSpeed);
+      ySpeed = yFilter.calculate(ySpeed);
     }
 
     boolean isFlipped =

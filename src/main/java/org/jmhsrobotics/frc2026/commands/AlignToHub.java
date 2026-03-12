@@ -54,11 +54,13 @@ public class AlignToHub extends Command {
 
     xSpeed =
         MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationY()) * DriveConstants.autoMaxSpeedMetersPerSec,
+            this.getSquareInput(-this.control.translationY())
+                * DriveConstants.autoMaxSpeedMetersPerSec,
             DriveConstants.deadBand);
     ySpeed =
         MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationX()) * DriveConstants.autoMaxSpeedMetersPerSec,
+            this.getSquareInput(-this.control.translationX())
+                * DriveConstants.autoMaxSpeedMetersPerSec,
             DriveConstants.deadBand);
 
     isFlipped =
