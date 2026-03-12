@@ -1,10 +1,12 @@
 package org.jmhsrobotics.frc2026.subsystems.led;
 
+import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.MitoCANdria;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
@@ -17,8 +19,14 @@ public class LED extends SubsystemBase {
   private LEDPattern pattern = LEDPattern.solid(Color.kRed);
 
   public LED() {
+    Alert mitoFail = new Alert("Failed to initialize mitoCANdria", Alert.AlertType.kError);
+    Alert otherFail = new Alert("Unknown Exception", Alert.AlertType.kError);
     try (MitoCANdria mito = new MitoCANdria(1)) {
       mito.setChannelEnabled(MitoCANdria.MITOCANDRIA_CHANNEL_5VB, true);
+    } catch (ConfigurationFailedException e) {
+      mitoFail.set(true);
+    } catch (Exception ex) {
+      otherFail.set(true);
     }
 
     led = new AddressableLED(Constants.LEDConstants.kPWMHeader);
