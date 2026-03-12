@@ -49,6 +49,8 @@ public class SimSlapdownIO implements SlapdownIO {
     slapDownSim.update(Constants.ksimTimestep);
 
     inputs.slapdownPositionDegrees = Math.toDegrees(slapDownSim.getAngleRads());
+    inputs.absoluteEncoderPos = Math.toDegrees(slapDownSim.getAngleRads());
+    inputs.primaryEncoderPos = Math.toDegrees(slapDownSim.getAngleRads());
     inputs.slapdownSpeedDegPerSec = Math.toDegrees(slapDownSim.getVelocityRadPerSec());
     inputs.slapdownCurrentAmps = slapDownSim.getCurrentDrawAmps();
     inputs.PIDSetpoint = Units.radiansToDegrees(slapDownPID.getSetpoint());

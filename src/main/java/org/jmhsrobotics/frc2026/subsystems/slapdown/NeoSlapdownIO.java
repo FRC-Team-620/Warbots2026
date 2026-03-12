@@ -87,6 +87,12 @@ public class NeoSlapdownIO implements SlapdownIO {
         slapdownMotor,
         slapdownMotor::getOutputCurrent,
         (value) -> inputs.slapdownCurrentAmps = value);
+    SparkUtil.ifOk(
+        slapdownMotor,
+        slapdownMotor.getAbsoluteEncoder()::getPosition,
+        (value) -> inputs.absoluteEncoderPos = value);
+    SparkUtil.ifOk(
+        slapdownMotor, slapdownEncoder::getPosition, (value) -> inputs.primaryEncoderPos = value);
 
     inputs.PIDSetpoint = slapdownPIDController.getSetpoint();
   }
