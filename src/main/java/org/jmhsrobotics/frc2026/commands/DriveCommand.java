@@ -60,6 +60,8 @@ public class DriveCommand extends Command {
       new SlewRateLimiter(DriveConstants.driveSlewRatePeriodSecs);
   static final SlewRateLimiter yFilter =
       new SlewRateLimiter(DriveConstants.driveSlewRatePeriodSecs);
+  static final SlewRateLimiter rotFilter =
+      new SlewRateLimiter(DriveConstants.rotSlewRatePeriodSecs);
 
   private final Drive drive;
   private final ControlBoard control;
@@ -135,6 +137,7 @@ public class DriveCommand extends Command {
     if (DriveConstants.driveSlewRateEnabled) {
       xSpeed = xFilter.calculate(xSpeed);
       ySpeed = yFilter.calculate(ySpeed);
+      rotationSpeed = rotFilter.calculate(rotationSpeed);
     }
 
     boolean isFlipped =

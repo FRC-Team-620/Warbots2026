@@ -50,6 +50,8 @@ public class DriveConstants {
       SmartDashboard.getBoolean("DriveTuning/slewRateEnabled", true);
   public static final double driveSlewRatePeriodSecs =
       SmartDashboard.getNumber("DriveTuning/slewRatePeriodSecs", 0.3);
+  public static final double rotSlewRatePeriodSecs =
+      SmartDashboard.getNumber("DriveTuning/rotSlewRatePeriodSecs", 0.2);
   public static final double deadBand = 0.05;
 
   public static final double odometryFrequency = 100.0; // Hz

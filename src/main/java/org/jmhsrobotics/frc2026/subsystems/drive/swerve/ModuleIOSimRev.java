@@ -53,6 +53,7 @@ public class ModuleIOSimRev implements ModuleIO {
 
     SmartDashboard.putBoolean("DriveTuning/slewRateEnabled", true);
     SmartDashboard.putNumber("DriveTuning/slewRatePeriodSecs", 0.3);
+    SmartDashboard.putNumber("DriveTuning/rotSlewRatePeriodSecs", 0.2);
 
     SmartDashboard.putNumber("DriveTuning/Speed-Kp", 0);
     SmartDashboard.putNumber("DriveTuning/Speed-Ki", 0);
