@@ -1,7 +1,7 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Timer;
@@ -16,6 +16,8 @@ public class Shooter extends SubsystemBase {
   private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
 
   private PIDController rpmController = new PIDController(0.08, 0, 0.005);
+  private SimpleMotorFeedforward ff =
+      new SimpleMotorFeedforward(0, 0); // TODO: Fill With Values From Sysid
 
   private Timer accelerationTimer = new Timer();
 
@@ -30,7 +32,7 @@ public class Shooter extends SubsystemBase {
     this.shooterIO = shooterIO;
     this.map = new InterpolatingDoubleTreeMap();
     createInterpolatingDoubleTreeMap(map);
-    SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
+    SmartDashboard.putData("ShooterFlywheel/pid", rpmController); // Add For Tuning
   }
 
   @Override
@@ -38,16 +40,24 @@ public class Shooter extends SubsystemBase {
     shooterIO.updateInputs(shooterInputs);
 
     if (isClosedLoop) {
-      final double maxPercentOutput = 1;
-      // calculate PID output
-      double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
-      double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
-      double pidControllerOutput =
-          this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
-      double clampedOutput =
-          MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
+      // final double maxPercentOutput = 1;
+      // // calculate PID output
+      // double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
+      // double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
+      // double pidControllerOutput =
+      //     this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
 
-      shooterIO.setSpeed(clampedOutput);
+      // double clampedOutput =
+      //     MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
+      // shooterIO.setSpeed(clampedOutput);
+      double velRPS = shooterInputs.velocityRPM / 60.0;
+      double goalRPS = this.goalSpeedRPM / 60.0;
+
+      double pidControllerVoltage = this.rpmController.calculate(velRPS, goalRPS);
+
+      double ffVolts =
+          ff.calculateWithVelocities(shooterInputs.velocityRPM / 60.0, this.goalSpeedRPM / 60.0);
+      shooterIO.setVoltage(ffVolts + pidControllerVoltage); // TODO May want to clamp this.
     }
 
     /* ----------------RPM Control------------------------ TODO: move to dedicated util method*/
