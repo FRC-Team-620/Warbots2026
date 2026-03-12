@@ -1,5 +1,6 @@
 package org.jmhsrobotics.frc2026.subsystems.led;
 
+import au.grapplerobotics.MitoCANdria;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -16,6 +17,10 @@ public class LED extends SubsystemBase {
   private LEDPattern pattern = LEDPattern.solid(Color.kRed);
 
   public LED() {
+    try (MitoCANdria mito = new MitoCANdria(1)) {
+      mito.setChannelEnabled(MitoCANdria.MITOCANDRIA_CHANNEL_5VB, true);
+    }
+
     led = new AddressableLED(Constants.LEDConstants.kPWMHeader);
     ledBuffer = new AddressableLEDBuffer(Constants.LEDConstants.kLength);
     led.setLength(ledBuffer.getLength());
