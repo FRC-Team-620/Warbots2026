@@ -6,11 +6,19 @@ import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 
 public class ZeroSlapdownCommand extends Command {
   private Slapdown slapdown;
-  private double speedDutyCycle = 0.3;
+  private double speedDutyCycle;
+  private double homingCurrentAmps;
+  private double homingGoalAngle;
+  private double timeoutSeconds;
+
   private Timer timer = new Timer();
 
-  public ZeroSlapdownCommand(Slapdown slapdown) {
+  public ZeroSlapdownCommand(Slapdown slapdown, double timeoutSeconds, double homingCurrentAmps, double homingGoalAngle, double dutyCycle) {
     this.slapdown = slapdown;
+    this.speedDutyCycle = dutyCycle;
+    this.timeoutSeconds = timeoutSeconds;
+    this.homingCurrentAmps = homingCurrentAmps;
+    this.homingGoalAngle = homingGoalAngle;
     addRequirements(slapdown);
   }
 
@@ -23,19 +31,19 @@ public class ZeroSlapdownCommand extends Command {
   @Override
   public void execute() {
     slapdown.setSpeedDutyCycle(speedDutyCycle);
-    if (slapdown.getCurrentAmps() > 40) {
+    if (slapdown.getCurrentAmps() > homingCurrentAmps) {
       timer.start();
     } else {
       timer.reset();
     }
-    if (timer.get() > 0.30) {
+    if (timer.get() > timeoutSeconds) {
       slapdown.setSpeedDutyCycle(0);
-      slapdown.setSlapdownEncoder(60);
+      slapdown.setSlapdownEncoder(homingGoalAngle);
     }
   }
 
   @Override
   public boolean isFinished() {
-    return timer.get() > 0.30;
+    return timer.get() > timeoutSeconds;
   }
 }
