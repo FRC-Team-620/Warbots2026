@@ -26,10 +26,18 @@ public class NeoSlapdownIO implements SlapdownIO {
   private double setPointDegrees = Constants.Slapdown.kSlapdownUpPositionDegrees;
 
   public NeoSlapdownIO() {
+    // slapdown is 40:1 ratio
 
     slapdownEncoderConfig.positionConversionFactor(360).velocityConversionFactor(6);
     // SlapDown motor
     slapdownMotorConfig = new SparkMaxConfig();
+    // Convert motor rotations to arm degrees. With a 40:1 gearbox, each motor
+    // rotation equals 1/40 of an arm rotation, so degrees per motor rotation = 360/40 = 9.0
+    slapdownMotorConfig.encoder.positionConversionFactor(360.0 / 40.0);
+    // Convert motor velocity (RPM) to degrees per second to match the absolute encoder's
+    // velocity units. Relative encoder velocity is in RPM by default, so multiply by
+    // (degrees per rotation) / 60.0 -> (360/40) / 60 = 0.15
+    slapdownMotorConfig.encoder.velocityConversionFactor(360.0 / 40.0 / 60.0);
     slapdownMotorConfig.absoluteEncoder.apply(slapdownEncoderConfig);
     slapdownMotorConfig
         .idleMode(IdleMode.kBrake)
@@ -52,7 +60,7 @@ public class NeoSlapdownIO implements SlapdownIO {
             Constants.Slapdown.kSlapdownI,
             Constants.Slapdown.kSlapdownD)
         .outputRange(-0.5, 0.3)
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
     SparkUtil.tryUntilOk(
         slapdownMotor,
@@ -63,6 +71,7 @@ public class NeoSlapdownIO implements SlapdownIO {
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
 
+    slapdownMotor.getEncoder().setPosition(slapdownMotor.getAbsoluteEncoder().getPosition());
     slapdownPIDController = slapdownMotor.getClosedLoopController();
   }
 
