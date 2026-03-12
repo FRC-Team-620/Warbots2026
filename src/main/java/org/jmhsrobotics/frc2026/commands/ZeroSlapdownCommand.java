@@ -13,7 +13,12 @@ public class ZeroSlapdownCommand extends Command {
 
   private Timer timer = new Timer();
 
-  public ZeroSlapdownCommand(Slapdown slapdown, double timeoutSeconds, double homingCurrentAmps, double homingGoalAngle, double dutyCycle) {
+  public ZeroSlapdownCommand(
+      Slapdown slapdown,
+      double timeoutSeconds,
+      double homingCurrentAmps,
+      double homingGoalAngle,
+      double dutyCycle) {
     this.slapdown = slapdown;
     this.speedDutyCycle = dutyCycle;
     this.timeoutSeconds = timeoutSeconds;
