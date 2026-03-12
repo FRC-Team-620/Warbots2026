@@ -54,7 +54,7 @@ public class SimShooterIO implements ShooterIO {
     inputs.velocityRPM = flywheelSim.getAngularVelocityRPM();
     inputs.voltage = flywheelSim.getInputVoltage();
     inputs.tempC = 20;
-    inputs.position += (flywheelSim.getAngularVelocityRPM() / 60.0) * Constants.ksimTimestep;
+    inputs.positionROT += (flywheelSim.getAngularVelocityRPM() / 60.0) * Constants.ksimTimestep;
     inputs.goalRPM = this.goalRPM;
     Logger.recordOutput("Shooter/VelocityRPS", inputs.velocityRPM / 60.0);
   }

@@ -21,7 +21,10 @@ public class Shooter extends SubsystemBase {
 
   private PIDController rpmController = new PIDController(0.097, 0, 0.007);
   private SimpleMotorFeedforward ff =
-      new SimpleMotorFeedforward(0, 0); // TODO: Fill With Values From Sysid
+      new SimpleMotorFeedforward(
+          Constants.ShooterConstants.kS,
+          Constants.ShooterConstants.kV,
+          Constants.ShooterConstants.kA);
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -94,7 +97,7 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/Voltage", shooterInputs.voltage);
     Logger.recordOutput("Shooter/Current", shooterInputs.currentAMPS);
     Logger.recordOutput("Shooter/Temperature C", shooterInputs.tempC);
-    Logger.recordOutput("Shooter/Position", shooterInputs.position);
+    Logger.recordOutput("Shooter/Position", shooterInputs.positionROT);
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
 
     Logger.recordOutput("Shooter/Active", isActive);
@@ -170,7 +173,7 @@ public class Shooter extends SubsystemBase {
     // log.record("Shooter/Voltage", shooterInputs.voltage);
     // log.record("Shooter/Current", shooterInputs.currentAMPS);
     // log.record("Shooter/Temperature C", shooterInputs.tempC);
-    Logger.recordOutput("Shooter/Position", shooterInputs.position);
+    Logger.recordOutput("Shooter/Position", shooterInputs.positionROT);
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }
 
