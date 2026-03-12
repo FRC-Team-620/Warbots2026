@@ -79,12 +79,22 @@ public class NeoSlapdownIO implements SlapdownIO {
         slapdownMotor::getOutputCurrent,
         (value) -> inputs.slapdownCurrentAmps = value);
 
+    inputs.slapdownAbsPositionDegrees = slapdownEncoder.getPosition();
+
     inputs.PIDSetpoint = slapdownPIDController.getSetpoint();
+  }
+
+  public void setSlapdownEncoder(double positionDegrees) {
+    slapdownEncoder.setPosition(positionDegrees);
   }
 
   public void setPositionDegrees(double degrees) {
     this.setPointDegrees = degrees;
     slapdownPIDController.setSetpoint(degrees, ControlType.kPosition);
+  }
+
+  public void setSpeedDutyCycle(double dutyCycle) {
+    slapdownMotor.set(dutyCycle);
   }
 
   @Override

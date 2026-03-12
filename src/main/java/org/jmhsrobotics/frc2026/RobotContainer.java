@@ -36,10 +36,12 @@ import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
+import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
+import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
@@ -379,6 +381,9 @@ public class RobotContainer {
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
 
     SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
+
+    SmartDashboard.putData("Zero Slapdown", new ZeroSlapdownCommand(slapdown));
+    SmartDashboard.putData("Set Slapdown to Absolute", new SetSlapdownToAbs(slapdown));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
   }
