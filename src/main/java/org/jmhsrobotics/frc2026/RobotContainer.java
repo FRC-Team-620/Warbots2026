@@ -78,6 +78,8 @@ import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
+import org.jmhsrobotics.frc2026.util.BallTracker;
+import org.jmhsrobotics.frc2026.util.FuelSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -93,13 +95,16 @@ public class RobotContainer {
   private final LED led;
   private final ControlBoard control;
   private final Intake intake;
-  private final Slapdown slapdown;
+  public final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
   private final Vision vision;
   private final Feeder feeder;
 
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  public FuelSim fuelSim = new FuelSim("FuelSim");
+  public BallTracker ballTracker;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -224,6 +229,8 @@ public class RobotContainer {
         "RightBumpAutoRED",
         new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartRED, control));
     // Configure the trigger bindings
+
+    ballTracker = new BallTracker(drive::getPose, 10, 3);
     configureBindings();
     configureDriverFeedback();
   }
@@ -363,7 +370,8 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
+    SmartDashboard.putData(
+        "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
