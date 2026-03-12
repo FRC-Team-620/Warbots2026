@@ -17,5 +17,7 @@ public interface SlapdownIO {
 
   public default void setSlapdownBrakeMode(boolean enable) {}
 
+  public default void setPID(double p, double i, double d) {}
+
   public default void updateInputs(SlapdownIOInputs inputs) {}
 }

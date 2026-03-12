@@ -1,12 +1,14 @@
 package org.jmhsrobotics.frc2026.subsystems.slapdown;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.CheckTolerance;
@@ -21,12 +23,28 @@ public class Slapdown extends SubsystemBase {
   private TrapezoidProfile trapezoidProfile =
       new TrapezoidProfile(new Constraints(100, 200)); // TODO update these values
 
+  private PIDController pidController =
+      new PIDController(
+          Constants.Slapdown.kSlapdownP,
+          Constants.Slapdown.kSlapdownI,
+          Constants.Slapdown.kSlapdownD);
+
   public Slapdown(SlapdownIO slapdownIO) {
     this.slapdownIO = slapdownIO;
+    SmartDashboard.putNumber("Slapdown/pid/p", pidController.getP());
+    SmartDashboard.putNumber("Slapdown/pid/i", pidController.getI());
+    SmartDashboard.putNumber("Slapdown/pid/d", pidController.getD());
+    // SmartDashboard.putData("Slapdown/pid", pidController);
   }
 
   @Override
   public void periodic() {
+    // slapdownIO.setPID(SmartDashboard.getNumber(, setPointDegrees), pidController.getI(),
+    // pidController.getD());
+    slapdownIO.setPID(
+        SmartDashboard.getNumber("Slapdown/pid/p", Constants.Slapdown.kSlapdownP),
+        SmartDashboard.getNumber("Slapdown/pid/i", Constants.Slapdown.kSlapdownI),
+        SmartDashboard.getNumber("Slapdown/pid/d", Constants.Slapdown.kSlapdownD));
     calcluatedState =
         trapezoidProfile.calculate(
             0.02,
