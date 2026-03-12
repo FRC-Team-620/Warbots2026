@@ -1,11 +1,18 @@
 package org.jmhsrobotics.frc2026.subsystems.slapdown;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.CheckTolerance;
+import org.littletonrobotics.junction.Logger;
 
 public class Slapdown extends SubsystemBase {
   private SlapdownIO slapdownIO;
@@ -16,12 +23,28 @@ public class Slapdown extends SubsystemBase {
   private TrapezoidProfile trapezoidProfile =
       new TrapezoidProfile(new Constraints(100, 200)); // TODO update these values
 
+  private PIDController pidController =
+      new PIDController(
+          Constants.Slapdown.kSlapdownP,
+          Constants.Slapdown.kSlapdownI,
+          Constants.Slapdown.kSlapdownD);
+
   public Slapdown(SlapdownIO slapdownIO) {
     this.slapdownIO = slapdownIO;
+    SmartDashboard.putNumber("Slapdown/pid/p", pidController.getP());
+    SmartDashboard.putNumber("Slapdown/pid/i", pidController.getI());
+    SmartDashboard.putNumber("Slapdown/pid/d", pidController.getD());
+    // SmartDashboard.putData("Slapdown/pid", pidController);
   }
 
   @Override
   public void periodic() {
+    // slapdownIO.setPID(SmartDashboard.getNumber(, setPointDegrees), pidController.getI(),
+    // pidController.getD());
+    slapdownIO.setPID(
+        SmartDashboard.getNumber("Slapdown/pid/p", Constants.Slapdown.kSlapdownP),
+        SmartDashboard.getNumber("Slapdown/pid/i", Constants.Slapdown.kSlapdownI),
+        SmartDashboard.getNumber("Slapdown/pid/d", Constants.Slapdown.kSlapdownD));
     calcluatedState =
         trapezoidProfile.calculate(
             0.02,
@@ -31,33 +54,32 @@ public class Slapdown extends SubsystemBase {
 
     slapdownIO.updateInputs(inputs);
 
-    // Logger.processInputs("Slapdown", inputs);
-    // Logger.recordOutput(
-    //     "Model/Slapdown/arm_position_goal",
-    //     new Pose3d(
-    //         0.252,
-    //         0,
-    //         0.204730,
-    //         new Rotation3d(0, Units.degreesToRadians(setPointDegrees - 180), 0)));
-    // Logger.recordOutput(
-    //     "Model/Slapdown/hopper_position_goal",
-    //     new Pose3d(
-    //         MathUtil.clamp((setPointDegrees - 90) / 90, 0, 1) * 0.30188, 0, 0, new
-    // Rotation3d()));
-    // Logger.recordOutput(
-    //     "Model/Slapdown/arm_position",
-    //     new Pose3d(
-    //         0.252,
-    //         0,
-    //         0.204730,
-    //         new Rotation3d(0, Units.degreesToRadians(inputs.slapdownPositionDegrees - 180), 0)));
-    // Logger.recordOutput(
-    //     "Model/Slapdown/hopper_position",
-    //     new Pose3d(
-    //         MathUtil.clamp((inputs.slapdownPositionDegrees - 90) / 90, 0, 1) * 0.30188,
-    //         0,
-    //         0,
-    //         new Rotation3d()));
+    Logger.processInputs("Slapdown", inputs);
+    Logger.recordOutput(
+        "Model/Slapdown/arm_position_goal",
+        new Pose3d(
+            0.252,
+            0,
+            0.204730,
+            new Rotation3d(0, Units.degreesToRadians(setPointDegrees - 180), 0)));
+    Logger.recordOutput(
+        "Model/Slapdown/hopper_position_goal",
+        new Pose3d(
+            MathUtil.clamp((setPointDegrees - 90) / 90, 0, 1) * 0.30188, 0, 0, new Rotation3d()));
+    Logger.recordOutput(
+        "Model/Slapdown/arm_position",
+        new Pose3d(
+            0.252,
+            0,
+            0.204730,
+            new Rotation3d(0, Units.degreesToRadians(inputs.slapdownPositionDegrees - 180), 0)));
+    Logger.recordOutput(
+        "Model/Slapdown/hopper_position",
+        new Pose3d(
+            MathUtil.clamp((inputs.slapdownPositionDegrees - 90) / 90, 0, 1) * 0.30188,
+            0,
+            0,
+            new Rotation3d()));
   }
 
   public boolean atGoal() {
@@ -78,5 +100,9 @@ public class Slapdown extends SubsystemBase {
 
   public double getPositionDegrees() {
     return inputs.slapdownPositionDegrees;
+  }
+
+  public boolean canIntake() {
+    return this.atGoal() && this.setPointDegrees == Constants.Slapdown.kSlapdownDownPositionDegrees;
   }
 }

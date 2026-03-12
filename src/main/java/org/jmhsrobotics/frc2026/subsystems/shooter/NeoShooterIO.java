@@ -193,9 +193,11 @@ public class NeoShooterIO implements ShooterIO {
 
   @Override
   public void stop() {
-    leftFlywheelPIDController.setSetpoint(0, ControlType.kVelocity);
+    // leftFlywheelPIDController.setSetpoint(0, ControlType.kVelocity);
+    centerFlywheelMotor.stopMotor();
   }
 
+  // TODO: Change left flywheel leader in brake mode to center
   @Override
   public void setBrakeMode(boolean enable) {
     var brakeConfig = new SparkMaxConfig();

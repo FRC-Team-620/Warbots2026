@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.AimingAuto;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
@@ -30,12 +31,15 @@ import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
+import org.jmhsrobotics.frc2026.commands.HoodDown;
+import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
+import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
@@ -74,6 +78,8 @@ import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
+import org.jmhsrobotics.frc2026.util.BallTracker;
+import org.jmhsrobotics.frc2026.util.FuelSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -89,13 +95,16 @@ public class RobotContainer {
   private final LED led;
   private final ControlBoard control;
   private final Intake intake;
-  private final Slapdown slapdown;
+  public final Slapdown slapdown;
   private final Indexer indexer;
   private final Climber climber;
   private final Vision vision;
   private final Feeder feeder;
 
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  public FuelSim fuelSim = new FuelSim("FuelSim");
+  public BallTracker ballTracker;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -184,9 +193,44 @@ public class RobotContainer {
     // (current values 2.2 and 0.3 are from 2025 season)
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
     autoChooser.addOption(
-        "FrontHubAuto", new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStart));
+        "FrontHubAutoBLUE",
+        new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE));
+    autoChooser.addOption(
+        "LeftTrenchAutoBLUE",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartBLUE, control));
+    autoChooser.addOption(
+        "LeftBumpAutoBLUE",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartBLUE, control));
+    autoChooser.addOption(
+        "RightTrenchAutoBLUE",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartBLUE, control));
+    autoChooser.addOption(
+        "RightBumpAutoBLUE",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartBLUE, control));
 
+    autoChooser.addOption(
+        "FrontHubAutoRED",
+        new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStartRED));
+    autoChooser.addOption(
+        "LeftTrenchAutoRED",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartRED, control));
+    autoChooser.addOption(
+        "LeftBumpAutoRED",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartRED, control));
+    autoChooser.addOption(
+        "RightTrenchAutoRED",
+        new AimingAuto(
+            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartRED, control));
+    autoChooser.addOption(
+        "RightBumpAutoRED",
+        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartRED, control));
     // Configure the trigger bindings
+
+    ballTracker = new BallTracker(drive::getPose, 10, 3);
     configureBindings();
     configureDriverFeedback();
   }
@@ -205,13 +249,14 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
+    // shooter.setDefaultCommand(new ShooterSpinup(shooter, 1300));
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
     control
         .shooterSpinup()
         .onTrue(new DistanceAdjustingShoot(shooter, drive))
-        .onFalse(new ShooterSetDutyCycle(shooter, 0));
+        .onFalse(new ShooterSpinup(shooter, 0));
 
     // control
     //     .shooterSpinup()
@@ -219,7 +264,12 @@ public class RobotContainer {
     //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
-        .runFeeder()
+        .dutyCycleShoot()
+        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
+        .onFalse(new ShooterSpinup(shooter, 0.0));
+
+    control
+        .feedAndShoot()
         .onTrue(
             new ParallelCommandGroup(
                 new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
@@ -227,6 +277,13 @@ public class RobotContainer {
         .onFalse(
             new ParallelCommandGroup(
                 new Feed(feeder, 0, shooter), new ShooterSetDutyCycle(shooter, 0)));
+
+    control
+        .runFeeder()
+        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
+        .onFalse(new IndependentFeed(feeder, 0));
+
+    control.hoodDown().onTrue(new HoodDown(shooter));
 
     // Slapdown Bindings
     control
@@ -272,6 +329,9 @@ public class RobotContainer {
 
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
+    control.slowdown().onTrue(Commands.runOnce(() -> drive.setSlowdownMode(true)));
+    control.slowdown().onFalse(Commands.runOnce(() -> drive.setSlowdownMode(false)));
+
     // extend climber
     control.ClimberExtendHooks().onTrue(new ClimberExtendHooks(climber));
     // retract climber
@@ -310,12 +370,15 @@ public class RobotContainer {
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    SmartDashboard.putData("Slapdown Down", new SlapdownMove(slapdown, 180));
+    SmartDashboard.putData(
+        "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
+
+    SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
   }
