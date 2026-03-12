@@ -372,14 +372,14 @@ public class RobotContainer {
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData(
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
-    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 55.0));
+    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 65.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
 
     SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
-    // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
+    // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter    //
     // Constants.Auto.hubStart));
   }
 

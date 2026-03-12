@@ -59,7 +59,7 @@ public class NeoSlapdownIO implements SlapdownIO {
             Constants.Slapdown.kSlapdownP,
             Constants.Slapdown.kSlapdownI,
             Constants.Slapdown.kSlapdownD)
-        .outputRange(-0.5, 0.3)
+        .outputRange(-1.0, 1.0)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
     SparkUtil.tryUntilOk(
