@@ -382,7 +382,7 @@ public class RobotContainer {
 
     SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
 
-    SmartDashboard.putData("Zero Slapdown", new ZeroSlapdownCommand(slapdown, 0.3, 20, 60, 0.3));
+    SmartDashboard.putData("Zero Slapdown", new ZeroSlapdownCommand(slapdown, 0.3, 20, 60, -0.1));
     SmartDashboard.putData("Set Slapdown to Absolute", new SetSlapdownToAbs(slapdown));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));

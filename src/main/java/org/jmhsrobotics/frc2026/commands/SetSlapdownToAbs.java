@@ -14,6 +14,7 @@ public class SetSlapdownToAbs extends Command {
   @Override
   public void initialize() {
     slapdown.setSlapdownEncoder(slapdown.getAbsPositionDegrees());
+    System.out.println("Set slapdown encoder to " + slapdown.getAbsPositionDegrees() + " degrees");
   }
 
   @Override

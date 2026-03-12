@@ -101,7 +101,7 @@ public class Slapdown extends SubsystemBase {
   }
 
   public double getAbsPositionDegrees() {
-    return inputs.slapdownPositionDegrees;
+    return inputs.slapdownAbsPositionDegrees;
   }
 
   public void setSlapdownEncoder(double positionDegrees) {
