@@ -60,7 +60,17 @@ public final class Constants {
   }
 
   public static class Auto {
-    public static final Pose2d hubStart = new Pose2d(3.569, 4.051, new Rotation2d(0.0));
+    public static final Pose2d hubStartBLUE = new Pose2d(3.569, 4.051, new Rotation2d(0.0));
+    public static final Pose2d leftTrenchStartBLUE = new Pose2d(3.5, 7.55, new Rotation2d(0));
+    public static final Pose2d rightTrenchStartBLUE = new Pose2d(3.50, 0.6, new Rotation2d(0));
+    public static final Pose2d leftBumpStartBLUE = new Pose2d(3.50, 2.5, new Rotation2d(0));
+    public static final Pose2d rightBumpStartBLUE = new Pose2d(3.50, 5.5, new Rotation2d(0));
+
+    public static final Pose2d hubStartRED = new Pose2d(13.00, 4.051, new Rotation2d(135.0));
+    public static final Pose2d leftTrenchStartRED = new Pose2d(13.00, 0.6, new Rotation2d(180.0));
+    public static final Pose2d rightTrenchStartRED = new Pose2d(13.0, 7.55, new Rotation2d(180.0));
+    public static final Pose2d leftBumpStartRED = new Pose2d(13.0, 2.5, new Rotation2d(180.0));
+    public static final Pose2d rightBumpStartRED = new Pose2d(13.0, 5.5, new Rotation2d(180.0));
   }
 
   public static enum Mode {
@@ -76,18 +86,21 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    // PID
-    public static final double kP = 0.08;
+    public static final double kP = 0.097;
     public static final double kI = 0.0;
-    public static final double kD = 0.005;
+    public static final double kD = 0.007;
 
+    public static final double kBaseRPM = 3500;
+    public static final double kShooterTolerance = 1000;
+    public static final double kShooterDutyCycle = 0.6;
+    public static final double kHoodTolerance = 1;
+    public static final double kShooterRPMOffset = 300.0;
+
+    public static final double kHubSetPointRPM = 3700.0;
     // FeedForward Constants - These are just guesses, will need to be tuned
     public static final double kS = 0.2; // Static Component of Friction
     public static final double kV = 0.0002; // Velocity Gain
     public static final double kA = 0;
-
-    public static final double kBaseRPM = 3000;
-    public static final double kShooterTolerance = 500;
   }
 
   public static class Intake {

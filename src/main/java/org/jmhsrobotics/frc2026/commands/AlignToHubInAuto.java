@@ -16,7 +16,7 @@ import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
 import org.littletonrobotics.junction.Logger;
 
-public class AlignToHub extends Command {
+public class AlignToHubInAuto extends Command {
 
   private final Drive drive;
   private final ControlBoard control;
@@ -32,7 +32,7 @@ public class AlignToHub extends Command {
   private Pose3d tagPose;
   private boolean isFlipped;
 
-  public AlignToHub(Drive drive, ControlBoard control) {
+  public AlignToHubInAuto(Drive drive, ControlBoard control) {
     this.drive = drive;
     this.control = control;
     this.isTeleop = false;
@@ -88,14 +88,9 @@ public class AlignToHub extends Command {
 
     Logger.recordOutput("Align/GoalAngleDegrees", thetaController.getSetpoint());
     Logger.recordOutput(
-        "Align/DistanceBlue",
+        "Align/Distance",
         getAutoAlignDistance(
             FieldConstants.Hub.topCenterPoint.toTranslation2d(), drive.getPose().getTranslation()));
-    Logger.recordOutput(
-        "Align/DistanceRed",
-        getAutoAlignDistance(
-            FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(),
-            drive.getPose().getTranslation()));
   }
 
   public Pose2d calculateSetpoints() {
@@ -104,7 +99,7 @@ public class AlignToHub extends Command {
 
     Logger.recordOutput("Align/hubPoint", FieldConstants.Hub.topCenterPoint);
     if (isFlipped) {
-      tagTranslation = FieldConstants.Hub.oppTopCenterPoint.toTranslation2d();
+      tagTranslation = FieldConstants.Hub.topCenterPoint.toTranslation2d();
     } else {
       tagTranslation = FieldConstants.Hub.topCenterPoint.toTranslation2d();
     }
