@@ -63,4 +63,9 @@ public class SimSlapdownIO implements SlapdownIO {
     // Sim brake mode is approximated by increased damping
     // TODO: implement
   }
+
+  @Override
+  public void setPID(double p, double i, double d) {
+    // slapDownPID = new PIDController(p, i, d);
+  }
 }

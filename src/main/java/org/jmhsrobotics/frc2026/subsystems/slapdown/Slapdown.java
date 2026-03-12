@@ -31,11 +31,20 @@ public class Slapdown extends SubsystemBase {
 
   public Slapdown(SlapdownIO slapdownIO) {
     this.slapdownIO = slapdownIO;
-    SmartDashboard.putData("Slapdown/pid", pidController);
+    SmartDashboard.putNumber("Slapdown/pid/p", pidController.getP());
+    SmartDashboard.putNumber("Slapdown/pid/i", pidController.getI());
+    SmartDashboard.putNumber("Slapdown/pid/d", pidController.getD());
+    // SmartDashboard.putData("Slapdown/pid", pidController);
   }
 
   @Override
   public void periodic() {
+    // slapdownIO.setPID(SmartDashboard.getNumber(, setPointDegrees), pidController.getI(),
+    // pidController.getD());
+    slapdownIO.setPID(
+        SmartDashboard.getNumber("Slapdown/pid/p", Constants.Slapdown.kSlapdownP),
+        SmartDashboard.getNumber("Slapdown/pid/i", Constants.Slapdown.kSlapdownI),
+        SmartDashboard.getNumber("Slapdown/pid/d", Constants.Slapdown.kSlapdownD));
     calcluatedState =
         trapezoidProfile.calculate(
             0.02,
