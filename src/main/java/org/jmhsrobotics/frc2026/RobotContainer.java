@@ -372,7 +372,7 @@ public class RobotContainer {
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData(
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
-    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
+    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 55.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
