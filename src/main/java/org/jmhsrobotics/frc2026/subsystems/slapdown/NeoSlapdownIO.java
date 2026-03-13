@@ -94,12 +94,22 @@ public class NeoSlapdownIO implements SlapdownIO {
     SparkUtil.ifOk(
         slapdownMotor, slapdownEncoder::getPosition, (value) -> inputs.primaryEncoderPos = value);
 
+    inputs.slapdownAbsPositionDegrees = slapdownMotor.getAbsoluteEncoder().getPosition();
+
     inputs.PIDSetpoint = slapdownPIDController.getSetpoint();
+  }
+
+  public void setSlapdownEncoder(double positionDegrees) {
+    slapdownEncoder.setPosition(positionDegrees);
   }
 
   public void setPositionDegrees(double degrees) {
     this.setPointDegrees = degrees;
     slapdownPIDController.setSetpoint(degrees, ControlType.kPosition);
+  }
+
+  public void setSpeedDutyCycle(double dutyCycle) {
+    slapdownMotor.set(dutyCycle);
   }
 
   @Override

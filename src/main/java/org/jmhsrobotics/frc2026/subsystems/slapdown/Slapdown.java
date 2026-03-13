@@ -18,6 +18,7 @@ public class Slapdown extends SubsystemBase {
   private SlapdownIO slapdownIO;
   private SlapdownIOInputsAutoLogged inputs = new SlapdownIOInputsAutoLogged();
   private double setPointDegrees = Constants.Slapdown.kSlapdownUpPositionDegrees;
+  private boolean isOpenLoop = false;
 
   private State calcluatedState = new State(Constants.Slapdown.kSlapdownUpPositionDegrees, 0);
   private TrapezoidProfile trapezoidProfile =
@@ -39,6 +40,14 @@ public class Slapdown extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (!isOpenLoop) {
+      calcluatedState =
+          trapezoidProfile.calculate(
+              0.02,
+              calcluatedState,
+              new State(setPointDegrees, 0)); // 20ms is the default periodic rate
+      slapdownIO.setPositionDegrees(calcluatedState.position);
+    }
     // slapdownIO.setPID(SmartDashboard.getNumber(, setPointDegrees), pidController.getI(),
     // pidController.getD());
     slapdownIO.setPID(
@@ -91,11 +100,17 @@ public class Slapdown extends SubsystemBase {
 
   public void setPositionDegrees(double setPointDegrees) {
     this.setPointDegrees = setPointDegrees;
+    this.isOpenLoop = false;
     slapdownIO.setPositionDegrees(setPointDegrees);
   }
 
   public void setSlapdownBrakeMode(boolean enable) {
     slapdownIO.setSlapdownBrakeMode(enable);
+  }
+
+  public void setSpeedDutyCycle(double dutyCycle) {
+    this.isOpenLoop = true;
+    slapdownIO.setSpeedDutyCycle(dutyCycle);
   }
 
   public double getPositionDegrees() {
@@ -104,5 +119,17 @@ public class Slapdown extends SubsystemBase {
 
   public boolean canIntake() {
     return this.atGoal() && this.setPointDegrees == Constants.Slapdown.kSlapdownDownPositionDegrees;
+  }
+
+  public double getCurrentAmps() {
+    return inputs.slapdownCurrentAmps;
+  }
+
+  public double getAbsPositionDegrees() {
+    return inputs.slapdownAbsPositionDegrees;
+  }
+
+  public void setSlapdownEncoder(double positionDegrees) {
+    slapdownIO.setSlapdownEncoder(positionDegrees);
   }
 }
