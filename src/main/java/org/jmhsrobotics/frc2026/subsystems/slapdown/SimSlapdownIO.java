@@ -49,6 +49,8 @@ public class SimSlapdownIO implements SlapdownIO {
     slapDownSim.update(Constants.ksimTimestep);
 
     inputs.slapdownPositionDegrees = Math.toDegrees(slapDownSim.getAngleRads());
+    inputs.absoluteEncoderPos = Math.toDegrees(slapDownSim.getAngleRads());
+    inputs.primaryEncoderPos = Math.toDegrees(slapDownSim.getAngleRads());
     inputs.slapdownSpeedDegPerSec = Math.toDegrees(slapDownSim.getVelocityRadPerSec());
     inputs.slapdownCurrentAmps = slapDownSim.getCurrentDrawAmps();
     inputs.PIDSetpoint = Units.radiansToDegrees(slapDownPID.getSetpoint());
@@ -62,5 +64,10 @@ public class SimSlapdownIO implements SlapdownIO {
   public void setSlapdownBrakeMode(boolean enable) {
     // Sim brake mode is approximated by increased damping
     // TODO: implement
+  }
+
+  @Override
+  public void setPID(double p, double i, double d) {
+    // slapDownPID = new PIDController(p, i, d);
   }
 }

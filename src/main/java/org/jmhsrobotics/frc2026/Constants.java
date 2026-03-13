@@ -93,7 +93,7 @@ public final class Constants {
     public static final double kBaseRPM = 3500;
     public static final double kShooterTolerance = 1000;
     public static final double kShooterDutyCycle = 0.6;
-    public static final double kHoodTolerance = 1;
+    public static final double kHoodTolerance = 0.05;
     public static final double kShooterRPMOffset = 300.0;
 
     public static final double kHubSetPointRPM = 3700.0;
@@ -110,9 +110,9 @@ public final class Constants {
     public static final double kSlapdownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
     public static final double kSlapdownToleranceDegrees = 5; // TODO update this (IMPORTANT)
 
-    public static final double kSlapdownP = 0.0225 / 2;
+    public static final double kSlapdownP = 0.1;
     public static final double kSlapdownI = 0.0;
-    public static final double kSlapdownD = 0.0;
+    public static final double kSlapdownD = 0.001;
   }
 
   public static class Indexer {

@@ -10,11 +10,15 @@ public interface SlapdownIO {
     public double slapdownSpeedDegPerSec;
     public double PIDSetpoint;
     public double slapdownAbsPositionDegrees;
+    public double primaryEncoderPos;
+    public double absoluteEncoderPos;
   }
 
   public default void setPositionDegrees(double degrees) {}
 
   public default void setSlapdownBrakeMode(boolean enable) {}
+
+  public default void setPID(double p, double i, double d) {}
 
   public default void updateInputs(SlapdownIOInputs inputs) {}
 
