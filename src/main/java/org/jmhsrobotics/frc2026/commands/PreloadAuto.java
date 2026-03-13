@@ -1,6 +1,9 @@
 package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -31,6 +34,17 @@ public class PreloadAuto extends SequentialCommandGroup {
                     new ParallelCommandGroup(
                         new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM),
                         new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle),
-                        new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter)))));
+                        new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
+                        Commands.runOnce(
+                            () -> {
+                              boolean isRed =
+                                  DriverStation.getAlliance().isPresent()
+                                      && DriverStation.getAlliance().get() == Alliance.Red;
+                              drive.setPose(
+                                  new Pose2d(
+                                      drive.getPose().getTranslation(),
+                                      Rotation2d.fromDegrees(isRed ? 180 : 0)));
+                            },
+                            drive)))));
   }
 }
