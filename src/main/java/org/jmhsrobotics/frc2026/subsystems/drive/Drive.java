@@ -74,7 +74,6 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  private double maxLinearSpeedMetersPerSec = DriveConstants.maxSpeedMetersPerSec;
   private boolean autoAlignComplete = false;
   private boolean turboMode = false;
   private boolean slowdownMode = false;
@@ -255,7 +254,7 @@ public class Drive extends SubsystemBase {
     speeds = ChassisSpeeds.discretize(speeds, Constants.krealTimeStep);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        setpointStates, this.getMaxLinearSpeedMetersPerSec());
+        setpointStates, this.getTheoreticalMaxSpeedMetersPerSec());
 
     // Log unoptimized setpoints
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -378,8 +377,16 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the maximum linear speed in meters per sec. */
-  public double getMaxLinearSpeedMetersPerSec() {
-    return DriveConstants.maxSpeedMetersPerSec;
+  public double getTheoreticalMaxSpeedMetersPerSec() {
+    return DriveConstants.theoreticalMaxSpeedMetersPerSec;
+  }
+
+  public double getTurboMaxLinearSpeedMetersPerSec() {
+    return DriveConstants.turboMaxSpeedMetersPerSec;
+  }
+
+  public double getAutoMaxLinearSpeedMetersPerSec() {
+    return DriveConstants.autoMaxSpeedMetersPerSec;
   }
 
   /** Returns the maximum angular speed in radians per sec. */
