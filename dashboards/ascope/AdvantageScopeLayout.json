@@ -1,13 +1,13 @@
 {
   "hubs": [
     {
-      "x": -8,
-      "y": -8,
-      "width": 1616,
-      "height": 1034,
+      "x": 480,
+      "y": 0,
+      "width": 800,
+      "height": 752,
       "state": {
         "sidebar": {
-          "width": 424,
+          "width": 244,
           "expanded": [
             "/LiveWindow/.status",
             "/Shuffleboard/.metadata",
@@ -32,11 +32,16 @@
             "/AdvantageKit/climber",
             "/AdvantageKit/Intake",
             "/AdvantageKit/indexer",
-            "/AdvantageKit/Slapdown"
+            "/AdvantageKit/Slapdown",
+            "/AdvantageKit/RealOutputs/Align",
+            "/AdvantageKit/RealOutputs/Shooter",
+            "/AdvantageKit/RealOutputs/Drive",
+            "/AdvantageKit/Drive",
+            "/AdvantageKit/Shooter"
           ]
         },
         "tabs": {
-          "selected": 9,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
@@ -127,24 +132,24 @@
                     "options": {}
                   }
                 ],
-                "game": "FRC:Axes"
+                "game": "FRC:2026 Field"
               },
               "controllerUUID": "7psjncpawnwtv3v5k8pk7oi92xwelwb6",
               "renderer": {
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.015069653254866255,
-                  -0.00662032695729442,
-                  1.5980045160522154
+                  4.622494242810171,
+                  4.810967535458478,
+                  -2.3184189721260293
                 ],
                 "cameraTarget": [
-                  -0.2337800331374477,
+                  -0.29032336927363106,
                   0.8466816719631195,
-                  -0.7409598102400381
+                  -0.8863518703307741
                 ]
               },
-              "controlsHeight": 370
+              "controlsHeight": 120
             },
             {
               "type": 9,
@@ -254,6 +259,26 @@
                       "color": "#af2437",
                       "size": "normal"
                     }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/AbsoluteEncoderPos",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/PrimaryEncoderPos",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487",
+                      "size": "normal"
+                    }
                   }
                 ],
                 "rightSources": [
@@ -294,7 +319,7 @@
               },
               "controllerUUID": "pg5hl0i8k73xc4mn9ee7bpp54finx3d3",
               "renderer": null,
-              "controlsHeight": 200
+              "controlsHeight": 162
             },
             {
               "type": 1,
@@ -425,7 +450,7 @@
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter RPM",
+                    "logKey": "NT:/AdvantageKit/Shooter/VelocityRPM",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -435,7 +460,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Goal RPM",
+                    "logKey": "NT:/AdvantageKit/Shooter/GoalRPM",
                     "logType": "Number",
                     "visible": true,
                     "options": {

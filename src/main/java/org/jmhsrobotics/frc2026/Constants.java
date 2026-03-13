@@ -110,9 +110,9 @@ public final class Constants {
     public static final double kSlapdownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
     public static final double kSlapdownToleranceDegrees = 5; // TODO update this (IMPORTANT)
 
-    public static final double kSlapdownP = 0.0225 / 2;
+    public static final double kSlapdownP = 0.1;
     public static final double kSlapdownI = 0.0;
-    public static final double kSlapdownD = 0.0;
+    public static final double kSlapdownD = 0.001;
   }
 
   public static class Indexer {
