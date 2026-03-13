@@ -68,8 +68,9 @@ public class Shooter extends SubsystemBase {
 
       double pidControllerVoltage = this.rpmController.calculate(velRPS, goalRPS);
 
-      double ffVolts =
-          ff.calculateWithVelocities(shooterInputs.velocityRPM / 60.0, this.goalSpeedRPM / 60.0);
+      // double ffVolts =
+      //     ff.calculateWithVelocities(shooterInputs.velocityRPM / 60.0, this.goalSpeedRPM / 60.0);
+      double ffVolts = ff.calculate(goalRPS);
       shooterIO.setVoltage(ffVolts + pidControllerVoltage); // TODO May want to clamp this.
     }
 
