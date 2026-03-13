@@ -26,6 +26,7 @@ public class NeoShooterIO implements ShooterIO {
   private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
   private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
+  private double voltage;
 
   private SparkClosedLoopController leftFlywheelPIDController =
       leftFlywheelMotorLeader.getClosedLoopController();
@@ -33,11 +34,11 @@ public class NeoShooterIO implements ShooterIO {
       centerFlywheelMotor.getClosedLoopController();
   private SparkClosedLoopController rightFlywheelPIDController =
       rightFlywheelMotor.getClosedLoopController();
+
   private double velocityRPM;
   private double goalRPM;
 
   public NeoShooterIO() {
-
     // leftFlywheelMotor
     motorConfigLeft = new SparkMaxConfig();
     motorConfigLeft
@@ -83,7 +84,12 @@ public class NeoShooterIO implements ShooterIO {
             Constants.ShooterConstants.kD);
     // .voltageCompensation(12);
     // .follow(leftFlywheelMotorLeader, false);
-    motorConfigMiddleLeader.encoder.quadratureMeasurementPeriod(10).quadratureAverageDepth(2);
+    motorConfigMiddleLeader
+        .encoder
+        .quadratureMeasurementPeriod(1)
+        .quadratureAverageDepth(2)
+        .uvwMeasurementPeriod(8)
+        .uvwAverageDepth(2);
 
     SparkUtil.tryUntilOk(
         leftFlywheelMotorLeader,
@@ -146,6 +152,11 @@ public class NeoShooterIO implements ShooterIO {
         leftFlywheelMotorLeader,
         leftFlywheelEncoder::getVelocity,
         (value) -> inputs.velocityRPM = value);
+
+    SparkUtil.ifOk(
+        leftFlywheelMotorLeader,
+        leftFlywheelEncoder::getPosition,
+        (value) -> inputs.positionROT = value);
     SparkUtil.ifOk(
         leftFlywheelMotorLeader,
         leftFlywheelMotorLeader::getBusVoltage,
@@ -155,6 +166,7 @@ public class NeoShooterIO implements ShooterIO {
         leftFlywheelMotorLeader::getMotorTemperature,
         (value) -> inputs.tempC = value);
 
+    inputs.appliedVoltage = voltage;
     inputs.goalRPM = this.goalRPM;
   }
 
@@ -174,6 +186,7 @@ public class NeoShooterIO implements ShooterIO {
   @Override
   public void setVoltage(double voltage) {
     centerFlywheelMotor.setVoltage(voltage);
+    this.voltage = voltage;
   }
 
   @Override

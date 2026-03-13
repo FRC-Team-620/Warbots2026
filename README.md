@@ -30,3 +30,17 @@ TODO: Ascope Custom Assets configurations
 
 # Preflight Procedure
 [Preflight Document](https://docs.google.com/document/d/1y8YTlZKGIjjIhhPViNVR2rbAraMHBm-Do5bom_juSBM/edit?tab=t.0)
+
+
+# Sys-ID Notes
+
+Logs MUST BE CONVERTED FOR SYSID TO WORK: Read Docs [HERE](https://docs.advantagekit.org/data-flow/sysid-compatibility/#loading-data)
+
+
+# Rev Velocity Filter notes
+
+
+[Default Vel Filters Bad for Flywheels](https://www.chiefdelphi.com/t/psa-rev-spark-default-velocity-filtering-is-still-really-bad-for-flywheels/514567)
+
+
+[Measurement Delay Calculator](https://robotsbythec.org/resources/signal-delay-calculator)
