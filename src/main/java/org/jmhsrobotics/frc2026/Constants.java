@@ -93,7 +93,7 @@ public final class Constants {
     public static final double kBaseRPM = 3500;
     public static final double kShooterTolerance = 1000;
     public static final double kShooterDutyCycle = 0.6;
-    public static final double kHoodTolerance = 1;
+    public static final double kHoodTolerance = 0.05;
     public static final double kShooterRPMOffset = 300.0;
 
     public static final double kHubSetPointRPM = 3700.0;
