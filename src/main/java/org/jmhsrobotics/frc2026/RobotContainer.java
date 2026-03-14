@@ -294,8 +294,8 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
-        .onFalse(new IndependentFeed(feeder, 0));
+        .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+        .onFalse(new Feed(feeder, 0, shooter));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
 
