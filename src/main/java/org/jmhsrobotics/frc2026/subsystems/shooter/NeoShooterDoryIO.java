@@ -29,9 +29,9 @@ public class NeoShooterDoryIO implements ShooterIO {
         .inverted(true)
         .closedLoop
         .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD)
+            Constants.Shooter.kP,
+            Constants.Shooter.kI,
+            Constants.Shooter.kD)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .maxOutput(1)
         .minOutput(0)

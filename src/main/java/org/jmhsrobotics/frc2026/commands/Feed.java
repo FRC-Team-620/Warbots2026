@@ -29,7 +29,7 @@ public class Feed extends Command {
       if (MathUtil.isNear(
           shooter.getServoGoal(),
           shooter.getServoPosition(),
-          Constants.ShooterConstants.kHoodTolerance)) {
+          Constants.Shooter.kHoodTolerance)) {
         this.feeder.setFeederSpeed(this.speed);
       } else {
         this.feeder.setFeederSpeed(0);

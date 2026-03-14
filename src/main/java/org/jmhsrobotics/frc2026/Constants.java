@@ -84,7 +84,7 @@ public final class Constants {
     REPLAY
   }
 
-  public static class ShooterConstants {
+  public static class Shooter {
 
     public static final double kP = 0.25;
     public static final double kI = 0.0;

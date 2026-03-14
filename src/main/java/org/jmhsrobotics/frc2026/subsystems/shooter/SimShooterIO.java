@@ -31,7 +31,7 @@ public class SimShooterIO implements ShooterIO {
       double k, double i, double d) { // TODO: This should prob be stored elsewhere (pid gains)
     pid = new PIDController(k, i, d);
     feedForward =
-        new SimpleMotorFeedforward(Constants.ShooterConstants.kS, Constants.ShooterConstants.kV);
+        new SimpleMotorFeedforward(Constants.Shooter.kS, Constants.Shooter.kV);
 
     SmartDashboard.putData("sim/flywheel/pid", pid);
   }

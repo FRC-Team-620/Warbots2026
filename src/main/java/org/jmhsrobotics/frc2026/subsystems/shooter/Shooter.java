@@ -21,14 +21,14 @@ public class Shooter extends SubsystemBase {
 
   private PIDController rpmController =
       new PIDController(
-          Constants.ShooterConstants.kP,
-          Constants.ShooterConstants.kI,
-          Constants.ShooterConstants.kD);
+          Constants.Shooter.kP,
+          Constants.Shooter.kI,
+          Constants.Shooter.kD);
   private SimpleMotorFeedforward ff =
       new SimpleMotorFeedforward(
-          Constants.ShooterConstants.kS,
-          Constants.ShooterConstants.kV,
-          Constants.ShooterConstants.kA);
+          Constants.Shooter.kS,
+          Constants.Shooter.kV,
+          Constants.Shooter.kA);
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -188,7 +188,7 @@ public class Shooter extends SubsystemBase {
 
   public boolean atRPMGoal() {
     return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
-            < Constants.ShooterConstants.kShooterTolerance
+            < Constants.Shooter.kShooterTolerance
         && goalSpeedRPM > 0;
   }
 
@@ -239,7 +239,7 @@ public class Shooter extends SubsystemBase {
 
   public boolean atMaxRPM() {
     // make it 100 rpm less than the max, so we get a buffer
-    return this.goalSpeedRPM > Constants.ShooterConstants.kBaseRPM - 100;
+    return this.goalSpeedRPM > Constants.Shooter.kBaseRPM - 100;
   }
 
   public boolean notMaxRPM() {

@@ -156,7 +156,7 @@ public class RobotContainer {
         shooter =
             new Shooter(
                 new SimShooterIO(
-                    0.06, Constants.ShooterConstants.kI, Constants.ShooterConstants.kD) {});
+                    0.06, Constants.Shooter.kI, Constants.Shooter.kD) {});
 
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
@@ -263,7 +263,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    shooter.setDefaultCommand(new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM));
+    shooter.setDefaultCommand(new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM));
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
@@ -271,7 +271,7 @@ public class RobotContainer {
         .shooterSpinup()
         .onTrue(new DistanceAdjustingShoot(shooter, drive))
         .onFalse(
-            new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM).withTimeout(0.1));
+            new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM).withTimeout(0.1));
 
     // control
     //     .shooterSpinup()
@@ -280,9 +280,9 @@ public class RobotContainer {
 
     control
         .setpointShoot()
-        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
+        .onTrue(new ShooterSpinup(shooter, Constants.Shooter.kHubSetPointRPM))
         .onFalse(
-            new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM).withTimeout(0.1));
+            new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM).withTimeout(0.1));
 
     control
         .feedAndShoot()
@@ -293,7 +293,7 @@ public class RobotContainer {
         .onFalse(
             new ParallelCommandGroup(
                     new Feed(feeder, 0, shooter),
-                    new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM))
+                    new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM))
                 .withTimeout(0.1));
 
     control
@@ -384,7 +384,7 @@ public class RobotContainer {
     SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
-        "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+        "Shooter Spinup", new ShooterSpinup(shooter, Constants.Shooter.kBaseRPM));
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
     SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));

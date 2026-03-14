@@ -49,9 +49,9 @@ public class NeoShooterIO implements ShooterIO {
         .inverted(true)
         .closedLoop
         .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+            Constants.Shooter.kP,
+            Constants.Shooter.kI,
+            Constants.Shooter.kD);
     // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     // .maxOutput(1)
     // .minOutput(0);
@@ -66,9 +66,9 @@ public class NeoShooterIO implements ShooterIO {
         .follow(Constants.CAN.kCenterFlywheelMotorID, true)
         .closedLoop
         .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+            Constants.Shooter.kP,
+            Constants.Shooter.kI,
+            Constants.Shooter.kD);
     // .voltageCompensation(12);
     //    .follow(leftFlywheelMotorLeader, true);
 
@@ -79,9 +79,9 @@ public class NeoShooterIO implements ShooterIO {
         .inverted(true)
         .closedLoop
         .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+            Constants.Shooter.kP,
+            Constants.Shooter.kI,
+            Constants.Shooter.kD);
     // .voltageCompensation(12);
     // .follow(leftFlywheelMotorLeader, false);
     motorConfigMiddleLeader
