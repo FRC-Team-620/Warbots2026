@@ -18,7 +18,7 @@ public class FaceDriveDirection extends Command {
 
   // Note: P-gain is changed! Because we are now calculating in Radians instead of Degrees,
   // you will need a higher P-gain. 4.0 is a good starting point to test.
-  private final PIDController thetaController = new PIDController(4.0, 0, 0);
+  private final PIDController thetaController = new PIDController(0.1, 0, 0);
 
   private boolean isFlipped;
   private Rotation2d targetHeading = new Rotation2d(); // Store the last valid heading
