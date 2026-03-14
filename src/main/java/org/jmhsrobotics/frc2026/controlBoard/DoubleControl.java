@@ -48,6 +48,11 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
+  public Trigger faceDriveDirection() {
+    return driver.leftTrigger();
+  }
+
+  @Override
   public Trigger turbo() {
     return driver.leftBumper();
   }

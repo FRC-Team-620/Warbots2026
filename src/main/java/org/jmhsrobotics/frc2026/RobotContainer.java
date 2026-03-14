@@ -353,6 +353,7 @@ public class RobotContainer {
     control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
     control.autoAim().whileTrue(new AlignToHub(drive, control));
+    control.faceDriveDirection().whileTrue(new FaceDriveDirection(drive, control));
 
     control
         .resetForward()
