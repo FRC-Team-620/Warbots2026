@@ -20,15 +20,9 @@ public class Shooter extends SubsystemBase {
   private Servo rightServo = new Servo(1);
 
   private PIDController rpmController =
-      new PIDController(
-          Constants.Shooter.kP,
-          Constants.Shooter.kI,
-          Constants.Shooter.kD);
+      new PIDController(Constants.Shooter.kP, Constants.Shooter.kI, Constants.Shooter.kD);
   private SimpleMotorFeedforward ff =
-      new SimpleMotorFeedforward(
-          Constants.Shooter.kS,
-          Constants.Shooter.kV,
-          Constants.Shooter.kA);
+      new SimpleMotorFeedforward(Constants.Shooter.kS, Constants.Shooter.kV, Constants.Shooter.kA);
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -187,8 +181,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean atRPMGoal() {
-    return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM)
-            < Constants.Shooter.kShooterTolerance
+    return Math.abs(shooterInputs.velocityRPM - goalSpeedRPM) < Constants.Shooter.kShooterTolerance
         && goalSpeedRPM > 0;
   }
 

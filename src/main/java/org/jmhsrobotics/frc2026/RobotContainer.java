@@ -154,9 +154,7 @@ public class RobotContainer {
                 new ModuleIOSimRev());
 
         shooter =
-            new Shooter(
-                new SimShooterIO(
-                    0.06, Constants.Shooter.kI, Constants.Shooter.kD) {});
+            new Shooter(new SimShooterIO(0.06, Constants.Shooter.kI, Constants.Shooter.kD) {});
 
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
@@ -270,8 +268,7 @@ public class RobotContainer {
     control
         .shooterSpinup()
         .onTrue(new DistanceAdjustingShoot(shooter, drive))
-        .onFalse(
-            new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM).withTimeout(0.1));
+        .onFalse(new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM).withTimeout(0.1));
 
     // control
     //     .shooterSpinup()
@@ -281,8 +278,7 @@ public class RobotContainer {
     control
         .setpointShoot()
         .onTrue(new ShooterSpinup(shooter, Constants.Shooter.kHubSetPointRPM))
-        .onFalse(
-            new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM).withTimeout(0.1));
+        .onFalse(new ShooterSpinup(shooter, Constants.Shooter.kDefualtRPM).withTimeout(0.1));
 
     control
         .feedAndShoot()

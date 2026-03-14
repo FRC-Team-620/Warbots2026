@@ -27,9 +27,7 @@ public class Feed extends Command {
   public void execute() {
     if (shooter.atRPMGoal()) {
       if (MathUtil.isNear(
-          shooter.getServoGoal(),
-          shooter.getServoPosition(),
-          Constants.Shooter.kHoodTolerance)) {
+          shooter.getServoGoal(), shooter.getServoPosition(), Constants.Shooter.kHoodTolerance)) {
         this.feeder.setFeederSpeed(this.speed);
       } else {
         this.feeder.setFeederSpeed(0);
