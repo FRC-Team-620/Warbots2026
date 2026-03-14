@@ -29,7 +29,7 @@ public class PreloadAuto extends SequentialCommandGroup {
                 .withTimeout(5.0)
                 .andThen(
                     new ParallelCommandGroup(
-                        new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM),
+                        new ShooterSpinup(shooter, Constants.ShooterConstants.kAutoHubSetPointRPM),
                         new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle),
                         new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter)))));
   }
