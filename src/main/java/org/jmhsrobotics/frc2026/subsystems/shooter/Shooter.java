@@ -19,7 +19,11 @@ public class Shooter extends SubsystemBase {
   private Servo leftServo = new Servo(0);
   private Servo rightServo = new Servo(1);
 
-  private PIDController rpmController = new PIDController(0.097, 0, 0.007);
+  private PIDController rpmController =
+      new PIDController(
+          Constants.ShooterConstants.kP,
+          Constants.ShooterConstants.kI,
+          Constants.ShooterConstants.kD);
   private SimpleMotorFeedforward ff =
       new SimpleMotorFeedforward(
           Constants.ShooterConstants.kS,

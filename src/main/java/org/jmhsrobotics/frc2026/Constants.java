@@ -96,7 +96,8 @@ public final class Constants {
     public static final double kHoodTolerance = 0.05;
     public static final double kShooterRPMOffset = 300.0;
 
-    public static final double kHubSetPointRPM = 3700.0;
+    public static final double kHubSetPointRPM = 2600.0;
+    public static final double kAutoHubSetPointRPM = 2750.0;
     // FeedForward Constants - These are just guesses, will need to be tuned
     public static final double kS = 0.2; // Static Component of Friction
     public static final double kV = 0.12521; // Velocity Gain
