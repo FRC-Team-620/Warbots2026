@@ -34,7 +34,6 @@ import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.HoodDown;
-import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
@@ -294,8 +293,8 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
-        .onFalse(new IndependentFeed(feeder, 0));
+        .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+        .onFalse(new Feed(feeder, 0, shooter));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
 
