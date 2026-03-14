@@ -35,6 +35,7 @@ import org.jmhsrobotics.frc2026.commands.HoodDown;
 import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
+import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
@@ -389,6 +390,8 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
+    led.setDefaultCommand(new LEDToControlMode(this.led));
+
     // turns purple when the shooter is active, but not at the max RPM
     new Trigger(shooter::notMaxRPM)
         .onTrue(

@@ -40,6 +40,7 @@ public class GameState {
             ? 1
             : 0)) { // first and third quarter and we won, or second and fourth quarter and we lost
       return Hub.INACTIVE;
+
     } else { // first and third quarter and we lost, or second and fourth quarter and we won
       return Hub.ACTIVE;
     }

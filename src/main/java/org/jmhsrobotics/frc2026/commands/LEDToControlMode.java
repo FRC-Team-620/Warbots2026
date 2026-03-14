@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.Optional;
@@ -53,7 +54,10 @@ public class LEDToControlMode extends Command {
   @Override
   public void execute() {
     time = DriverStation.getMatchTime();
+    String hubActive = "Unknown Hub Activity";
     Optional<Alliance> ally = DriverStation.getAlliance();
+    SmartDashboard.putString("GameState/active_hub", hubActive);
+
     if (ally.isPresent() && DriverStation.isTeleop()) {
 
       if ((time < 133) && (time > 130)) {
@@ -72,12 +76,14 @@ public class LEDToControlMode extends Command {
       } else if ((time > 133) || (time <= 30)) {
         led.setPattern(bothHubsActivePattern);
       } else if (((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.ACTIVE))
-          || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE)))
+          || ((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.INACTIVE))) {
         led.setPattern(blueHubActivePattern);
-      else if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE))
-          || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE)))
+        hubActive = "BLUE Hub is Active";
+      } else if (((ally.get() == Alliance.Red) && (GameState.getHubStatus() == Hub.ACTIVE))
+          || ((ally.get() == Alliance.Blue) && (GameState.getHubStatus() == Hub.INACTIVE))) {
         led.setPattern(redHubActivePattern);
-      else led.setPattern(scrollingRainbow);
+        hubActive = "RED Hub is Active";
+      } else led.setPattern(scrollingRainbow);
     } else {
       led.setPattern(scrollingRainbow);
     }
