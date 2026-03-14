@@ -270,7 +270,8 @@ public class RobotContainer {
     control
         .shooterSpinup()
         .onTrue(new DistanceAdjustingShoot(shooter, drive))
-        .onFalse(new ShooterSpinup(shooter, 0));
+        .onFalse(
+            new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM).withTimeout(0.1));
 
     // control
     //     .shooterSpinup()
@@ -280,7 +281,8 @@ public class RobotContainer {
     control
         .setpointShoot()
         .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
-        .onFalse(new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM).withTimeout(0.1));
+        .onFalse(
+            new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM).withTimeout(0.1));
 
     control
         .feedAndShoot()
@@ -290,7 +292,9 @@ public class RobotContainer {
                 new DistanceAdjustingShoot(shooter, drive)))
         .onFalse(
             new ParallelCommandGroup(
-                new Feed(feeder, 0, shooter), new ShooterSetDutyCycle(shooter, 0)));
+                    new Feed(feeder, 0, shooter),
+                    new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM))
+                .withTimeout(0.1));
 
     control
         .runFeeder()
