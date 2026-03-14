@@ -70,7 +70,7 @@ public class DoubleControl implements ControlBoard {
   }
 
   @Override
-  public Trigger dutyCycleShoot() {
+  public Trigger setpointShoot() {
     return operator.leftStick();
   }
 

@@ -124,7 +124,7 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
-  public Trigger dutyCycleShoot() {
+  public Trigger setpointShoot() {
     return driver.leftStick();
   }
 
