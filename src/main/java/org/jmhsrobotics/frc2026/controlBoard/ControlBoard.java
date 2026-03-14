@@ -27,7 +27,7 @@ public interface ControlBoard {
 
   public Trigger shooterSpinup();
 
-  public Trigger dutyCycleShoot();
+  public Trigger setpointShoot();
 
   public Trigger feedAndShoot();
 

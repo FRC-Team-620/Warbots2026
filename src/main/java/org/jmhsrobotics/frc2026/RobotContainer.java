@@ -263,7 +263,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveCommand(drive, control));
     // intake.setDefaultCommand(new SlapdownMove(intake, 90));
     indexer.setDefaultCommand(new IndexerMove(indexer, 0.0));
-    // shooter.setDefaultCommand(new ShooterSpinup(shooter, 1300));
+    shooter.setDefaultCommand(new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM));
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
@@ -278,9 +278,9 @@ public class RobotContainer {
     //     .onFalse(new ShooterSetDutyCycle(shooter, 0));
 
     control
-        .dutyCycleShoot()
+        .setpointShoot()
         .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
-        .onFalse(new ShooterSpinup(shooter, 0.0));
+        .onFalse(new ShooterSpinup(shooter, Constants.ShooterConstants.kDefualtRPM).withTimeout(0.1));
 
     control
         .feedAndShoot()
