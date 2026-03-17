@@ -6,9 +6,6 @@ package org.jmhsrobotics.frc2026;
 
 import static edu.wpi.first.units.Units.Seconds;
 
-import java.util.jar.Attributes.Name;
-
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.reduxrobotics.canand.CanandEventLoop;
@@ -30,7 +27,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.jmhsrobotics.frc2026.commands.AimingAuto;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
-import org.jmhsrobotics.frc2026.commands.AlignToHubInAuto;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
 import org.jmhsrobotics.frc2026.commands.ClimberMove;
 import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
@@ -205,6 +201,8 @@ public class RobotContainer {
     this.control = new DoubleControl();
 
     led = new LED();
+
+    registerNamedCommands();
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
@@ -431,18 +429,25 @@ public class RobotContainer {
                 .withTimeout(1.5));
   }
 
-  private void registerNamedCommands(){
-    NamedCommands.registerCommand("Intake Down", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
-    NamedCommands.registerCommand("Intake Up", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
-    NamedCommands.registerCommand("Intake On", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+  private void registerNamedCommands() {
+    NamedCommands.registerCommand(
+        "Intake Down", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
+    NamedCommands.registerCommand(
+        "Intake Up", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
+    NamedCommands.registerCommand(
+        "Intake On", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     NamedCommands.registerCommand("Intake Off", new IntakeMove(intake, 0));
-    NamedCommands.registerCommand("Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    NamedCommands.registerCommand(
+        "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
     NamedCommands.registerCommand("Shooter Stop", new ShooterSpinup(shooter, 0));
-    NamedCommands.registerCommand("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
-    NamedCommands.registerCommand("Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
+    NamedCommands.registerCommand(
+        "Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
+    NamedCommands.registerCommand(
+        "Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     NamedCommands.registerCommand("Indexer Off", new IndexerMove(indexer, 0));
     NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control));
-
+    NamedCommands.registerCommand(
+        "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
   }
 
   /**
