@@ -89,8 +89,11 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     SmartDashboard.putNumber("MatchTime", Timer.getFPGATimestamp());
     Logger.recordOutput(
-        "Vision/CameraPosition",
-        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.rexCalibration));
+        "Vision/Camera0Position",
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.codyCalibration));
+    Logger.recordOutput(
+        "Vision/Camera1Position",
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.fivesCalibration));
     CommandScheduler.getInstance().run();
   }
 
