@@ -212,14 +212,27 @@ public class RobotContainer {
     autoChooser.addOption(
         "LeftTrenchAutoBLUE",
         new AimingAuto(
-            drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftTrenchStartBLUE, control));
+            drive,
+            shooter,
+            indexer,
+            feeder,
+            slapdown,
+            Constants.Auto.leftTrenchStartBLUE,
+            control));
     autoChooser.addOption(
         "LeftBumpAutoBLUE",
-        new AimingAuto(drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftBumpStartBLUE, control));
+        new AimingAuto(
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftBumpStartBLUE, control));
     autoChooser.addOption(
         "RightTrenchAutoBLUE",
         new AimingAuto(
-            drive, shooter, indexer, feeder, slapdown, Constants.Auto.rightTrenchStartBLUE, control));
+            drive,
+            shooter,
+            indexer,
+            feeder,
+            slapdown,
+            Constants.Auto.rightTrenchStartBLUE,
+            control));
     autoChooser.addOption(
         "RightBumpAutoBLUE",
         new AimingAuto(
@@ -234,14 +247,22 @@ public class RobotContainer {
             drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftTrenchStartRED, control));
     autoChooser.addOption(
         "LeftBumpAutoRED",
-        new AimingAuto(drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftBumpStartRED, control));
+        new AimingAuto(
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftBumpStartRED, control));
     autoChooser.addOption(
         "RightTrenchAutoRED",
         new AimingAuto(
-            drive, shooter, indexer, feeder, slapdown, Constants.Auto.rightTrenchStartRED, control));
+            drive,
+            shooter,
+            indexer,
+            feeder,
+            slapdown,
+            Constants.Auto.rightTrenchStartRED,
+            control));
     autoChooser.addOption(
         "RightBumpAutoRED",
-        new AimingAuto(drive, shooter, indexer, feeder, slapdown, Constants.Auto.rightBumpStartRED, control));
+        new AimingAuto(
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.rightBumpStartRED, control));
     // Configure the trigger bindings
 
     ballTracker = new BallTracker(drive::getPose, 10, 3);
