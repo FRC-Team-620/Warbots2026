@@ -20,8 +20,6 @@ public class Intake extends SubsystemBase {
 
     Logger.recordOutput("Intake/Intake Current Amps", inputs.intakeCurrentAmps);
     Logger.recordOutput("Intake/Intake Speed RPM", inputs.RPM);
-    // Logger.recordOutput("Intake/SlapDown Position Degrees", inputs.slapDownPositionDegrees);
-    // Logger.recordOutput("Intake/SlapDown Current Amps", inputs.slapDownCurrentAmps);
     Logger.recordOutput("Intake/Intake Temperature Celcius", inputs.intakeMotorTemperatureCelcius);
   }
 

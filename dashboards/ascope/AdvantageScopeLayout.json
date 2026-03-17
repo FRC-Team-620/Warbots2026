@@ -1,13 +1,13 @@
 {
   "hubs": [
     {
-      "x": 0,
+      "x": 480,
       "y": 0,
-      "width": 1180,
-      "height": 800,
+      "width": 800,
+      "height": 752,
       "state": {
         "sidebar": {
-          "width": 424,
+          "width": 244,
           "expanded": [
             "/SmartDashboard",
             "/LiveWindow/.status",
@@ -46,11 +46,15 @@
             "/AdvantageKit/Drive/Module3/TurnPosition",
             "/AdvantageKit/Drive/Module0/TurnPosition",
             "/AdvantageKit/Drive/Module1/TurnPosition",
-            "/AdvantageKit/Drive/Module2/TurnPosition"
+            "/AdvantageKit/Drive/Module2/TurnPosition",
+            "/AdvantageKit/RealOutputs/Align",
+            "/AdvantageKit/RealOutputs/Shooter",
+            "/AdvantageKit/RealOutputs/Drive",
+            "/AdvantageKit/Drive"
           ]
         },
         "tabs": {
-          "selected": 2,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
@@ -408,6 +412,92 @@
             },
             {
               "type": 1,
+              "title": "Slapdown",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/PIDSetpoint",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/SlapdownPositionDegrees",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/AbsoluteEncoderPos",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/PrimaryEncoderPos",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/SlapdownCurrentAmps",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "NT:/AdvantageKit/Slapdown/SlapdownSpeedDegPerSec",
+                    "logType": "Number",
+                    "visible": false,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "rightUnitConversion": {
+                  "autoTarget": null,
+                  "preset": null
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "pg5hl0i8k73xc4mn9ee7bpp54finx3d3",
+              "renderer": null,
+              "controlsHeight": 162
+            },
+            {
+              "type": 1,
               "title": "Intake",
               "controller": {
                 "leftSources": [
@@ -469,7 +559,7 @@
                 "leftSources": [
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter RPM",
+                    "logKey": "NT:/AdvantageKit/Shooter/VelocityRPM",
                     "logType": "Number",
                     "visible": true,
                     "options": {
@@ -479,7 +569,7 @@
                   },
                   {
                     "type": "stepped",
-                    "logKey": "NT:/AdvantageKit/RealOutputs/Shooter/Shooter Goal RPM",
+                    "logKey": "NT:/AdvantageKit/Shooter/GoalRPM",
                     "logType": "Number",
                     "visible": true,
                     "options": {
