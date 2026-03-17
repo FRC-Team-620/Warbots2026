@@ -2,12 +2,14 @@ package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jmhsrobotics.frc2026.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class SimShooterIO implements ShooterIO {
   public static final double IN_TO_KG_MOI = 0.0002926397; // TODO: Move to constants
@@ -23,9 +25,13 @@ public class SimShooterIO implements ShooterIO {
   public double outputVolts = 0;
   public double goalRPM = 0;
 
+  SimpleMotorFeedforward feedForward;
+
   public SimShooterIO(
       double k, double i, double d) { // TODO: This should prob be stored elsewhere (pid gains)
     pid = new PIDController(k, i, d);
+    feedForward =
+        new SimpleMotorFeedforward(Constants.ShooterConstants.kS, Constants.ShooterConstants.kV);
 
     SmartDashboard.putData("sim/flywheel/pid", pid);
   }
@@ -36,7 +42,8 @@ public class SimShooterIO implements ShooterIO {
     if (!isOpenLoop) {
       outvolts =
           MathUtil.clamp(
-              this.pid.calculate(flywheelSim.getAngularVelocityRPM()),
+              this.pid.calculate(flywheelSim.getAngularVelocityRPM())
+                  + feedForward.calculate(this.goalRPM),
               -RobotController.getBatteryVoltage(),
               RobotController.getBatteryVoltage());
     }
@@ -47,7 +54,9 @@ public class SimShooterIO implements ShooterIO {
     inputs.velocityRPM = flywheelSim.getAngularVelocityRPM();
     inputs.voltage = flywheelSim.getInputVoltage();
     inputs.tempC = 20;
+    inputs.positionROT += (flywheelSim.getAngularVelocityRPM() / 60.0) * Constants.ksimTimestep;
     inputs.goalRPM = this.goalRPM;
+    Logger.recordOutput("Shooter/VelocityRPS", inputs.velocityRPM / 60.0);
   }
 
   @Override
@@ -61,6 +70,11 @@ public class SimShooterIO implements ShooterIO {
     this.goalRPM = RPM;
     isOpenLoop = false;
     pid.setSetpoint(RPM);
+  }
+
+  public void setVoltage(double voltage) {
+    this.outputVolts = voltage;
+    isOpenLoop = true;
   }
 
   @Override

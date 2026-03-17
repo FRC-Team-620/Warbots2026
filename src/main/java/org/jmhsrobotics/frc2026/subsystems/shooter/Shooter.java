@@ -1,11 +1,13 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -17,8 +19,16 @@ public class Shooter extends SubsystemBase {
   private Servo leftServo = new Servo(0);
   private Servo rightServo = new Servo(1);
 
-  private PIDController rpmController = new PIDController(0.097, 0, 0.007);
-
+  private PIDController rpmController =
+      new PIDController(
+          Constants.ShooterConstants.kP,
+          Constants.ShooterConstants.kI,
+          Constants.ShooterConstants.kD);
+  private SimpleMotorFeedforward ff =
+      new SimpleMotorFeedforward(
+          Constants.ShooterConstants.kS,
+          Constants.ShooterConstants.kV,
+          Constants.ShooterConstants.kA);
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -32,6 +42,7 @@ public class Shooter extends SubsystemBase {
   private double hoodPosition = 0.30;
 
   public Shooter(ShooterIO shooterIO) {
+
     this.shooterIO = shooterIO;
     this.rpmMap = new InterpolatingDoubleTreeMap();
     createRPMMap(rpmMap);
@@ -46,16 +57,25 @@ public class Shooter extends SubsystemBase {
     shooterIO.updateInputs(shooterInputs);
 
     if (isClosedLoop) {
-      final double maxPercentOutput = 1;
-      // calculate PID output
-      double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
-      double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
-      double pidControllerOutput =
-          this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
-      double clampedOutput =
-          MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
+      // final double maxPercentOutput = 1;
+      // // calculate PID output
+      // double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
+      // double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
+      // double pidControllerOutput =
+      //     this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
 
-      shooterIO.setSpeed(clampedOutput);
+      // double clampedOutput =
+      //     MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
+      // shooterIO.setSpeed(clampedOutput);
+      double velRPS = shooterInputs.velocityRPM / 60.0;
+      double goalRPS = this.goalSpeedRPM / 60.0;
+
+      double pidControllerVoltage = this.rpmController.calculate(velRPS, goalRPS);
+
+      // double ffVolts =
+      //     ff.calculateWithVelocities(shooterInputs.velocityRPM / 60.0, this.goalSpeedRPM / 60.0);
+      double ffVolts = ff.calculate(goalRPS);
+      shooterIO.setVoltage(ffVolts + pidControllerVoltage); // TODO May want to clamp this.
     }
 
     leftServo.setPosition(hoodPosition);
@@ -77,6 +97,12 @@ public class Shooter extends SubsystemBase {
 
     Logger.processInputs("Shooter", shooterInputs);
 
+    Logger.recordOutput("Shooter/Goal RPM", shooterInputs.goalRPM);
+    Logger.recordOutput("Shooter/Velocity RPM", shooterInputs.velocityRPM);
+    Logger.recordOutput("Shooter/Voltage", shooterInputs.voltage);
+    Logger.recordOutput("Shooter/Current", shooterInputs.currentAMPS);
+    Logger.recordOutput("Shooter/Temperature C", shooterInputs.tempC);
+    Logger.recordOutput("Shooter/Position", shooterInputs.positionROT);
     Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
 
     Logger.recordOutput("Shooter/Active", isActive);
@@ -134,12 +160,26 @@ public class Shooter extends SubsystemBase {
     shooterIO.setVoltage(voltage);
   }
 
+  public void setVoltage(Voltage voltage) {
+    shooterIO.setVoltage(voltage.baseUnitMagnitude());
+  }
+
   public void setHoodPosition(double position) {
     this.hoodPosition = position;
   }
 
   public void stop() {
     shooterIO.stop();
+  }
+
+  public void LogData(SysIdRoutineLog log) {
+    // log.record("Shooter/Goal RPM", shooterInputs.goalRPM);
+    // log.record("Shooter/Velocity RPM", shooterInputs.velocityRPM);
+    // log.record("Shooter/Voltage", shooterInputs.voltage);
+    // log.record("Shooter/Current", shooterInputs.currentAMPS);
+    // log.record("Shooter/Temperature C", shooterInputs.tempC);
+    Logger.recordOutput("Shooter/Position", shooterInputs.positionROT);
+    Logger.recordOutput("Shooter/At RPM Goal", this.atRPMGoal());
   }
 
   public void setBrakeMode(boolean enable) {

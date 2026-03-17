@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.jmhsrobotics.frc2026.commands.AimingAuto;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -36,10 +38,12 @@ import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
+import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
+import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
@@ -80,6 +84,7 @@ import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 import org.jmhsrobotics.frc2026.util.BallTracker;
 import org.jmhsrobotics.frc2026.util.FuelSim;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -100,6 +105,7 @@ public class RobotContainer {
   private final Climber climber;
   private final Vision vision;
   private final Feeder feeder;
+  private final SysIdRoutine routine;
 
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -184,6 +190,14 @@ public class RobotContainer {
         break;
     }
 
+    routine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(
+                null,
+                null,
+                null, // Use default config
+                (state) -> Logger.recordOutput("SysIdTestState", state.toString())),
+            new SysIdRoutine.Mechanism(shooter::setVoltage, (null), shooter));
     this.control = new DoubleControl();
 
     led = new LED();
@@ -372,15 +386,23 @@ public class RobotContainer {
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData(
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
-    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 60.0));
+    SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 65.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
 
     SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
+
+    SmartDashboard.putData("Zero Slapdown", new ZeroSlapdownCommand(slapdown, 0.3, 20, 60, -0.1));
+    SmartDashboard.putData("Set Slapdown to Absolute", new SetSlapdownToAbs(slapdown));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
+
+    SmartDashboard.putData("SysID/DynamicTestF", routine.dynamic(Direction.kForward));
+    SmartDashboard.putData("SysID/QuasistaticTestF", routine.quasistatic(Direction.kForward));
+    SmartDashboard.putData("SysID/DynamicTestR", routine.dynamic(Direction.kReverse));
+    SmartDashboard.putData("SysID/QuasistaticTestR", routine.quasistatic(Direction.kReverse));
   }
 
   /**
