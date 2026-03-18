@@ -103,10 +103,10 @@ public class ModuleIOThrifty implements ModuleIO {
     // FIXME: remove and set these after tuning complete
     SmartDashboard.putNumber("DriveTuning/defaultMaxSpeedMPS", 3);
     SmartDashboard.putNumber("DriveTuning/turboMaxSpeedMPS", 4);
-    SmartDashboard.putNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+    SmartDashboard.putNumber("DriveTuning/intakeMaxSpeedMPS", 2.2);
     SmartDashboard.putNumber("DriveTuning/autoMaxSpeedMPS", 3);
     SmartDashboard.putNumber("DriveTuning/defaultMaxRotMPS", 3);
-    SmartDashboard.putNumber("DriveTuning/turboMaxRotMPS", 20);
+    SmartDashboard.putNumber("DriveTuning/turboMaxRotMPS", 3);
     SmartDashboard.putNumber("DriveTuning/intakeMaxRotMPS", 3);
     SmartDashboard.putNumber("DriveTuning/autoMaxRotMPS", 3);
 
