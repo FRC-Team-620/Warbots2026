@@ -17,6 +17,8 @@ public interface ControlBoard {
 
   public Trigger autoAim();
 
+  public Trigger faceDriveDirection();
+
   public Trigger turbo();
 
   public Trigger slowdown();
