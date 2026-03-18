@@ -128,9 +128,10 @@ public class DriveCommand extends Command {
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
-              this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.defaultMaxRotSpeedRadPerSec,
-              DriveConstants.deadBand);
+                  this.getSquareInput(-this.control.rotation())
+                      * DriveConstants.defaultMaxRotSpeedRadPerSec,
+                  DriveConstants.deadBand)
+              * 1.6;
     }
 
     /* APPLY SLEW RATE LIMITING */

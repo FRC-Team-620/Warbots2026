@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -137,6 +138,24 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    DriveConstants.defaultMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+    DriveConstants.turboMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/turboMaxSpeedMPS", 4);
+    DriveConstants.intakeMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+    DriveConstants.autoMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+
+    DriveConstants.defaultMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxRotRPS", 3);
+    DriveConstants.turboMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/turboMaxRotRPS", 3);
+    DriveConstants.intakeMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/intakeMaxRotRPS", 3);
+    DriveConstants.autoMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
+
     double cycle = (Math.sin(test) * 0.5) + 0.5;
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);

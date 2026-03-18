@@ -106,21 +106,21 @@ public class ModuleIOThrifty implements ModuleIO {
     SmartDashboard.putNumber("DriveTuning/intakeMaxSpeedMPS", 2);
     SmartDashboard.putNumber("DriveTuning/autoMaxSpeedMPS", 3);
     SmartDashboard.putNumber("DriveTuning/defaultMaxRotMPS", 3);
-    SmartDashboard.putNumber("DriveTuning/turboMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/turboMaxRotMPS", 20);
     SmartDashboard.putNumber("DriveTuning/intakeMaxRotMPS", 3);
     SmartDashboard.putNumber("DriveTuning/autoMaxRotMPS", 3);
 
-    SmartDashboard.putBoolean("DriveTuning/slewRateEnabled", true);
+    SmartDashboard.putBoolean("DriveTuning/slewRateEnabled", false);
     SmartDashboard.putNumber("DriveTuning/slewRatePeriodSecs", 0.3);
     SmartDashboard.putNumber("DriveTuning/rotSlewRatePeriodSecs", 0.2);
 
-    SmartDashboard.putNumber("DriveTuning/Speed-Kp", 0);
+    SmartDashboard.putNumber("DriveTuning/Speed-Kp", 0.02);
     SmartDashboard.putNumber("DriveTuning/Speed-Ki", 0);
     SmartDashboard.putNumber("DriveTuning/Speed-Kd", 0);
 
-    SmartDashboard.putNumber("DriveTuning/Rot-Kp", 0);
+    SmartDashboard.putNumber("DriveTuning/Rot-Kp", 8);
     SmartDashboard.putNumber("DriveTuning/Rot-Ki", 0);
-    SmartDashboard.putNumber("DriveTuning/Rot-Kd", 0);
+    SmartDashboard.putNumber("DriveTuning/Rot-Kd", 0.1);
 
     // Configure drive motor
     var driveConfig = new SparkMaxConfig();
