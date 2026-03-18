@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
 
@@ -40,6 +41,28 @@ public class ModuleIOSimRev implements ModuleIO {
   private double turnAppliedVolts = 0.0;
 
   public ModuleIOSimRev() {
+    // FIXME: remove and set these after tuning complete
+    SmartDashboard.putNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/turboMaxSpeedMPS", 4);
+    SmartDashboard.putNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+    SmartDashboard.putNumber("DriveTuning/autoMaxSpeedMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/defaultMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/turboMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/intakeMaxRotMPS", 3);
+    SmartDashboard.putNumber("DriveTuning/autoMaxRotMPS", 3);
+
+    SmartDashboard.putBoolean("DriveTuning/slewRateEnabled", false);
+    SmartDashboard.putNumber("DriveTuning/slewRatePeriodSecs", 0.3);
+    SmartDashboard.putNumber("DriveTuning/rotSlewRatePeriodSecs", 0.2);
+
+    SmartDashboard.putNumber("DriveTuning/Speed-Kp", 0);
+    SmartDashboard.putNumber("DriveTuning/Speed-Ki", 0);
+    SmartDashboard.putNumber("DriveTuning/Speed-Kd", 0);
+
+    SmartDashboard.putNumber("DriveTuning/Rot-Kp", 0);
+    SmartDashboard.putNumber("DriveTuning/Rot-Ki", 0);
+    SmartDashboard.putNumber("DriveTuning/Rot-Kd", 0);
+
     // Create drive and turn sim models
     driveSim =
         new DCMotorSim(
