@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private InterpolatingDoubleTreeMap hoodMap;
   private double hoodRealPosition = 0.0;
 
-  private double hoodPosition = 0.2;
+  private double hoodPosition = 0.30;
 
   public Shooter(ShooterIO shooterIO) {
 
