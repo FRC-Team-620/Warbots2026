@@ -118,6 +118,11 @@ public final class Constants {
     public static final double kSlapdownP = 0.1;
     public static final double kSlapdownI = 0.0;
     public static final double kSlapdownD = 0.001;
+
+    public static final double kTimeoutSeconds = 0.3;
+    public static final double kHomingCurrentAmps = 20;
+    public static final double kHomingGoalAngle = 60;
+    public static final double kSpeedDutyCycle = -0.1;
   }
 
   public static class Indexer {

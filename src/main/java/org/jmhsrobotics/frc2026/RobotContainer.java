@@ -112,6 +112,8 @@ public class RobotContainer {
   public FuelSim fuelSim = new FuelSim("FuelSim");
   public BallTracker ballTracker;
 
+  private final Command zeroSlapdown;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     SmartDashboard.putString("/CurrentSimMode", Constants.currentMode.toString());
@@ -201,6 +203,14 @@ public class RobotContainer {
     this.control = new DoubleControl();
 
     led = new LED();
+
+    zeroSlapdown =
+        new ZeroSlapdownCommand(
+            slapdown,
+            Constants.Slapdown.kTimeoutSeconds,
+            Constants.Slapdown.kHomingCurrentAmps,
+            Constants.Slapdown.kHomingGoalAngle,
+            Constants.Slapdown.kSpeedDutyCycle);
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
@@ -415,7 +425,7 @@ public class RobotContainer {
 
     SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
 
-    SmartDashboard.putData("Zero Slapdown", new ZeroSlapdownCommand(slapdown, 0.3, 20, 60, -0.1));
+    SmartDashboard.putData("Zero Slapdown", zeroSlapdown);
     SmartDashboard.putData("Set Slapdown to Absolute", new SetSlapdownToAbs(slapdown));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
@@ -455,6 +465,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.get();
+    Command auto = autoChooser.get();
+    return zeroSlapdown.andThen(auto);
   }
 }

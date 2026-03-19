@@ -38,7 +38,6 @@ public class AimingAuto extends SequentialCommandGroup {
                 new AlignToHub(drive, control),
                 new DistanceAdjustingShoot(shooter, drive),
                 new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle),
-                new ZeroSlapdownCommand(slapdown, 0.3, 20, 60, -0.1),
                 new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))));
   }
 }
