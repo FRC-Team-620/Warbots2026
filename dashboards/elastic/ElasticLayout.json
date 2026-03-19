@@ -2079,18 +2079,6 @@
             }
           },
           {
-            "title": "Shooter FlyWheel PID",
-            "x": 0.0,
-            "y": 128.0,
-            "width": 256.0,
-            "height": 384.0,
-            "type": "PIDController",
-            "properties": {
-              "topic": "/SmartDashboard/ShooterFlywheel/pid",
-              "period": 0.06
-            }
-          },
-          {
             "title": "FlyWheel PID",
             "x": 768.0,
             "y": 128.0,
