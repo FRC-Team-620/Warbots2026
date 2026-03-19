@@ -32,11 +32,13 @@ import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.commands.FaceDriveDirection;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.HoodDown;
 import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
+import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
@@ -356,6 +358,7 @@ public class RobotContainer {
     control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
     control.autoAim().whileTrue(new AlignToHub(drive, control));
+    control.faceDriveDirection().whileTrue(new FaceDriveDirection(drive, control));
 
     control
         .resetForward()
@@ -392,6 +395,7 @@ public class RobotContainer {
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 65.0));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
+    SmartDashboard.putData("Face Drive Direction", new FaceDriveDirection(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
@@ -415,6 +419,8 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
+    led.setDefaultCommand(new LEDToControlMode(this.led));
+
     // turns purple when the shooter is active, but not at the max RPM
     new Trigger(shooter::notMaxRPM)
         .onTrue(

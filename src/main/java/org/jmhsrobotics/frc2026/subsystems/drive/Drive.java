@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -74,7 +75,6 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  private double maxLinearSpeedMetersPerSec = DriveConstants.maxSpeedMetersPerSec;
   private boolean autoAlignComplete = false;
   private boolean turboMode = false;
   private boolean slowdownMode = false;
@@ -138,6 +138,24 @@ public class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
+    DriveConstants.defaultMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+    DriveConstants.turboMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/turboMaxSpeedMPS", 4);
+    DriveConstants.intakeMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+    DriveConstants.autoMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+
+    DriveConstants.defaultMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxRotRPS", 3);
+    DriveConstants.turboMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/turboMaxRotRPS", 3);
+    DriveConstants.intakeMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/intakeMaxRotRPS", 3);
+    DriveConstants.autoMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
+
     double cycle = (Math.sin(test) * 0.5) + 0.5;
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
@@ -255,7 +273,7 @@ public class Drive extends SubsystemBase {
     speeds = ChassisSpeeds.discretize(speeds, Constants.krealTimeStep);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        setpointStates, this.getMaxLinearSpeedMetersPerSec());
+        setpointStates, this.getTheoreticalMaxSpeedMetersPerSec());
 
     // Log unoptimized setpoints
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -378,8 +396,16 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the maximum linear speed in meters per sec. */
-  public double getMaxLinearSpeedMetersPerSec() {
-    return DriveConstants.maxSpeedMetersPerSec;
+  public double getTheoreticalMaxSpeedMetersPerSec() {
+    return DriveConstants.theoreticalMaxSpeedMetersPerSec;
+  }
+
+  public double getTurboMaxLinearSpeedMetersPerSec() {
+    return DriveConstants.turboMaxSpeedMetersPerSec;
+  }
+
+  public double getAutoMaxLinearSpeedMetersPerSec() {
+    return DriveConstants.autoMaxSpeedMetersPerSec;
   }
 
   /** Returns the maximum angular speed in radians per sec. */

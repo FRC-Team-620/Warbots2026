@@ -19,15 +19,45 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveConstants {
 
-  public static final double maxSpeedMetersPerSec = 5.0;
+  // FIXME: change back to "final" after tuning complete
+  public static double defaultMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+  public static double turboMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/turboMaxSpeedMPS", 4);
+  public static double intakeMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+  public static double autoMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+
+  public static double defaultMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxRotRPS", 3);
+  public static double turboMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/turboMaxRotRPS", 3);
+  public static double intakeMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/intakeMaxRotRPS", 3);
+  public static double autoMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
+
+  // as of Mar 12, 2026 we are running Thrifty Swerve with 12:18 gearing = 15ft/s
+  public static final double theoreticalMaxSpeedFeetPerSec = 15;
+  public static final double theoreticalMaxSpeedMetersPerSec =
+      Units.feetToMeters(
+          theoreticalMaxSpeedFeetPerSec); // ft to meters because thrifty gives us ft/s
 
   // change coefficients when we want to implement turbo
   public static final double turboCoefficient = 1;
   public static final double nonTurboCoefficient = 0.9;
   public static final double slowdownCoefficient = 0.6;
+  public static final boolean driveSlewRateEnabled =
+      SmartDashboard.getBoolean("DriveTuning/slewRateEnabled", true);
+  public static final double driveSlewRatePeriodSecs =
+      SmartDashboard.getNumber("DriveTuning/slewRatePeriodSecs", 0.3);
+  public static final double rotSlewRatePeriodSecs =
+      SmartDashboard.getNumber("DriveTuning/rotSlewRatePeriodSecs", 0.2);
   public static final double deadBand = 0.05;
 
   public static final double odometryFrequency = 100.0; // Hz
@@ -53,7 +83,7 @@ public class DriveConstants {
         };
 
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     // Zeroed rotation values for each module, see setup instructions
 
@@ -120,7 +150,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                autoMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,
@@ -135,7 +165,7 @@ public class DriveConstants {
     public static final double wheelBase = Units.inchesToMeters(20); // this too?
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     public static final Translation2d[] moduleTranslations =
         new Translation2d[] {
@@ -175,6 +205,7 @@ public class DriveConstants {
 
     // Drive PID configuration
     public static final double driveKp = 0.025;
+    public static final double driveKi = 0.0;
     public static final double driveKd = 0.0;
     public static final double driveKs = 0.0;
     public static final double driveKv = 0.126;
@@ -199,6 +230,7 @@ public class DriveConstants {
     // Turn PID configuration
     // 14 for p value was too much
     public static final double turnKp = 6;
+    public static final double turnKi = 0.0;
     public static final double turnKd = 0.03;
     public static final double turnSimP = 0.2;
     public static final double turnSimD = 0.0;
@@ -215,7 +247,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                defaultMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,
@@ -230,7 +262,7 @@ public class DriveConstants {
     public static final double wheelBase = Units.inchesToMeters(22.5); // this too?
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     public static final Translation2d[] moduleTranslations =
         new Translation2d[] {
@@ -308,7 +340,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                defaultMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,
