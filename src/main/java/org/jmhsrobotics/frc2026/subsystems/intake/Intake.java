@@ -20,9 +20,7 @@ public class Intake extends SubsystemBase {
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
     Trigger isStalled = new Trigger(this::isStalled);
-    isStalled.whileTrue(
-        new IntakeMove(this, -1)
-            .withTimeout(0.25).repeatedly());
+    isStalled.whileTrue(new IntakeMove(this, -1).withTimeout(0.5).repeatedly());
     isStalled.onFalse(new IntakeMove(this, Constants.Intake.kSpeedDutyCycle));
   }
 
