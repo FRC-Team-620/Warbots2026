@@ -6,13 +6,11 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-
-import com.revrobotics.spark.config.SparkMaxConfig;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
 
@@ -54,10 +52,10 @@ public class NeoIntakeIO implements IntakeIO {
         intakeMotor::getMotorTemperature,
         (value) -> inputs.intakeMotorTemperatureCelcius = value);
 
-    boolean isStalled = Math.abs(intakeMotor.getAppliedOutput()) > 0.1 && Math.abs(intakeMotor.getEncoder().getVelocity()) < 10.0;
+    boolean isStalled =
+        Math.abs(intakeMotor.getAppliedOutput()) > 0.1
+            && Math.abs(intakeMotor.getEncoder().getVelocity()) < 10.0;
     stallAlert.set(stallDebouncer.calculate(isStalled));
-
-
   }
 
   @Override
