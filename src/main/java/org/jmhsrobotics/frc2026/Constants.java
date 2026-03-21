@@ -114,6 +114,8 @@ public final class Constants {
     public static final double kSlapdownUpPositionDegrees = 60; // TODO update this (IMPORTANT)
     public static final double kSlapdownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
     public static final double kSlapdownToleranceDegrees = 5; // TODO update this (IMPORTANT)
+    public static final double kSlapdownJiggleUpDegrees = 70;
+    public static final double kSlapdownJiggleDownDegrees = 150;
 
     public static final double kSlapdownP = 0.1;
     public static final double kSlapdownI = 0.0;
