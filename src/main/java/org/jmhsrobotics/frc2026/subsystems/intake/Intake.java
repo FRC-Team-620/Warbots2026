@@ -1,6 +1,8 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -10,6 +12,12 @@ public class Intake extends SubsystemBase {
 
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
+    Trigger isStalled = new Trigger(this::isStalled);
+    isStalled.onTrue(new IntakeMove(this, -1).withTimeout(0.25));
+  }
+
+  public boolean isStalled() {
+    return inputs.stalled;
   }
 
   @Override
