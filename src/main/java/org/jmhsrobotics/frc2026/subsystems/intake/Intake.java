@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.littletonrobotics.junction.Logger;
 
@@ -13,13 +14,16 @@ public class Intake extends SubsystemBase {
   private IntakeIO intakeIO;
   private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   private boolean isActive = false;
-  private Debouncer stallDebouncer = new Debouncer(0.25, DebounceType.kBoth);
+  private Debouncer stallDebouncer = new Debouncer(0.100, DebounceType.kBoth);
   private Alert stallAlert = new Alert("Intake Motor Stalled!", AlertType.kWarning);
 
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
     Trigger isStalled = new Trigger(this::isStalled);
-    isStalled.onTrue(new IntakeMove(this, -1).withTimeout(0.25));
+    isStalled.whileTrue(
+        new IntakeMove(this, -1)
+            .withTimeout(0.25).repeatedly());
+    isStalled.onFalse(new IntakeMove(this, Constants.Intake.kSpeedDutyCycle));
   }
 
   public boolean isStalled() {
