@@ -314,7 +314,7 @@ public class RobotContainer {
         .slapdownMoveUp()
         .onTrue(
             new ParallelRaceGroup(
-                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle/3),
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle / 3),
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
 
     // Intake Bindings
