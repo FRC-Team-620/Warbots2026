@@ -14,13 +14,13 @@ public class Intake extends SubsystemBase {
   private IntakeIO intakeIO;
   private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   private boolean isActive = false;
-  private Debouncer stallDebouncer = new Debouncer(0.100, DebounceType.kBoth);
+  private Debouncer stallDebouncer = new Debouncer(0.50, DebounceType.kBoth);
   private Alert stallAlert = new Alert("Intake Motor Stalled!", AlertType.kWarning);
 
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
     Trigger isStalled = new Trigger(this::isStalled);
-    isStalled.whileTrue(new IntakeMove(this, -1).withTimeout(0.5).repeatedly());
+    isStalled.whileTrue(new IntakeMove(this, -1).withTimeout(0.7).repeatedly());
     isStalled.onFalse(new IntakeMove(this, Constants.Intake.kSpeedDutyCycle));
   }
 
