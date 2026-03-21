@@ -25,6 +25,8 @@ public interface ControlBoard {
 
   public Trigger hoodDown();
 
+  public Trigger XBrake();
+
   // =======Operator Controls=======
 
   public Trigger shooterSpinup();

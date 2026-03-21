@@ -67,6 +67,11 @@ public class DoubleControl implements ControlBoard {
     return driver.rightStick();
   }
 
+  @Override
+  public Trigger XBrake(){
+    return driver.a();
+  }
+
   // ========Operator Controls========
 
   @Override

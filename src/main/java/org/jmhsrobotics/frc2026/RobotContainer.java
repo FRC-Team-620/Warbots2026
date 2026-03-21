@@ -46,6 +46,7 @@ import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
+import org.jmhsrobotics.frc2026.commands.XBrake;
 import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
@@ -299,7 +300,8 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
+        .onTrue(
+            new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
         .onFalse(new IndependentFeed(feeder, 0));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
@@ -358,6 +360,8 @@ public class RobotContainer {
 
     control.autoAim().whileTrue(new AlignToHub(drive, control));
     control.faceDriveDirection().whileTrue(new FaceDriveDirection(drive, control));
+
+    control.XBrake().onTrue(new XBrake(drive));
 
     control
         .resetForward()
