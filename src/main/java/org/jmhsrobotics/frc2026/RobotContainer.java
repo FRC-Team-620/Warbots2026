@@ -284,9 +284,12 @@ public class RobotContainer {
     control
         .dutyCycleShoot()
         .whileTrue(
-            new SequentialCommandGroup(
-                Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
-                new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)));
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
+                    new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)),
+                new SlapdownJiggle(slapdown),
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
 
     control
         .feedAndShoot()
