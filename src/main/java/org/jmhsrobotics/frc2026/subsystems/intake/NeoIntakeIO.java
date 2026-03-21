@@ -53,8 +53,8 @@ public class NeoIntakeIO implements IntakeIO {
         (value) -> inputs.intakeMotorTemperatureCelcius = value);
 
     boolean isStalled =
-        Math.abs(intakeMotor.getAppliedOutput()) > 0.1
-            && Math.abs(intakeMotor.getEncoder().getVelocity()) < 10.0;
+        Math.abs(speedDutyCycle) > 0.1 && Math.abs(intakeMotor.getEncoder().getVelocity()) < 10.0;
+
     stallAlert.set(stallDebouncer.calculate(isStalled));
   }
 
