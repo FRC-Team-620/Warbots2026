@@ -56,13 +56,6 @@ public class DriveCommand extends Command {
   static final PIDController yController = new PIDController(0.6, 0, 0);
   static final PIDController thetaController = new PIDController(0.1, 0, 0);
 
-  static final SlewRateLimiter xFilter =
-      new SlewRateLimiter(DriveConstants.driveSlewRatePeriodSecs);
-  static final SlewRateLimiter yFilter =
-      new SlewRateLimiter(DriveConstants.driveSlewRatePeriodSecs);
-  static final SlewRateLimiter rotFilter =
-      new SlewRateLimiter(DriveConstants.rotSlewRatePeriodSecs);
-
   private final Drive drive;
   private final ControlBoard control;
 
@@ -132,13 +125,6 @@ public class DriveCommand extends Command {
                       * DriveConstants.defaultMaxRotSpeedRadPerSec,
                   DriveConstants.deadBand)
               * 1.6;
-    }
-
-    /* APPLY SLEW RATE LIMITING */
-    if (DriveConstants.driveSlewRateEnabled) {
-      xSpeed = xFilter.calculate(xSpeed);
-      ySpeed = yFilter.calculate(ySpeed);
-      rotationSpeed = rotFilter.calculate(rotationSpeed);
     }
 
     boolean isFlipped =

@@ -281,8 +281,10 @@ public class RobotContainer {
 
     control
         .dutyCycleShoot()
-        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
-        .onFalse(new ShooterSpinup(shooter, 0.0));
+        .whileTrue(
+            new SequentialCommandGroup(
+                Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
+                new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)));
 
     control
         .feedAndShoot()
