@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -314,8 +315,8 @@ public class RobotContainer {
     control
         .slapdownMoveUp()
         .onTrue(
-            new SequentialCommandGroup(
-                new IntakeMove(intake, 0).withTimeout(0.2),
+            new ParallelRaceGroup(
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle / 3),
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
 
     // Intake Bindings
