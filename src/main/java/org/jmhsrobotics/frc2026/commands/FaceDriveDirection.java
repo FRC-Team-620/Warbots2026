@@ -45,12 +45,14 @@ public class FaceDriveDirection extends Command {
     // constants
     double xSpeed =
         MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationY()) * DriveConstants.slowdownCoefficient,
+            this.getSquareInput(-this.control.translationY())
+                * DriveConstants.intakeMaxSpeedMetersPerSec,
             DriveConstants.deadBand);
 
     double ySpeed =
         MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationX()) * DriveConstants.slowdownCoefficient,
+            this.getSquareInput(-this.control.translationX())
+                * DriveConstants.intakeMaxSpeedMetersPerSec,
             DriveConstants.deadBand);
 
     isFlipped =
@@ -68,11 +70,13 @@ public class FaceDriveDirection extends Command {
     // 2. Calculate PID output using RADIANS
     double thetaOutput =
         thetaController.calculate(
-            drive.getPose().getRotation().getRadians(), // Measurement
+            (isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()).getRadians(), // Measurement
             targetHeading.getRadians() // Setpoint
             );
 
     ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, thetaOutput);
+
+    Logger.recordOutput("Drive/IntakeDrive/isRed", isFlipped);
 
     speeds =
         ChassisSpeeds.fromFieldRelativeSpeeds(
