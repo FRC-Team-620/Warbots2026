@@ -1,5 +1,9 @@
 package org.jmhsrobotics.frc2026.subsystems.intake;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
@@ -9,6 +13,8 @@ public class Intake extends SubsystemBase {
   private IntakeIO intakeIO;
   private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
   private boolean isActive = false;
+  private Debouncer stallDebouncer = new Debouncer(0.25, DebounceType.kBoth);
+  private Alert stallAlert = new Alert("Intake Motor Stalled!", AlertType.kWarning);
 
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
@@ -22,7 +28,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    stallAlert.set(stallDebouncer.calculate(inputs.stalled));
     intakeIO.updateInputs(inputs);
 
     Logger.processInputs("Intake", inputs);
