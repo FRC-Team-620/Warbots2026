@@ -301,8 +301,7 @@ public class RobotContainer {
     control
         .runFeeder()
         .onTrue(
-            new ParallelCommandGroup(
-                new XBrake(drive), new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle)))
+            new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
         .onFalse(new IndependentFeed(feeder, 0));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
@@ -361,6 +360,8 @@ public class RobotContainer {
 
     control.autoAim().whileTrue(new AlignToHub(drive, control));
     control.faceDriveDirection().whileTrue(new FaceDriveDirection(drive, control));
+
+    control.XBrake().onTrue(new XBrake(drive));
 
     control
         .resetForward()

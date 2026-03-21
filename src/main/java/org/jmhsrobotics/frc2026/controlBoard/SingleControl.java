@@ -66,6 +66,10 @@ public class SingleControl implements ControlBoard {
     return null;
   }
 
+  public Trigger XBrake(){
+    return null;
+  }
+
   // ========Operator Controls========
 
   @Override
