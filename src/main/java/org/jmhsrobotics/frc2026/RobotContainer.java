@@ -290,8 +290,8 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
                     new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))));
-                // new SlapdownJiggle(slapdown),
-                // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
+    // new SlapdownJiggle(slapdown),
+    // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
     // new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
 
     control
@@ -307,10 +307,11 @@ public class RobotContainer {
     control
         .runFeeder()
         .whileTrue(
-            new ParallelCommandGroup(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
-            new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
-            new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
-        // .onFalse(new IndependentFeed(feeder, 0));
+            new ParallelCommandGroup(
+                new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
+                new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
+                new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
+    // .onFalse(new IndependentFeed(feeder, 0));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
 
