@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -39,6 +40,7 @@ import org.jmhsrobotics.frc2026.commands.HoodDown;
 import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
+import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
@@ -287,8 +289,9 @@ public class RobotContainer {
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
-                    new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)),
-                new SlapdownJiggle(slapdown)));
+                    new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))));
+                // new SlapdownJiggle(slapdown),
+                // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
     // new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
 
     control
@@ -303,8 +306,11 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle))
-        .onFalse(new IndependentFeed(feeder, 0));
+        .whileTrue(
+            new ParallelCommandGroup(new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
+            new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
+            new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
+        // .onFalse(new IndependentFeed(feeder, 0));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
 
@@ -315,7 +321,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees)
                     .withTimeout(1.5),
-                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
+                new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
     control
         .slapdownMoveUp()
         .onTrue(
@@ -328,13 +334,13 @@ public class RobotContainer {
         .intakeOn()
         .onTrue(
             new ParallelCommandGroup(
-                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle),
+                new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
                 Commands.run(
                         () ->
                             led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
                     .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
-    control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
+    control.extakeFuel().onTrue(new IntakeMoveAntiJam(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
     // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
@@ -415,6 +421,7 @@ public class RobotContainer {
     SmartDashboard.putData("SysID/QuasistaticTestF", routine.quasistatic(Direction.kForward));
     SmartDashboard.putData("SysID/DynamicTestR", routine.dynamic(Direction.kReverse));
     SmartDashboard.putData("SysID/QuasistaticTestR", routine.quasistatic(Direction.kReverse));
+    SmartDashboard.putData("AntiJam Intake", new IntakeMoveAntiJam(intake, 1));
   }
 
   /**

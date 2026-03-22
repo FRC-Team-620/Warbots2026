@@ -5,9 +5,6 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import org.jmhsrobotics.frc2026.Constants;
-import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -19,9 +16,9 @@ public class Intake extends SubsystemBase {
 
   public Intake(IntakeIO intakeIO) {
     this.intakeIO = intakeIO;
-    Trigger isStalled = new Trigger(this::isStalled);
-    isStalled.whileTrue(new IntakeMove(this, -1).withTimeout(0.5).repeatedly());
-    isStalled.onFalse(new IntakeMove(this, Constants.Intake.kSpeedDutyCycle));
+    // Trigger isStalled = new Trigger(this::isStalled);
+    // isStalled.whileTrue(new IntakeMove(this, -1).withTimeout(0.5).repeatedly());
+    // isStalled.onFalse(new IntakeMove(this, Constants.Intake.kSpeedDutyCycle));
   }
 
   public boolean isStalled() {
