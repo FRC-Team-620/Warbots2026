@@ -75,7 +75,7 @@ public class VisionIOPhotonVision implements VisionIO {
             Logger.recordOutput(
                 "DEBUG/" + this.name + "/a" + i,
                 VisonPosition.computeRobotToCamera(
-                        new Pose3d(0.1, 0.1, 0.1, new Rotation3d()), target.bestCameraToTarget)
+                        new Pose3d(0.1, -0.9684, 0.1, new Rotation3d()), target.bestCameraToTarget)
                     .toString());
           }
           inputs.tagPoses[i] =
