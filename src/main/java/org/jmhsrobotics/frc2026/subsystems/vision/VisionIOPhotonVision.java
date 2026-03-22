@@ -21,10 +21,10 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.jmhsrobotics.frc2026.util.VisonPosition;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.jmhsrobotics.frc2026.util.VisonPosition;
 
 /** IO implementation for real PhotonVision hardware. */
 public class VisionIOPhotonVision implements VisionIO {
@@ -72,7 +72,11 @@ public class VisionIOPhotonVision implements VisionIO {
           if (DEBUG) {
             Logger.recordOutput(
                 "DEBUG/" + this.name + "/" + i, new Pose3d().plus(target.bestCameraToTarget));
-            Logger.recordOutput("DEBUG/" + this.name + "/a" + i, VisonPosition.computeRobotToCamera(new Pose3d(0.1, 0.1, 0.1, new Rotation3d()), target.bestCameraToTarget).toString());
+            Logger.recordOutput(
+                "DEBUG/" + this.name + "/a" + i,
+                VisonPosition.computeRobotToCamera(
+                        new Pose3d(0.1, 0.1, 0.1, new Rotation3d()), target.bestCameraToTarget)
+                    .toString());
           }
           inputs.tagPoses[i] =
               new TagPose(
