@@ -36,10 +36,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
 
-public class DriveCommands {
+public class DriveCommand extends Command {
   private static final double DEADBAND = 0.05;
   private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.4;
@@ -55,7 +56,102 @@ public class DriveCommands {
   static final PIDController yController = new PIDController(0.6, 0, 0);
   static final PIDController thetaController = new PIDController(0.1, 0, 0);
 
-  private DriveCommands() {}
+  private final Drive drive;
+  private final ControlBoard control;
+
+  public DriveCommand(Drive drive, ControlBoard control) {
+    this.drive = drive;
+    this.control = control;
+    addRequirements(this.drive);
+  }
+
+  @Override
+  public void initialize() {}
+
+  @Override
+  public void execute() {
+    double xSpeed, ySpeed, rotationSpeed;
+    /* TURBO MODE */
+    if (drive.getTurboMode()) {
+      xSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationY())
+                  * DriveConstants.turboMaxSpeedMetersPerSec,
+              DriveConstants.deadBand);
+      ySpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationX())
+                  * DriveConstants.turboMaxSpeedMetersPerSec,
+              DriveConstants.deadBand);
+      rotationSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.rotation())
+                  * DriveConstants.turboMaxRotSpeedRadPerSec,
+              DriveConstants.deadBand);
+    }
+    /* INTAKE MODE */
+    else if (drive.getSlowdownMode()) {
+      xSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationY())
+                  * DriveConstants.intakeMaxSpeedMetersPerSec,
+              DriveConstants.deadBand);
+      ySpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationX())
+                  * DriveConstants.intakeMaxSpeedMetersPerSec,
+              DriveConstants.deadBand);
+      rotationSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.rotation())
+                  * DriveConstants.intakeMaxRotSpeedRadPerSec,
+              DriveConstants.deadBand);
+    }
+    /* DEFAULT SPEED */
+    else {
+      xSpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationY())
+                  * DriveConstants.defaultMaxSpeedMetersPerSec,
+              DriveConstants.deadBand);
+      ySpeed =
+          MathUtil.applyDeadband(
+              this.getSquareInput(-this.control.translationX())
+                  * DriveConstants.defaultMaxSpeedMetersPerSec,
+              DriveConstants.deadBand);
+      rotationSpeed =
+          MathUtil.applyDeadband(
+                  this.getSquareInput(-this.control.rotation())
+                      * DriveConstants.defaultMaxRotSpeedRadPerSec,
+                  DriveConstants.deadBand)
+              * 1.6;
+    }
+
+    boolean isFlipped =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+
+    ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
+    speeds =
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            speeds,
+            isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation());
+    this.drive.runVelocity(speeds);
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    this.drive.stop();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
+
+  private double getSquareInput(double input) {
+    return Math.pow(input, 2) * Math.signum(input);
+  }
 
   public static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
     // Apply deadband
@@ -106,8 +202,8 @@ public class DriveCommands {
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(
-                      linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                      linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getX() * drive.getTheoreticalMaxSpeedMetersPerSec(),
+                      linearVelocity.getY() * drive.getTheoreticalMaxSpeedMetersPerSec(),
                       omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()

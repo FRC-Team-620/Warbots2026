@@ -1,0 +1,31 @@
+package org.jmhsrobotics.frc2026.subsystems.intake;
+
+import org.littletonrobotics.junction.AutoLog;
+
+// TODO: in future we may want to split up this hardware layer for arm and intake motors
+public interface IntakeIO {
+  @AutoLog
+  public static class IntakeIOInputs {
+    public double intakeCurrentAmps;
+    public double intakeMotorTemperatureCelcius;
+    public double RPM;
+    public double outputSpeedDutyCycle;
+    public boolean stalled;
+  }
+
+  public default void setPIDF(
+      double p,
+      double i,
+      double d,
+      double f) {} // TODO: inclear what loop this PIDF is setting, is it ment for the arm or intake
+
+  // motors
+
+  public default void setSpeedDutyCycle(double dutyCycle) {}
+
+  public default void stop() {}
+
+  public default void updateInputs(IntakeIOInputs inputs) {}
+
+  public default void setIntakeBrakeMode(boolean enable) {}
+}

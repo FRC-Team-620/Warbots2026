@@ -19,14 +19,40 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveConstants {
 
-  public static final double maxSpeedMetersPerSec = 5.0;
+  // FIXME: change back to "final" after tuning complete
+  public static double defaultMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+  public static double turboMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/turboMaxSpeedMPS", 4);
+  public static double intakeMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+  public static double autoMaxSpeedMetersPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+
+  public static double defaultMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/defaultMaxRotRPS", 3);
+  public static double turboMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/turboMaxRotRPS", 3);
+  public static double intakeMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/intakeMaxRotRPS", 3);
+  public static double autoMaxRotSpeedRadPerSec =
+      SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
+
+  // as of Mar 12, 2026 we are running Thrifty Swerve with 12:18 gearing = 15ft/s
+  public static final double theoreticalMaxSpeedFeetPerSec = 15;
+  public static final double theoreticalMaxSpeedMetersPerSec =
+      Units.feetToMeters(
+          theoreticalMaxSpeedFeetPerSec); // ft to meters because thrifty gives us ft/s
 
   // change coefficients when we want to implement turbo
   public static final double turboCoefficient = 1;
   public static final double nonTurboCoefficient = 0.9;
+  public static final double slowdownCoefficient = 0.6;
+  public static final double deadBand = 0.05;
 
   public static final double odometryFrequency = 100.0; // Hz
 
@@ -51,7 +77,7 @@ public class DriveConstants {
         };
 
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     // Zeroed rotation values for each module, see setup instructions
 
@@ -59,14 +85,14 @@ public class DriveConstants {
     public static final int pigeonCanId = 62; // gyro
 
     public static final int frontLeftDriveCanId = 10;
-    public static final int backLeftDriveCanId = 12;
+    public static final int backLeftDriveCanId = 13;
     public static final int frontRightDriveCanId = 11;
-    public static final int backRightDriveCanId = 13;
+    public static final int backRightDriveCanId = 12;
 
     public static final int frontLeftTurnCanId = 20;
-    public static final int backLeftTurnCanId = 22;
+    public static final int backLeftTurnCanId = 23;
     public static final int frontRightTurnCanId = 21;
-    public static final int backRightTurnCanId = 23;
+    public static final int backRightTurnCanId = 22;
 
     // Drive motor configuration
     public static final int driveMotorCurrentLimit = 50;
@@ -118,7 +144,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                autoMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,
@@ -129,11 +155,108 @@ public class DriveConstants {
   public static class thriftyConstants {
     public static final DCMotor driveGearbox = DCMotor.getNEO(1);
     public static final DCMotor turnGearbox = DCMotor.getNEO(1);
+    public static final double trackWidth = Units.inchesToMeters(24); // make this a variable?
+    public static final double wheelBase = Units.inchesToMeters(20); // this too?
+    public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
+    public static final double maxAngularSpeedRadPerSec =
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+
+    public static final Translation2d[] moduleTranslations =
+        new Translation2d[] {
+          new Translation2d(trackWidth / 2.0, wheelBase / 2.0),
+          new Translation2d(trackWidth / 2.0, -wheelBase / 2.0),
+          new Translation2d(-trackWidth / 2.0, wheelBase / 2.0),
+          new Translation2d(-trackWidth / 2.0, -wheelBase / 2.0)
+        };
+
+    // Zeroed rotation values for each module, see setup instructions
+
+    // Device CAN IDs
+    // TBD
+    public static final int pigeonCanId = 62; // gyro
+
+    // TBD
+    public static final int frontLeftDriveCanId = 10;
+    public static final int backLeftDriveCanId = 13;
+    public static final int frontRightDriveCanId = 11;
+    public static final int backRightDriveCanId = 12;
+
+    public static final int frontLeftTurnCanId = 20;
+    public static final int backLeftTurnCanId = 23;
+    public static final int frontRightTurnCanId = 21;
+    public static final int backRightTurnCanId = 22;
+
+    // Drive motor configuration
+    public static final int driveMotorCurrentLimit = 45;
+    public static final double wheelRadiusMeters = Units.inchesToMeters(2);
+    public static final double driveMotorReduction = 6.23;
+
+    // Drive encoder configuration
+    public static final double driveEncoderPositionFactor =
+        2 * Math.PI / driveMotorReduction; // Rotor Rotations -> Wheel Radians
+    public static final double driveEncoderVelocityFactor =
+        (2 * Math.PI) / 60.0 / driveMotorReduction; // Rotor RPM -> Wheel Rad/Sec
+
+    // Drive PID configuration
+    public static final double driveKp = 0.025;
+    public static final double driveKi = 0.0;
+    public static final double driveKd = 0.0;
+    public static final double driveKs = 0.0;
+    public static final double driveKv = 0.126;
+    // public static final double driveKf = 0.1;
+    public static final double driveSimP = 0.05;
+    public static final double driveSimD = 0.0;
+    public static final double driveSimKs = 0.0;
+    public static final double driveSimKv = 0.0789;
+
+    // Turn motor configuration
+    public static final boolean turnInverted = false;
+    public static final int turnMotorCurrentLimit = 20;
+    public static final double turnMotorReduction = 9424.0 / 203.0; // Useless?
+
+    // Turn encoder configuration
+    // Redux -                      true
+    // Thrifty (with cut cable) -   false (tested on hardware and removes oscillation)
+    public static final boolean turnEncoderInverted = false;
+    public static final double turnEncoderPositionFactor = 2 * Math.PI; // Rotations -> Radians
+    public static final double turnEncoderVelocityFactor = (2 * Math.PI) / 60.0; // RPM -> Rad/Sec
+
+    // Turn PID configuration
+    // 14 for p value was too much
+    public static final double turnKp = 6;
+    public static final double turnKi = 0.0;
+    public static final double turnKd = 0.03;
+    public static final double turnSimP = 0.2;
+    public static final double turnSimD = 0.0;
+    public static final double turnPIDMinInput = 0; // Radians
+    public static final double turnPIDMaxInput = 2 * Math.PI; // Radians
+
+    // PathPlanner configuration
+    public static final double robotMassKg = 50.34875;
+    public static final double robotMOI = 6.883; // needs to be changed
+    public static final double wheelCOF = 1.2; // needs to be changed
+    public static final RobotConfig ppConfig =
+        new RobotConfig(
+            robotMassKg,
+            robotMOI,
+            new ModuleConfig(
+                wheelRadiusMeters,
+                defaultMaxSpeedMetersPerSec,
+                wheelCOF,
+                driveGearbox.withReduction(driveMotorReduction),
+                driveMotorCurrentLimit,
+                1),
+            moduleTranslations);
+  }
+
+  public static class DoryThriftyConstants {
+    public static final DCMotor driveGearbox = DCMotor.getNEO(1);
+    public static final DCMotor turnGearbox = DCMotor.getNEO(1);
     public static final double trackWidth = Units.inchesToMeters(22.5); // make this a variable?
     public static final double wheelBase = Units.inchesToMeters(22.5); // this too?
     public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
     public static final double maxAngularSpeedRadPerSec =
-        DriveConstants.maxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
+        DriveConstants.defaultMaxSpeedMetersPerSec / DriveConstants.revConstants.driveBaseRadius;
 
     public static final Translation2d[] moduleTranslations =
         new Translation2d[] {
@@ -211,7 +334,7 @@ public class DriveConstants {
             robotMOI,
             new ModuleConfig(
                 wheelRadiusMeters,
-                maxSpeedMetersPerSec,
+                defaultMaxSpeedMetersPerSec,
                 wheelCOF,
                 driveGearbox.withReduction(driveMotorReduction),
                 driveMotorCurrentLimit,

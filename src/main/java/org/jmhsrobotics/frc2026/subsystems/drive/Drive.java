@@ -24,7 +24,9 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -37,13 +39,13 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.jmhsrobotics.frc2026.Constants;
-import org.jmhsrobotics.frc2026.subsystems.drive.GyroIO.GyroIOInputs;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleThrifty;
 import org.jmhsrobotics.frc2026.util.LocalADStarAK;
@@ -53,8 +55,9 @@ import org.littletonrobotics.junction.Logger;
 public class Drive extends SubsystemBase {
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
-  private final GyroIOInputs gyroInputs = new GyroIOInputs();
-  private final ModuleThrifty[] modules = new ModuleThrifty[4]; // FL, FR, BL, BR
+  private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+  private final ModuleThrifty[] modules =
+      new ModuleThrifty[4]; // FL, FR, BL, BR //FIXME: this is wrong should be IO or inputs
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
@@ -72,16 +75,12 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
-  private double maxLinearSpeedMetersPerSec = DriveConstants.maxSpeedMetersPerSec;
   private boolean autoAlignComplete = false;
   private boolean turboMode = false;
-  private boolean alignBlockedByCoral = false;
+  private boolean slowdownMode = false;
 
   private double driveVelocity = 0;
   private double driveAcceleration = 0;
-
-  private int coralScoredEast = 0;
-  private int coralScoredWest = 0;
 
   public Drive(
       GyroIO gyroIO,
@@ -135,16 +134,55 @@ public class Drive extends SubsystemBase {
                 (voltage) -> runCharacterization(voltage.in(Units.Volts)), null, this));
   }
 
+  double test = 0.0;
+
   @Override
   public void periodic() {
+    DriveConstants.defaultMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+    DriveConstants.turboMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/turboMaxSpeedMPS", 4);
+    DriveConstants.intakeMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/intakeMaxSpeedMPS", 2);
+    DriveConstants.autoMaxSpeedMetersPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxSpeedMPS", 3);
+
+    DriveConstants.defaultMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/defaultMaxRotRPS", 3);
+    DriveConstants.turboMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/turboMaxRotRPS", 3);
+    DriveConstants.intakeMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/intakeMaxRotRPS", 3);
+    DriveConstants.autoMaxRotSpeedRadPerSec =
+        SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
+
+    double cycle = (Math.sin(test) * 0.5) + 0.5;
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
-    // TODO: Logger.processInputs("Drive/Gyro", gyroInputs);
+    Logger.processInputs("Drive/Gyro", gyroInputs);
+
     Logger.recordOutput("Gyro/Gyro Connected", gyroInputs.connected);
     Logger.recordOutput("Gyro/Gyro Heading", gyroInputs.yawPosition);
-    Logger.recordOutput("Drive/Coral Scored East", this.coralScoredEast);
-    Logger.recordOutput("Drive/Coral Scored West", this.coralScoredWest);
 
+    Logger.recordOutput(
+        "test/climber_right", new Pose3d(0, 0, -cycle * 0.55, new Rotation3d())); // *0.30188
+    Logger.recordOutput(
+        "test/climber_left", new Pose3d(0, 0, cycle * 0.55, new Rotation3d())); // *0.30188
+    Logger.recordOutput(
+        "test/climber_right_hook",
+        new Pose3d(0, cycle * 0.1, -cycle * 0.55, new Rotation3d())); // *0.30188
+    Logger.recordOutput(
+        "test/climber_left_hook",
+        new Pose3d(0, cycle * 0.1, cycle * 0.55, new Rotation3d())); // *0.30188
+    SwerveModuleState[] states =
+        new SwerveModuleState[] {
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState(),
+          new SwerveModuleState()
+        };
+
+    Logger.recordOutput("MyStates", states); // TODO: Clean up Name
     // Calculates acceleration and velocity, then logs them
     driveAcceleration =
         (Math.sqrt(
@@ -161,6 +199,9 @@ public class Drive extends SubsystemBase {
 
     Logger.recordOutput("SwerveChassisSpeeds/Measured Velocity", driveVelocity);
     Logger.recordOutput("SwerveChassisSpeeds/Measured Acceleration", driveAcceleration);
+
+    Logger.recordOutput("Drive/TurboModeEnabled", turboMode);
+    Logger.recordOutput("Drive/SlowdownTModeEnabled", slowdownMode);
 
     for (var module : modules) {
       module.periodic();
@@ -232,7 +273,7 @@ public class Drive extends SubsystemBase {
     speeds = ChassisSpeeds.discretize(speeds, Constants.krealTimeStep);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        setpointStates, this.getMaxLinearSpeedMetersPerSec());
+        setpointStates, this.getTheoreticalMaxSpeedMetersPerSec());
 
     // Log unoptimized setpoints
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -305,7 +346,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  private ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
@@ -355,8 +396,16 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the maximum linear speed in meters per sec. */
-  public double getMaxLinearSpeedMetersPerSec() {
-    return DriveConstants.maxSpeedMetersPerSec;
+  public double getTheoreticalMaxSpeedMetersPerSec() {
+    return DriveConstants.theoreticalMaxSpeedMetersPerSec;
+  }
+
+  public double getTurboMaxLinearSpeedMetersPerSec() {
+    return DriveConstants.turboMaxSpeedMetersPerSec;
+  }
+
+  public double getAutoMaxLinearSpeedMetersPerSec() {
+    return DriveConstants.autoMaxSpeedMetersPerSec;
   }
 
   /** Returns the maximum angular speed in radians per sec. */
@@ -391,6 +440,14 @@ public class Drive extends SubsystemBase {
 
   public boolean getTurboMode() {
     return turboMode;
+  }
+
+  public void setSlowdownMode(boolean slowdownMode) {
+    this.slowdownMode = slowdownMode;
+  }
+
+  public boolean getSlowdownMode() {
+    return slowdownMode;
   }
 
   public ModuleThrifty[] getSwerveModules() {

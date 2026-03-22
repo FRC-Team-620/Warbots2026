@@ -4,20 +4,33 @@
 
 package org.jmhsrobotics.frc2026;
 
+import com.revrobotics.util.StatusLogger;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.simulation.DriverStationSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
+import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 import org.jmhsrobotics.warcore.util.BuildDataLogger;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
@@ -29,11 +42,36 @@ public class Robot extends TimedRobot {
   public Robot() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    StatusLogger.disableAutoLogging();
     m_robotContainer = new RobotContainer();
     // Get Default Log and Log Git Data into it.
     DataLog dataLog = DataLogManager.getLog();
     BuildDataLogger.LogToWpiLib(dataLog, BuildConstants.class);
     BuildDataLogger.LogToNetworkTables(BuildConstants.class);
+
+    // Set up data receivers & replay source
+    switch (Constants.currentMode) {
+      case REAL:
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
+        break;
+
+      case SIM:
+        // Running a physics simulator, log to NT
+        Logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new WPILOGWriter());
+        break;
+
+      case REPLAY:
+        // Replaying a log, set up replay source
+        String inPath = LogFileUtil.findReplayLog();
+        String outPath = LogFileUtil.addPathSuffix(inPath, "_sim");
+        Logger.setReplaySource(new WPILOGReader(inPath));
+        Logger.addDataReceiver(new WPILOGWriter(outPath));
+        break;
+    }
+
+    Logger.start();
   }
 
   /**
@@ -49,6 +87,10 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    SmartDashboard.putNumber("MatchTime", Timer.getFPGATimestamp());
+    Logger.recordOutput(
+        "Vision/CameraPosition",
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.rexCalibration));
     CommandScheduler.getInstance().run();
   }
 
@@ -103,9 +145,37 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    DriverStationSim.setFmsAttached(true);
+    DriverStationSim.setDsAttached(true);
+    DriverStationSim.setEnabled(true);
+
+    m_robotContainer.fuelSim.spawnStartingFuel();
+    m_robotContainer.fuelSim.registerRobot(
+        DriveConstants.thriftyConstants.trackWidth, // from left to right in meters
+        DriveConstants.thriftyConstants.wheelBase, // from front to back in meters
+        Units.inchesToMeters(5), // from floor to top of bumpers in meters
+        m_robotContainer.drive::getPose, // Supplier<Pose2d> of robot pose
+        m_robotContainer.drive
+            ::getChassisSpeeds); // Supplier<ChassisSpeeds> of field-centric chassis speeds
+    m_robotContainer.fuelSim.registerIntake(
+        DriveConstants.thriftyConstants.wheelBase / 2,
+        (DriveConstants.thriftyConstants.wheelBase / 2) + 0.30188,
+        -DriveConstants.thriftyConstants.trackWidth / 2,
+        DriveConstants.thriftyConstants.trackWidth / 2,
+        () -> {
+          return m_robotContainer.slapdown.canIntake() && !m_robotContainer.ballTracker.isFull();
+        },
+        m_robotContainer.ballTracker::addFuel);
+
+    m_robotContainer.fuelSim.start();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    m_robotContainer.fuelSim.updateSim();
+    m_robotContainer.ballTracker.updatelog();
+    // m_robotContainer.fuelSim.logFuels();
+  }
 }

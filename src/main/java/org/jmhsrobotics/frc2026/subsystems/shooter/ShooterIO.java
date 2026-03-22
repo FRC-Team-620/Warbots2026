@@ -10,11 +10,17 @@ public interface ShooterIO {
     public double voltage;
     public double currentAMPS;
     public double tempC;
+    public double positionROT;
+    public double appliedVoltage;
   }
 
   public default void updateInputs(ShooterIOInputs inputs) {}
 
   public default void setRPM(double rpm) {}
+
+  public default void setSpeed(double speed) {}
+
+  public default void setVoltage(double voltage) {}
 
   public default void setPIDF(double p, double i, double d, double f) {}
 

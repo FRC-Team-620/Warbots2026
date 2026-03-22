@@ -1,10 +1,13 @@
 package org.jmhsrobotics.frc2026.controlBoard;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
 
 public class SingleControl implements ControlBoard {
   CommandXboxController driver = new CommandXboxController(0);
+  private Rotation2d angle = new Rotation2d();
 
   // TODO: also need to add controller monitor to double control when that gets made
   public SingleControl() {
@@ -19,6 +22,11 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
+  public Rotation2d rotationABS() {
+    return angle.plus(Rotation2d.fromDegrees(driver.getRightX()));
+  }
+
+  @Override
   public double translationX() {
     return driver.getLeftX();
   }
@@ -26,5 +34,107 @@ public class SingleControl implements ControlBoard {
   @Override
   public double translationY() {
     return driver.getLeftY();
+  }
+
+  @Override
+  public Trigger resetForward() {
+    return driver.rightBumper();
+  }
+
+  @Override
+  public Trigger autoAim() {
+    return driver.rightTrigger();
+  }
+
+  @Override
+  public Trigger faceDriveDirection() {
+    return null;
+  }
+
+  @Override
+  public Trigger turbo() {
+    return driver.leftBumper();
+  }
+
+  @Override
+  public Trigger hoodDown() {
+    return driver.rightStick();
+  }
+
+  @Override
+  public Trigger slowdown() {
+    return null;
+  }
+
+  // ========Operator Controls========
+
+  @Override
+  public Trigger shooterSpinup() {
+    return driver.rightTrigger();
+  }
+
+  @Override
+  public Trigger feedAndShoot() {
+    return driver.leftTrigger();
+  }
+
+  @Override
+  public Trigger slapdownMoveDown() {
+    return driver.povLeft();
+  }
+
+  @Override
+  public Trigger slapdownMoveUp() {
+    return driver.povRight();
+  }
+
+  @Override
+  public Trigger indexOn() {
+    return driver.leftBumper();
+  }
+
+  @Override
+  public Trigger intakeOn() {
+    return driver.b();
+  }
+
+  @Override
+  public Trigger intakeOff() {
+    return driver.a();
+  }
+
+  @Override
+  public Trigger climberUp() {
+    return driver.povUp();
+  }
+
+  @Override
+  public Trigger climberDown() {
+    return driver.povDown();
+  }
+
+  @Override
+  public Trigger extakeFuel() {
+    return driver.x();
+  }
+
+  @Override
+  public Trigger ClimberRetractHooks() {
+    return driver.povRight();
+  }
+
+  @Override
+  public Trigger ClimberExtendHooks() {
+    return driver.povLeft();
+  }
+
+  @Override
+  public Trigger dutyCycleShoot() {
+    return driver.leftStick();
+  }
+
+  @Override
+  public Trigger runFeeder() {
+    return driver.rightStick();
   }
 }
