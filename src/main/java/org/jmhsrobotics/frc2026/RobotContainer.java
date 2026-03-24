@@ -309,7 +309,7 @@ public class RobotContainer {
         .whileTrue(
             new ParallelCommandGroup(
                 new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
-                new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
+                // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
                 new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
     // .onFalse(new IndependentFeed(feeder, 0));
 
