@@ -18,10 +18,13 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,6 +191,10 @@ public class Vision extends SubsystemBase {
     } else {
       return new TagPose[0];
     }
+  }
+
+  public Command getCalibrationCommand(String camName, Transform3d calibrationOffset) {
+    return new InstantCommand(() -> {}, this).ignoringDisable(true);
   }
 
   @FunctionalInterface

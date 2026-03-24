@@ -51,10 +51,10 @@ public class NeoShooterIO implements ShooterIO {
         .pid(
             Constants.ShooterConstants.kP,
             Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
-    // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    // .maxOutput(1)
-    // .minOutput(0);
+            Constants.ShooterConstants.kD)
+        // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .maxOutput(1)
+        .minOutput(0);
 
     motorConfigFollowerRight = new SparkMaxConfig();
     motorConfigMiddleLeader = new SparkMaxConfig();

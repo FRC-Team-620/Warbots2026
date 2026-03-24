@@ -16,8 +16,6 @@ public class FaceDriveDirection extends Command {
   private final Drive drive;
   private final ControlBoard control;
 
-  // Note: P-gain is changed! Because we are now calculating in Radians instead of Degrees,
-  // you will need a higher P-gain. 4.0 is a good starting point to test.
   private final PIDController thetaController = new PIDController(3, 0, 0);
 
   private boolean isFlipped;
@@ -45,12 +43,14 @@ public class FaceDriveDirection extends Command {
     // constants
     double xSpeed =
         MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationY()) * DriveConstants.slowdownCoefficient,
+            this.getSquareInput(-this.control.translationY())
+                * DriveConstants.intakeMaxSpeedMetersPerSec,
             DriveConstants.deadBand);
 
     double ySpeed =
         MathUtil.applyDeadband(
-            this.getSquareInput(-this.control.translationX()) * DriveConstants.slowdownCoefficient,
+            this.getSquareInput(-this.control.translationX())
+                * DriveConstants.intakeMaxSpeedMetersPerSec,
             DriveConstants.deadBand);
 
     isFlipped =
@@ -65,14 +65,17 @@ public class FaceDriveDirection extends Command {
 
     Logger.recordOutput("Drive/IntakeDrive/TargetAngleDegrees", targetHeading.getDegrees());
 
-    // 2. Calculate PID output using RADIANS
+    // 2. Calculate PID output using radians
     double thetaOutput =
         thetaController.calculate(
-            drive.getPose().getRotation().getRadians(), // Measurement
+            (isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation())
+                .getRadians(), // Measurement
             targetHeading.getRadians() // Setpoint
             );
 
     ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, thetaOutput);
+
+    Logger.recordOutput("Drive/IntakeDrive/isRed", isFlipped);
 
     speeds =
         ChassisSpeeds.fromFieldRelativeSpeeds(

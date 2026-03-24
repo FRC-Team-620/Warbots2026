@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private InterpolatingDoubleTreeMap hoodMap;
   private double hoodRealPosition = 0.0;
 
-  private double hoodPosition = 0.30;
+  private double hoodPosition = 0.31;
 
   public Shooter(ShooterIO shooterIO) {
 
@@ -169,6 +169,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stop() {
+    this.goalSpeedRPM = 0.0;
+    this.isClosedLoop = false;
     shooterIO.stop();
   }
 
@@ -203,21 +205,21 @@ public class Shooter extends SubsystemBase {
   public void createRPMMap(InterpolatingDoubleTreeMap map) {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(1.3, 3700.0);
-    map.put(2.0, 3900.0);
-    map.put(3.0, 4800.0);
+    map.put(1.3, 2600.0);
+    map.put(2.0, 2550.0);
+    map.put(3.0, 2700.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
     // (distance, hood height)
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(1.3, 0.2);
-    map.put(2.1, 0.35);
-    map.put(3.0, 0.5);
-    map.put(4.0, 0.63);
-    map.put(5.0, 0.7);
-    map.put(5.5, 0.75);
+    map.put(1.3, 0.31);
+    map.put(2.0, 0.5);
+    map.put(3.0, 0.6);
+    // map.put(4.0, 0.63);
+    // map.put(5.0, 0.7);
+    // map.put(5.5, 0.75);
   }
 
   public boolean isActive() {

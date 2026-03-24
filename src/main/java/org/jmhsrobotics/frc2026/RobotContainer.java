@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -43,6 +44,7 @@ import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
+import org.jmhsrobotics.frc2026.commands.SlapdownJiggle;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
@@ -285,8 +287,13 @@ public class RobotContainer {
 
     control
         .dutyCycleShoot()
-        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
-        .onFalse(new ShooterSpinup(shooter, 0.0));
+        .whileTrue(
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
+                    new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)),
+                new SlapdownJiggle(slapdown),
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
 
     control
         .feedAndShoot()
@@ -316,8 +323,8 @@ public class RobotContainer {
     control
         .slapdownMoveUp()
         .onTrue(
-            new SequentialCommandGroup(
-                new IntakeMove(intake, 0).withTimeout(0.2),
+            new ParallelRaceGroup(
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle / 3),
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
 
     // Intake Bindings
@@ -394,6 +401,7 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 65.0));
+    SmartDashboard.putData("Slapdown Jiggle", new SlapdownJiggle(slapdown));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
     SmartDashboard.putData("Face Drive Direction", new FaceDriveDirection(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
