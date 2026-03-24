@@ -20,7 +20,7 @@ public class Feed extends Command {
 
   @Override
   public void initialize() {
-    this.feeder.setFeederSpeed(0);
+    // this.feeder.setFeederSpeed(0);
   }
 
   @Override

@@ -37,7 +37,6 @@ import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.FaceDriveDirection;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.HoodDown;
-import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
@@ -308,8 +307,8 @@ public class RobotContainer {
         .runFeeder()
         .whileTrue(
             new ParallelCommandGroup(
-                // .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
-                new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
+                new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
+                // new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
                 // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
                 new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
     // .onFalse(new IndependentFeed(feeder, 0));
