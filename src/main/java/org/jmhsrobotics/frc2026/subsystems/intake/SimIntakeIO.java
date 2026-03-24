@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jmhsrobotics.frc2026.Constants;
 
 public class SimIntakeIO implements IntakeIO {
@@ -23,6 +24,10 @@ public class SimIntakeIO implements IntakeIO {
 
   private boolean intakeOpenLoop = true;
   private double intakeVolts = 0.0;
+
+  public SimIntakeIO() {
+    SmartDashboard.putBoolean("SimIntake/set_stall", false);
+  }
 
   @Override
   public void setSpeedDutyCycle(double dutyCycle) {
@@ -61,6 +66,7 @@ public class SimIntakeIO implements IntakeIO {
     inputs.intakeCurrentAmps = intakeSim.getCurrentDrawAmps();
     inputs.RPM = intakeSim.getAngularVelocityRPM();
     inputs.intakeMotorTemperatureCelcius = 25.0;
+    inputs.stalled = SmartDashboard.getBoolean("SimIntake/set_stall", false);
   }
 
   @Override

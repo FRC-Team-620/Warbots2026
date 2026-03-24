@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -32,14 +34,19 @@ import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
+import org.jmhsrobotics.frc2026.commands.FaceDriveDirection;
 import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.HoodDown;
+import org.jmhsrobotics.frc2026.commands.IndependentFeed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
+import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
+import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
 import org.jmhsrobotics.frc2026.commands.ShooterSpinup;
+import org.jmhsrobotics.frc2026.commands.SlapdownJiggle;
 import org.jmhsrobotics.frc2026.commands.SlapdownMove;
 import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
@@ -278,8 +285,14 @@ public class RobotContainer {
 
     control
         .dutyCycleShoot()
-        .onTrue(new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))
-        .onFalse(new ShooterSpinup(shooter, 0.0));
+        .whileTrue(
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
+                    new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))));
+    // new SlapdownJiggle(slapdown),
+    // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
+    // new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
 
     control
         .feedAndShoot()
@@ -293,8 +306,13 @@ public class RobotContainer {
 
     control
         .runFeeder()
-        .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
-        .onFalse(new Feed(feeder, 0, shooter));
+        .whileTrue(
+            new ParallelCommandGroup(
+                // .onTrue(new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))
+                new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
+                // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
+                new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
+    // .onFalse(new IndependentFeed(feeder, 0));
 
     control.hoodDown().onTrue(new HoodDown(shooter));
 
@@ -305,12 +323,12 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees)
                     .withTimeout(1.5),
-                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
+                new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
     control
         .slapdownMoveUp()
         .onTrue(
-            new SequentialCommandGroup(
-                new IntakeMove(intake, 0).withTimeout(0.2),
+            new ParallelRaceGroup(
+                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle / 3),
                 new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
 
     // Intake Bindings
@@ -318,13 +336,13 @@ public class RobotContainer {
         .intakeOn()
         .onTrue(
             new ParallelCommandGroup(
-                new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle),
+                new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
                 Commands.run(
                         () ->
                             led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
                     .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
-    control.extakeFuel().onTrue(new IntakeMove(intake, -(Constants.Intake.kSpeedDutyCycle)));
+    control.extakeFuel().onTrue(new IntakeMoveAntiJam(intake, -(Constants.Intake.kSpeedDutyCycle)));
 
     // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
@@ -351,6 +369,7 @@ public class RobotContainer {
     control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
     control.autoAim().whileTrue(new AlignToHub(drive, control));
+    control.faceDriveDirection().whileTrue(new FaceDriveDirection(drive, control));
 
     control
         .resetForward()
@@ -386,7 +405,9 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
     SmartDashboard.putData("Slapdown Up", new SlapdownMove(slapdown, 65.0));
+    SmartDashboard.putData("Slapdown Jiggle", new SlapdownJiggle(slapdown));
     SmartDashboard.putData("AutoAlignHub", new AlignToHub(drive, control));
+    SmartDashboard.putData("Face Drive Direction", new FaceDriveDirection(drive, control));
     SmartDashboard.putData("Shooter Duty Cycle", new ShooterSetDutyCycle(shooter, 0.5));
 
     SmartDashboard.putData("DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
@@ -402,6 +423,7 @@ public class RobotContainer {
     SmartDashboard.putData("SysID/QuasistaticTestF", routine.quasistatic(Direction.kForward));
     SmartDashboard.putData("SysID/DynamicTestR", routine.dynamic(Direction.kReverse));
     SmartDashboard.putData("SysID/QuasistaticTestR", routine.quasistatic(Direction.kReverse));
+    SmartDashboard.putData("AntiJam Intake", new IntakeMoveAntiJam(intake, 1));
   }
 
   /**
@@ -410,6 +432,8 @@ public class RobotContainer {
    */
   // TODO: Actually test this to make sure it works correctly
   private void configureDriverFeedback() {
+    led.setDefaultCommand(new LEDToControlMode(this.led));
+
     // turns purple when the shooter is active, but not at the max RPM
     new Trigger(shooter::notMaxRPM)
         .onTrue(

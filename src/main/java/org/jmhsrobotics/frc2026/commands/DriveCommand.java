@@ -71,63 +71,60 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     double xSpeed, ySpeed, rotationSpeed;
+    /* TURBO MODE */
     if (drive.getTurboMode()) {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.turboCoefficient,
+                  * DriveConstants.turboMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.turboCoefficient,
+                  * DriveConstants.turboMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * 0.8,
+                  * DriveConstants.turboMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
-    } else if (drive.getSlowdownMode()) {
+    }
+    /* INTAKE MODE */
+    else if (drive.getSlowdownMode()) {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.slowdownCoefficient,
+                  * DriveConstants.intakeMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.slowdownCoefficient,
+                  * DriveConstants.intakeMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * 0.8,
+                  * DriveConstants.intakeMaxRotSpeedRadPerSec,
               DriveConstants.deadBand);
-    } else {
+    }
+    /* DEFAULT SPEED */
+    else {
       xSpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationY())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.nonTurboCoefficient,
+                  * DriveConstants.defaultMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       ySpeed =
           MathUtil.applyDeadband(
               this.getSquareInput(-this.control.translationX())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * DriveConstants.nonTurboCoefficient,
+                  * DriveConstants.defaultMaxSpeedMetersPerSec,
               DriveConstants.deadBand);
       rotationSpeed =
           MathUtil.applyDeadband(
-              this.getSquareInput(-this.control.rotation())
-                  * DriveConstants.maxSpeedMetersPerSec
-                  * 0.6,
-              DriveConstants.deadBand);
+                  this.getSquareInput(-this.control.rotation())
+                      * DriveConstants.defaultMaxRotSpeedRadPerSec,
+                  DriveConstants.deadBand)
+              * 1.6;
     }
 
     boolean isFlipped =
@@ -205,8 +202,8 @@ public class DriveCommand extends Command {
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(
-                      linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                      linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getX() * drive.getTheoreticalMaxSpeedMetersPerSec(),
+                      linearVelocity.getY() * drive.getTheoreticalMaxSpeedMetersPerSec(),
                       omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
