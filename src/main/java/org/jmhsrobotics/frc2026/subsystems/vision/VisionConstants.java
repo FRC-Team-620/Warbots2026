@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
@@ -29,7 +30,7 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   // TODO: Confirm and Identify which camera is on which side, update camera names
-  public static String camera0Name = "cody";
+  public static String camera0Name = "rex";
   public static String camera1Name = "fives";
   public static String camera2Name = "camera2";
   public static String camera3Name = "Camera3";
@@ -53,11 +54,13 @@ public class VisionConstants {
 
   public static Transform3d rexCalibration =
       new Transform3d(
-          0.018,
-          0.000,
-          0.507,
+          new Translation3d(-0.32, 0.05, 0.35),
           new Rotation3d(
-              0, Units.degreesToRadians(-35), 0)); // 0.824, 0.187, -0.028, new Rotation3d());
+              new Quaternion(
+                  0.25820065290841687,
+                  -0.04437469554990406,
+                  8.498465320544434E-4,
+                  0.9650712859646134)));
   public static Transform3d codyCalibration =
       new Transform3d(-0.308, 0.062, 0.343, new Rotation3d(0, 0, Units.degreesToRadians(-210)));
   // 0.795, -0.224, -0.139, new Rotation3d());
@@ -78,7 +81,7 @@ public class VisionConstants {
   public static final Pose3d camera3ToRobot =
       calibrationOffset.transformBy(camera3Calibration.inverse());
 
-  public static final Transform3d robotToCamera0 = codyCalibration;
+  public static final Transform3d robotToCamera0 = rexCalibration;
   public static final Transform3d robotToCamera1 = fivesCalibration;
   public static final Transform3d robotToCamera2 =
       new Transform3d(fivesToRobot.getTranslation(), fivesToRobot.getRotation());
