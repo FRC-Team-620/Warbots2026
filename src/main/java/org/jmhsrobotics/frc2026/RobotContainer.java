@@ -6,26 +6,6 @@ package org.jmhsrobotics.frc2026;
 
 import static edu.wpi.first.units.Units.Seconds;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.reduxrobotics.canand.CanandEventLoop;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.jmhsrobotics.frc2026.commands.AimingAuto;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
@@ -51,6 +31,9 @@ import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
+import org.jmhsrobotics.frc2026.fireControl.ProjectileSimulator;
+import org.jmhsrobotics.frc2026.fireControl.ShotCalculator;
+import org.jmhsrobotics.frc2026.fireControl.ShotLUT;
 import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
 import org.jmhsrobotics.frc2026.subsystems.climber.ClimberIO;
 import org.jmhsrobotics.frc2026.subsystems.climber.NeoClimberIO;
@@ -91,6 +74,28 @@ import org.jmhsrobotics.frc2026.util.BallTracker;
 import org.jmhsrobotics.frc2026.util.FuelSim;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.reduxrobotics.canand.CanandEventLoop;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -252,6 +257,61 @@ public class RobotContainer {
     ballTracker = new BallTracker(drive::getPose, 10, 3);
     configureBindings();
     configureDriverFeedback();
+
+    // plug in YOUR robot's measurements from CAD
+    ProjectileSimulator.SimParameters params = new ProjectileSimulator.SimParameters(
+        0.215,   // ball mass kg
+        0.1501,  // ball diameter m
+        0.47,    // drag coeff (smooth sphere)
+        0.2,     // Magnus coeff
+        1.225,   // air density
+        0.532032,    // exit height (m), floor to where the ball leaves the shooter
+        0.1016,  // flywheel diameter (m), measure with calipers
+        1.83,    // target height (m), from game manual
+        0.6,     // slip factor (0=no grip, 1=perfect), tune this on the real robot
+        45.0,    // launch angle from horizontal, measure from CAD
+        0.001,   // sim timestep
+        1500, 6000, 25, 5.0  // RPM search range, iterations, max sim time
+    );
+
+    ProjectileSimulator sim = new ProjectileSimulator(params);
+    ProjectileSimulator.GeneratedLUT lut = sim.generateLUT();
+
+    // print it out
+    for (var entry : lut.entries()) {
+        if (entry.reachable()) {
+            System.out.printf("%.2fm -> %.0f RPM, %.3fs TOF%n",
+                entry.distanceM(), entry.rpm(), entry.tof());
+        }
+    }
+
+    // in RobotContainer or wherever you set stuff up
+    ShotCalculator.Config config = new ShotCalculator.Config();
+    config.launcherOffsetX = 0.23;  // how far forward the launcher is from robot center (m)
+    config.launcherOffsetY = 0.0;   // how far left, 0 if centered
+    config.phaseDelayMs = 30.0;     // your vision pipeline latency
+    config.mechLatencyMs = 20.0;    // how long the mechanism takes to respond
+    config.maxTiltDeg = 5.0;        // suppress firing when chassis tilts past this (bumps/ramps)
+    config.headingSpeedScalar = 1.0; // heading tolerance tightens with robot speed (0 to disable)
+    config.headingReferenceDistance = 2.5; // heading tolerance scales with distance from hub
+
+    ShotCalculator shotCalc = new ShotCalculator(config);
+
+    // load the LUT you generated
+    for (var entry : lut.entries()) {
+        if (entry.reachable()) {
+            shotCalc.loadLUTEntry(entry.distanceM(), entry.rpm(), entry.tof());
+        }
+    }
+
+
+
+    // sweep angles from 30 to 60 degrees in 1-degree steps
+    ShotLUT shotLut = sim.generateVariableAngleShotLUT(30.0, 60.0, 1.0);
+    
+
+    shotCalc.loadShotLUT(shotLut);
+    
   }
 
   /**

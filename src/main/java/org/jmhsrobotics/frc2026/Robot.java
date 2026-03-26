@@ -6,6 +6,7 @@ package org.jmhsrobotics.frc2026;
 
 import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -14,6 +15,9 @@ import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import org.jmhsrobotics.frc2026.fireControl.FuelPhysicsSim;
+import org.jmhsrobotics.frc2026.fireControl.ShotCalculator;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.util.ControllerMonitor;
@@ -92,6 +96,29 @@ public class Robot extends LoggedRobot {
         "Vision/CameraPosition",
         new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.rexCalibration));
     CommandScheduler.getInstance().run();
+      
+        // call this every cycle in robotPeriodic()
+    Translation2d hubCenter = new Translation2d(4.6, 4.0);  // your target
+    Translation2d hubForward = new Translation2d(1, 0);       // which way the hub faces
+      
+    ShotCalculator.ShotInputs inputs = new ShotCalculator.ShotInputs(
+        m_robotContainer.drive.getPose(),
+        m_robotContainer.drive.getFieldVelocity(),
+        m_robotContainer.drive.getRobotVelocity(),
+        hubCenter,
+        hubForward,
+        0.9,  // vision confidence, 0 to 1
+        m_robotContainer.drive.getPitch().getDegrees(),  // pitch for tilt gate (0.0 if no gyro)
+        m_robotContainer.drive.getRoll().getDegrees()    // roll for tilt gate (0.0 if no gyro)
+    );
+      
+    ShotCalculator.LaunchParameters shot = shotCalc.calculate(inputs);
+    if (shot.isValid() && shot.confidence() > 50) {
+        m_robotContainer.shooter.setRPM(shot.rpm());
+        drivebase.aimAt(shot.driveAngle());
+        // shot.driveAngularVelocityRadPerSec() gives you a heading feedforward if you want it
+    }
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -169,6 +196,15 @@ public class Robot extends LoggedRobot {
         m_robotContainer.ballTracker::addFuel);
 
     m_robotContainer.fuelSim.start();
+
+    FuelPhysicsSim ballSim = new FuelPhysicsSim("Sim/Fuel");
+    ballSim.enable();
+    ballSim.placeFieldBalls();  // spawns all the game pieces
+
+    // tell it about your robot
+    ballSim.configureRobot(0.8382, 0.9398, 0.1651,
+        () -> swerve.getPose(), () -> swerve.getChassisSpeeds());
+
   }
 
   /** This function is called periodically whilst in simulation. */
@@ -177,5 +213,11 @@ public class Robot extends LoggedRobot {
     m_robotContainer.fuelSim.updateSim();
     m_robotContainer.ballTracker.updatelog();
     // m_robotContainer.fuelSim.logFuels();
+
+    ballSim.tick();  // runs physics, publishes ball positions to NT
+
+    // when you shoot
+    ballSim.launchBall(launcherPosition, launchVelocity, spinRPM);
+
   }
 }
