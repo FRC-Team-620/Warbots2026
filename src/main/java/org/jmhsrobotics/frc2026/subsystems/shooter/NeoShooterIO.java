@@ -7,7 +7,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -49,27 +48,27 @@ public class NeoShooterIO implements ShooterIO {
         .smartCurrentLimit(50)
         .follow(Constants.CAN.kCenterFlywheelMotorID, false)
         //  .voltageCompensation(12)
-        .inverted(true)
-        .closedLoop
-        .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD)
-        // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .maxOutput(1)
-        .minOutput(0);
+        .inverted(true);
+    // .closedLoop
+    // .pid(
+    //     Constants.ShooterConstants.kOnboardP,
+    //     Constants.ShooterConstants.kOnboardI,
+    //     Constants.ShooterConstants.kOnboardD)
+    // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    // .maxOutput(1)
+    // .minOutput(0);
 
     motorConfigRightFollower = new SparkFlexConfig();
     motorConfigRightFollower
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .inverted(false)
-        .follow(Constants.CAN.kCenterFlywheelMotorID, true)
-        .closedLoop
-        .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+        .follow(Constants.CAN.kCenterFlywheelMotorID, true);
+    // .closedLoop
+    // .pid(
+    //     Constants.ShooterConstants.kOnboardP,
+    //     Constants.ShooterConstants.kOnboardI,
+    //     Constants.ShooterConstants.kOnboardD);
     // .voltageCompensation(12);
     //    .follow(leftFlywheelMotorLeader, true);
 
@@ -80,15 +79,19 @@ public class NeoShooterIO implements ShooterIO {
         .inverted(true)
         .closedLoop
         .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+            Constants.ShooterConstants.kOnboardP,
+            Constants.ShooterConstants.kOnboardI,
+            Constants.ShooterConstants.kOnboardD)
+        .maxOutput(1)
+        .minOutput(0);
+    motorConfigMiddleLeader.closedLoop.feedForward.kV(Constants.ShooterConstants.kOnboardV);
     // .voltageCompensation(12);
     // .follow(leftFlywheelMotorLeader, false);
-    // motorConfigMiddleLeader
-    //     .encoder
-    //     .quadratureMeasurementPeriod(5)
-    //     .quadratureAverageDepth(32)
+
+    // quadratureMeasurementPeriod is ACTUALLY 6 not 3, gets multiplied by 2 when set
+    motorConfigMiddleLeader.encoder.quadratureMeasurementPeriod(3).quadratureAverageDepth(30);
+    motorConfigMiddleLeader.signals.appliedOutputPeriodMs(5);
+
     //     .uvwMeasurementPeriod(8)
     //     .uvwAverageDepth(2);
 
@@ -196,9 +199,7 @@ public class NeoShooterIO implements ShooterIO {
   @Override
   public void setRPM(double velocityRPM) {
     this.goalRPM = velocityRPM;
-    // leftFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
     centerFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
-    //  rightFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
   }
 
   @Override

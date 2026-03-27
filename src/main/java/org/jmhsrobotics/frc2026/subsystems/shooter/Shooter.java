@@ -1,7 +1,5 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Servo;
@@ -19,16 +17,6 @@ public class Shooter extends SubsystemBase {
   private Servo leftServo = new Servo(0);
   private Servo rightServo = new Servo(1);
 
-  private PIDController rpmController =
-      new PIDController(
-          Constants.ShooterConstants.kP,
-          Constants.ShooterConstants.kI,
-          Constants.ShooterConstants.kD);
-  private SimpleMotorFeedforward ff =
-      new SimpleMotorFeedforward(
-          Constants.ShooterConstants.kS,
-          Constants.ShooterConstants.kV,
-          Constants.ShooterConstants.kA);
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -48,35 +36,12 @@ public class Shooter extends SubsystemBase {
     createRPMMap(rpmMap);
     this.hoodMap = new InterpolatingDoubleTreeMap();
     createHoodMap(hoodMap);
-    SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
     SmartDashboard.putNumber("Hood Position", hoodPosition);
   }
 
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
-
-    if (isClosedLoop) {
-      // final double maxPercentOutput = 1;
-      // // calculate PID output
-      // double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
-      // double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
-      // double pidControllerOutput =
-      //     this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
-
-      // double clampedOutput =
-      //     MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
-      // shooterIO.setSpeed(clampedOutput);
-      double velRPS = shooterInputs.velocityRPM / 60.0;
-      double goalRPS = this.goalSpeedRPM / 60.0;
-
-      double pidControllerVoltage = this.rpmController.calculate(velRPS, goalRPS);
-
-      // double ffVolts =
-      //     ff.calculateWithVelocities(shooterInputs.velocityRPM / 60.0, this.goalSpeedRPM / 60.0);
-      double ffVolts = ff.calculate(goalRPS);
-      shooterIO.setVoltage(ffVolts + pidControllerVoltage); // TODO May want to clamp this.
-    }
 
     leftServo.setPosition(hoodPosition);
     rightServo.setPosition(hoodPosition);
@@ -119,13 +84,7 @@ public class Shooter extends SubsystemBase {
   public void setRPM(double velocityTargetRPM) {
     // TODO: what and why?
     Logger.recordOutput("Shooter/velocityTarget", velocityTargetRPM);
-    if (velocityTargetRPM > 0) {
-      accelerationTimer.start();
-    } else {
-      accelerationTimer.reset();
-      accelerationTimer.stop();
-    }
-    this.isClosedLoop = true;
+    shooterIO.setRPM(velocityTargetRPM);
     // set global RPM goal
     this.goalSpeedRPM = velocityTargetRPM;
 
