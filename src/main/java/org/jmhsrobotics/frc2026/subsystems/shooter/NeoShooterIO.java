@@ -16,15 +16,15 @@ import org.jmhsrobotics.frc2026.util.SparkUtil;
 import org.littletonrobotics.junction.Logger;
 
 public class NeoShooterIO implements ShooterIO {
-  private SparkMax leftFlywheelMotor =
-      new SparkMax(Constants.CAN.kLeftFlywheelMotorID, MotorType.kBrushless);
+  private SparkFlex leftFlywheelMotor =
+      new SparkFlex(Constants.CAN.kLeftFlywheelMotorID, MotorType.kBrushless);
   private SparkFlex centerFlywheelMotor =
       new SparkFlex(Constants.CAN.kCenterFlywheelMotorID, MotorType.kBrushless);
-  private SparkMax rightFlywheelMotor =
-      new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
+  private SparkFlex rightFlywheelMotor =
+      new SparkFlex(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
 
-  private SparkMaxConfig motorConfigLeftFollower;
-  private SparkMaxConfig motorConfigRightFollower;
+  private SparkFlexConfig motorConfigLeftFollower;
+  private SparkFlexConfig motorConfigRightFollower;
   private SparkFlexConfig motorConfigMiddleLeader;
   private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotor.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
@@ -43,7 +43,7 @@ public class NeoShooterIO implements ShooterIO {
 
   public NeoShooterIO() {
     // leftFlywheelMotor
-    motorConfigLeftFollower = new SparkMaxConfig();
+    motorConfigLeftFollower = new SparkFlexConfig();
     motorConfigLeftFollower
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
@@ -59,7 +59,7 @@ public class NeoShooterIO implements ShooterIO {
         .maxOutput(1)
         .minOutput(0);
 
-    motorConfigRightFollower = new SparkMaxConfig();
+    motorConfigRightFollower = new SparkFlexConfig();
     motorConfigRightFollower
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
