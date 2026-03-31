@@ -73,6 +73,7 @@ import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
+import org.jmhsrobotics.frc2026.subsystems.intake.VortexIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
@@ -136,7 +137,9 @@ public class RobotContainer {
                 new ModuleIOThrifty(3));
 
         shooter = new Shooter(new NeoShooterIO());
-        intake = new Intake(new NeoIntakeIO());
+        // Old Code - Keep here in case we need to revert to Neo Motor
+        //intake = new Intake(new NeoIntakeIO());
+        intake = new Intake(new VortexIntakeIO());
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
