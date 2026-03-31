@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     stallAlert.set(stallDebouncer.calculate(inputs.stalled));
-    intakeIO.updateInputs(inputs);
+    intakeIO.updateInputs(inputs); // get output from hardware
 
     Logger.processInputs("Intake", inputs);
 
