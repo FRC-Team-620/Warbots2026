@@ -3,16 +3,18 @@ package org.jmhsrobotics.frc2026.subsystems.intake;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
 
 public class VortexIntakeIO implements IntakeIO {
-  private SparkFlex intakeLeaderMotor = new SparkFlex(Constants.CAN.kIntakeMotorID, MotorType.kBrushless);
-  private SparkFlex intakeFollowerMotor = new SparkFlex(Constants.CAN.kIntakeFollowerMotorID, MotorType.kBrushless);
+  private SparkFlex intakeLeaderMotor =
+      new SparkFlex(Constants.CAN.kIntakeMotorID, MotorType.kBrushless);
+  private SparkFlex intakeFollowerMotor =
+      new SparkFlex(Constants.CAN.kIntakeFollowerMotorID, MotorType.kBrushless);
   private SparkFlexConfig intakeLeaderMotorConfig;
   private SparkFlexConfig intakeFollowerMotorConfig;
   private RelativeEncoder intakeEncoder = intakeLeaderMotor.getEncoder();
@@ -31,8 +33,11 @@ public class VortexIntakeIO implements IntakeIO {
     SparkUtil.tryUntilOk(
         intakeLeaderMotor,
         5,
-        () -> intakeLeaderMotor.configure(
-            intakeLeaderMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        () ->
+            intakeLeaderMotor.configure(
+                intakeLeaderMotorConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters));
 
     // Create the follower configuration
     intakeFollowerMotorConfig = new SparkFlexConfig();
@@ -46,8 +51,11 @@ public class VortexIntakeIO implements IntakeIO {
     SparkUtil.tryUntilOk(
         intakeFollowerMotor,
         5,
-        () -> intakeFollowerMotor.configure(
-            intakeFollowerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+        () ->
+            intakeFollowerMotor.configure(
+                intakeFollowerMotorConfig,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters));
   }
 
   public void updateInputs(IntakeIOInputs inputs) {
@@ -58,10 +66,7 @@ public class VortexIntakeIO implements IntakeIO {
         intakeLeaderMotor,
         intakeLeaderMotor::getOutputCurrent,
         (value) -> inputs.intakeCurrentAmps = value);
-    SparkUtil.ifOk(
-        intakeLeaderMotor,
-        intakeEncoder::getVelocity,
-        (value) -> inputs.RPM = value);
+    SparkUtil.ifOk(intakeLeaderMotor, intakeEncoder::getVelocity, (value) -> inputs.RPM = value);
     SparkUtil.ifOk(
         intakeLeaderMotor,
         intakeLeaderMotor::getMotorTemperature,
@@ -72,17 +77,16 @@ public class VortexIntakeIO implements IntakeIO {
         intakeFollowerMotor,
         intakeFollowerMotor::getOutputCurrent,
         (value) -> inputs.intakeCurrentAmps = value);
-    SparkUtil.ifOk(
-        intakeFollowerMotor,
-        intakeEncoder::getVelocity,
-        (value) -> inputs.RPM = value);
+    SparkUtil.ifOk(intakeFollowerMotor, intakeEncoder::getVelocity, (value) -> inputs.RPM = value);
     SparkUtil.ifOk(
         intakeFollowerMotor,
         intakeFollowerMotor::getMotorTemperature,
         (value) -> inputs.intakeMotorTemperatureCelcius = value);
 
     // See if the motor is currently stalled
-    boolean isStalled = Math.abs(speedDutyCycle) > 0.1 && Math.abs(intakeLeaderMotor.getEncoder().getVelocity()) < 10.0;
+    boolean isStalled =
+        Math.abs(speedDutyCycle) > 0.1
+            && Math.abs(intakeLeaderMotor.getEncoder().getVelocity()) < 10.0;
     inputs.stalled = isStalled;
   }
 
@@ -102,14 +106,16 @@ public class VortexIntakeIO implements IntakeIO {
     SparkUtil.tryUntilOk(
         intakeLeaderMotor,
         5,
-        () -> intakeLeaderMotor.configure(
-            brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+        () ->
+            intakeLeaderMotor.configure(
+                brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
     // Set the follower motor
     SparkUtil.tryUntilOk(
         intakeFollowerMotor,
         5,
-        () -> intakeFollowerMotor.configure(
-            brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+        () ->
+            intakeFollowerMotor.configure(
+                brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 }
