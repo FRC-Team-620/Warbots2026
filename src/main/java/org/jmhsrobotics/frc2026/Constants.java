@@ -90,6 +90,11 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.05;
 
+    public static final double kOnboardP = 0.0007;
+    public static final double kOnboardI = 0.0;
+    public static final double kOnboardD = 0.0;
+    public static final double kOnboardV = 0.00188;
+
     public static final double kBaseRPM = 3500;
     public static final double kShooterTolerance = 100;
     public static final double kShooterDutyCycle = 0.6;
