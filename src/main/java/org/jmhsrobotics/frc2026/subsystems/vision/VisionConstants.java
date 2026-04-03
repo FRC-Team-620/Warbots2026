@@ -29,7 +29,7 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   // TODO: Confirm and Identify which camera is on which side, update camera names
-  public static String camera0Name = "cody";
+  public static String camera0Name = "rex";
   public static String camera1Name = "fives";
   public static String camera2Name = "camera2";
   public static String camera3Name = "Camera3";
@@ -53,18 +53,31 @@ public class VisionConstants {
 
   public static Transform3d rexCalibration =
       new Transform3d(
-          0.018,
-          0.000,
-          0.507,
+          0.76,
+          -1.17,
+          0.26,
           new Rotation3d(
-              0, Units.degreesToRadians(-35), 0)); // 0.824, 0.187, -0.028, new Rotation3d());
+              new Quaternion(
+                  0.27199051288747156,
+                  -0.025677229980518912,
+                  0.0012065927817215272,
+                  0.9619565400232991))); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
       new Transform3d(-0.308, 0.062, 0.343, new Rotation3d(0, 0, Units.degreesToRadians(-210)));
   // 0.795, -0.224, -0.139, new Rotation3d());
   // blackbirdCalibration = new Pose3d();
   // TODO: Make sure all cameras are calibrated correctly
   public static Transform3d fivesCalibration =
-      new Transform3d(-0.308, -0.062, 0.343, new Rotation3d(0, 0, Units.degreesToRadians(210)));
+      new Transform3d(
+          0.75,
+          -0.78,
+          0.26,
+          new Rotation3d(
+              new Quaternion(
+                  -0.25177549331940885,
+                  -0.00402848540578471,
+                  -0.011347406369106361,
+                  0.9677107567025378)));
   public static Transform3d camera3Calibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
@@ -78,7 +91,7 @@ public class VisionConstants {
   public static final Pose3d camera3ToRobot =
       calibrationOffset.transformBy(camera3Calibration.inverse());
 
-  public static final Transform3d robotToCamera0 = codyCalibration;
+  public static final Transform3d robotToCamera0 = rexCalibration;
   public static final Transform3d robotToCamera1 = fivesCalibration;
   public static final Transform3d robotToCamera2 =
       new Transform3d(fivesToRobot.getTranslation(), fivesToRobot.getRotation());

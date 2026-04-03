@@ -50,10 +50,10 @@ public class Slapdown extends SubsystemBase {
     }
     // slapdownIO.setPID(SmartDashboard.getNumber(, setPointDegrees), pidController.getI(),
     // pidController.getD());
-    slapdownIO.setPID(
-        SmartDashboard.getNumber("Slapdown/pid/p", Constants.Slapdown.kSlapdownP),
-        SmartDashboard.getNumber("Slapdown/pid/i", Constants.Slapdown.kSlapdownI),
-        SmartDashboard.getNumber("Slapdown/pid/d", Constants.Slapdown.kSlapdownD));
+    // slapdownIO.setPID(
+    //     SmartDashboard.getNumber("Slapdown/pid/p", Constants.Slapdown.kSlapdownP),
+    //     SmartDashboard.getNumber("Slapdown/pid/i", Constants.Slapdown.kSlapdownI),
+    //     SmartDashboard.getNumber("Slapdown/pid/d", Constants.Slapdown.kSlapdownD));
     calcluatedState =
         trapezoidProfile.calculate(
             0.02,
