@@ -43,6 +43,7 @@ public final class Constants {
     // TODO update CANIds
     public static final int kCanAndGyroID = 0;
     public static final int kIntakeMotorID = 41;
+    public static final int kIntakeFollowerMotorID = 42;
     public static final int kSlapdownMotorID = 40;
     public static final int kIndexerMotorID = 2;
     public static final int kClimberMotorID = 30;
@@ -112,7 +113,7 @@ public final class Constants {
   public static class Intake {
     public static final double kBaseRPM = 3000;
 
-    public static final double kSpeedDutyCycle = 1;
+    public static final double kSpeedDutyCycle = 1.0;
   }
 
   public static class Slapdown {
