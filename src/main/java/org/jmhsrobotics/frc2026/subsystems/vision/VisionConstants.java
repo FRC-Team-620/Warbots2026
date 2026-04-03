@@ -69,15 +69,15 @@ public class VisionConstants {
   // TODO: Make sure all cameras are calibrated correctly
   public static Transform3d fivesCalibration =
       new Transform3d(
-          0.75,
-          -0.78,
-          0.26,
+          -0.32,
+          -0.06,
+          0.36,
           new Rotation3d(
               new Quaternion(
-                  -0.25177549331940885,
-                  -0.00402848540578471,
-                  -0.011347406369106361,
-                  0.9677107567025378)));
+                  -0.2559549349673289,
+                  -0.003858641720550643,
+                  -0.008591370823215483,
+                  0.9666428350209404)));
   public static Transform3d camera3Calibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));

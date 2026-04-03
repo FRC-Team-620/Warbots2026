@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +82,11 @@ public class VisionIOPhotonVision implements VisionIO {
             Logger.recordOutput(
                 "DEBUG/" + this.name + "/b" + i,
                 VisonPosition.computeRobotToCamera(
-                        new Pose3d(0.1, -0.9684, 0.1, new Rotation3d()),
+                        new Pose3d(
+                            -Units.inchesToMeters(38.25),
+                            -Units.inchesToMeters(10),
+                            Units.inchesToMeters(7.25),
+                            new Rotation3d()),
                         target.bestCameraToTarget) // TODO PUT RIGHT OFFSET
                     .toString());
           }
