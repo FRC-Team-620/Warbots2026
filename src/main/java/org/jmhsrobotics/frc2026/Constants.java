@@ -113,7 +113,7 @@ public final class Constants {
   public static class Intake {
     public static final double kBaseRPM = 3000;
 
-    public static final double kSpeedDutyCycle = 1;
+    public static final double kSpeedDutyCycle = 1.0;
   }
 
   public static class Slapdown {

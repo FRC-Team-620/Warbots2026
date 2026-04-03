@@ -29,6 +29,14 @@ public class VortexIntakeIO implements IntakeIO {
         .voltageCompensation(12)
         .inverted(false);
 
+    // Create the follower configuration
+    intakeFollowerMotorConfig = new SparkFlexConfig();
+    intakeFollowerMotorConfig
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit(30)
+        .voltageCompensation(12)
+        .follow(Constants.CAN.kIntakeMotorID, true);
+
     // Create the leader instance
     SparkUtil.tryUntilOk(
         intakeLeaderMotor,
@@ -38,14 +46,6 @@ public class VortexIntakeIO implements IntakeIO {
                 intakeLeaderMotorConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
-
-    // Create the follower configuration
-    intakeFollowerMotorConfig = new SparkFlexConfig();
-    intakeFollowerMotorConfig
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(30)
-        .voltageCompensation(12)
-        .follow(Constants.CAN.kIntakeMotorID, true);
 
     // Create the follower instance
     SparkUtil.tryUntilOk(
