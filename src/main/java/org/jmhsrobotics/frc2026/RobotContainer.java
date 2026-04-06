@@ -71,8 +71,8 @@ import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
-import org.jmhsrobotics.frc2026.subsystems.intake.NeoIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
+import org.jmhsrobotics.frc2026.subsystems.intake.VortexIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
@@ -136,7 +136,9 @@ public class RobotContainer {
                 new ModuleIOThrifty(3));
 
         shooter = new Shooter(new NeoShooterIO());
-        intake = new Intake(new NeoIntakeIO());
+        // Old Code - Keep here in case we need to revert to Neo Motor
+        // intake = new Intake(new NeoIntakeIO());
+        intake = new Intake(new VortexIntakeIO());
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         climber = new Climber(new NeoClimberIO());
@@ -144,7 +146,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVision(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0) {});
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0),
+                new VisionIOPhotonVision(
+                    VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         feeder = new Feeder(new NeoFeederIO());
         break;
 
@@ -171,7 +175,9 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose));
+                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
         feeder = new Feeder(new SimFeederIO());
         break;
 
@@ -190,7 +196,7 @@ public class RobotContainer {
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
         climber = new Climber(new ClimberIO() {});
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         feeder = new Feeder(new FeederIO() {});
         break;
     }

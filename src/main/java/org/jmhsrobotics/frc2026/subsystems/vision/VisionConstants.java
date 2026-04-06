@@ -30,8 +30,8 @@ public class VisionConstants {
   // Camera names, must match names configured on coprocessor
   // TODO: Confirm and Identify which camera is on which side, update camera names
   public static String camera0Name = "rex";
-  public static String camera1Name = "Camera1";
-  public static String camera2Name = "Camera2";
+  public static String camera1Name = "fives";
+  public static String camera2Name = "camera2";
   public static String camera3Name = "Camera3";
 
   // Robot to camera transforms
@@ -53,20 +53,31 @@ public class VisionConstants {
 
   public static Transform3d rexCalibration =
       new Transform3d(
-          0.018,
-          0.000,
-          0.507,
+          -0.30,
+          0.05,
+          0.34,
           new Rotation3d(
-              0, Units.degreesToRadians(-35), 0)); // 0.824, 0.187, -0.028, new Rotation3d());
+              new Quaternion(
+                  0.2654733389470705,
+                  -0.013521994662107767,
+                  0.005693362433918658,
+                  0.9640065599324767))); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
-      new Transform3d(
-          0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
+      new Transform3d(-0.308, 0.062, 0.343, new Rotation3d(0, 0, Units.degreesToRadians(-210)));
   // 0.795, -0.224, -0.139, new Rotation3d());
   // blackbirdCalibration = new Pose3d();
   // TODO: Make sure all cameras are calibrated correctly
-  public static Transform3d camera2Calibration =
+  public static Transform3d fivesCalibration =
       new Transform3d(
-          0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
+          -0.31,
+          -0.06,
+          0.35,
+          new Rotation3d(
+              new Quaternion(
+                  -0.2578076268118781,
+                  -0.00306237897673145,
+                  -0.008597764784923356,
+                  0.9661531596146304)));
   public static Transform3d camera3Calibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
@@ -75,16 +86,15 @@ public class VisionConstants {
       new Pose3d(1, 0, 0.25, new Rotation3d(Rotation2d.fromDegrees(180)));
   public static final Pose3d rexToRobot = calibrationOffset.transformBy(rexCalibration.inverse());
   public static final Pose3d codyToRobot = calibrationOffset.transformBy(codyCalibration.inverse());
-  public static final Pose3d camera2ToRobot =
-      calibrationOffset.transformBy(camera2Calibration.inverse());
+  public static final Pose3d fivesToRobot =
+      calibrationOffset.transformBy(fivesCalibration.inverse());
   public static final Pose3d camera3ToRobot =
       calibrationOffset.transformBy(camera3Calibration.inverse());
 
   public static final Transform3d robotToCamera0 = rexCalibration;
-  public static final Transform3d robotToCamera1 =
-      new Transform3d(codyToRobot.getTranslation(), codyToRobot.getRotation());
+  public static final Transform3d robotToCamera1 = fivesCalibration;
   public static final Transform3d robotToCamera2 =
-      new Transform3d(camera2ToRobot.getTranslation(), camera2ToRobot.getRotation());
+      new Transform3d(fivesToRobot.getTranslation(), fivesToRobot.getRotation());
   public static final Transform3d robotToCamera3 =
       new Transform3d(camera3ToRobot.getTranslation(), camera3ToRobot.getRotation());
 
@@ -97,15 +107,15 @@ public class VisionConstants {
 
   // Standard deviation baselines, for 1 meter distance and 1 tag
   // (Adjusted automatically based on distance and # of tags)
-  public static double linearStdDevBaseline = 0.1; // Meters
+  public static double linearStdDevBaseline = 0.2; // Meters
   public static double angularStdDevBaseline = 100; // Radians
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
   public static double[] cameraStdDevFactors =
       new double[] {
-        1.0, // Camera 0
-        1.0, // Camera 1
+        4.0, // Camera 0
+        4.0, // Camera 1
         1.0, // Camera 2
         1.0
       };
@@ -114,4 +124,17 @@ public class VisionConstants {
   public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
   public static double angularStdDevMegatag2Factor =
       Double.POSITIVE_INFINITY; // No rotation data available
+
+  public static final Transform3d calibrationJigLeftPose =
+      new Transform3d(
+          -Units.inchesToMeters(38),
+          Units.inchesToMeters(10),
+          Units.inchesToMeters(7.25),
+          new Rotation3d());
+  public static final Transform3d calibraitionJigRightPose =
+      new Transform3d(
+          -Units.inchesToMeters(38.25),
+          -Units.inchesToMeters(10),
+          Units.inchesToMeters(7.25),
+          new Rotation3d());
 }
