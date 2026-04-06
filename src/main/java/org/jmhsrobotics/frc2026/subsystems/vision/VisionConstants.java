@@ -124,4 +124,15 @@ public class VisionConstants {
   public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
   public static double angularStdDevMegatag2Factor =
       Double.POSITIVE_INFINITY; // No rotation data available
+
+      public static final Transform3d calibrationJigLeftPose = new Transform3d(
+                            -Units.inchesToMeters(38),
+                            Units.inchesToMeters(10),
+                            Units.inchesToMeters(7.25),
+                            new Rotation3d());
+    public static final Transform3d calibraitionJigRightPose = new Transform3d(
+                            -Units.inchesToMeters(38.25),
+                            -Units.inchesToMeters(10),
+                            Units.inchesToMeters(7.25),
+                            new Rotation3d());
 }

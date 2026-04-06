@@ -101,16 +101,12 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput(
         "Vision/CalibrationJigLeft",
         new Pose3d(m_robotContainer.drive.getPose())
-            .plus(new Transform3d(0.1, -0.9684, 0.1, new Rotation3d())));
+            .plus(VisionConstants.calibrationJigLeftPose));
     Logger.recordOutput(
         "Vision/CalibrationJigRight",
         new Pose3d(m_robotContainer.drive.getPose())
             .plus(
-                new Transform3d(
-                    -Units.inchesToMeters(38.25),
-                    -Units.inchesToMeters(10),
-                    Units.inchesToMeters(7.25),
-                    new Rotation3d())));
+                VisionConstants.calibraitionJigRightPose));
     CommandScheduler.getInstance().run();
   }
 
