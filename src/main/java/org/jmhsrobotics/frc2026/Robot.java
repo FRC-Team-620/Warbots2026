@@ -6,8 +6,6 @@ package org.jmhsrobotics.frc2026;
 
 import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -100,13 +98,11 @@ public class Robot extends LoggedRobot {
 
     Logger.recordOutput(
         "Vision/CalibrationJigLeft",
-        new Pose3d(m_robotContainer.drive.getPose())
-            .plus(VisionConstants.calibrationJigLeftPose));
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.calibrationJigLeftPose));
     Logger.recordOutput(
         "Vision/CalibrationJigRight",
         new Pose3d(m_robotContainer.drive.getPose())
-            .plus(
-                VisionConstants.calibraitionJigRightPose));
+            .plus(VisionConstants.calibraitionJigRightPose));
     CommandScheduler.getInstance().run();
   }
 

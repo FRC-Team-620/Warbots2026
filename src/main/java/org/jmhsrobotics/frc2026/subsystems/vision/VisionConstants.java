@@ -53,15 +53,15 @@ public class VisionConstants {
 
   public static Transform3d rexCalibration =
       new Transform3d(
-          0.76,
-          -1.17,
-          0.26,
+          -0.30,
+          0.05,
+          0.34,
           new Rotation3d(
               new Quaternion(
-                  0.27199051288747156,
-                  -0.025677229980518912,
-                  0.0012065927817215272,
-                  0.9619565400232991))); // 0.824, 0.187, -0.028, new Rotation3d());
+                  0.2654733389470705,
+                  -0.013521994662107767,
+                  0.005693362433918658,
+                  0.9640065599324767))); // 0.824, 0.187, -0.028, new Rotation3d());
   public static Transform3d codyCalibration =
       new Transform3d(-0.308, 0.062, 0.343, new Rotation3d(0, 0, Units.degreesToRadians(-210)));
   // 0.795, -0.224, -0.139, new Rotation3d());
@@ -69,15 +69,15 @@ public class VisionConstants {
   // TODO: Make sure all cameras are calibrated correctly
   public static Transform3d fivesCalibration =
       new Transform3d(
-          -0.32,
+          -0.31,
           -0.06,
-          0.36,
+          0.35,
           new Rotation3d(
               new Quaternion(
-                  -0.2559549349673289,
-                  -0.003858641720550643,
-                  -0.008591370823215483,
-                  0.9666428350209404)));
+                  -0.2578076268118781,
+                  -0.00306237897673145,
+                  -0.008597764784923356,
+                  0.9661531596146304)));
   public static Transform3d camera3Calibration =
       new Transform3d(
           0.781, -0.238, -0.178, new Rotation3d(new Quaternion(-0.303, -0.138, -0.020, -0.943)));
@@ -107,15 +107,15 @@ public class VisionConstants {
 
   // Standard deviation baselines, for 1 meter distance and 1 tag
   // (Adjusted automatically based on distance and # of tags)
-  public static double linearStdDevBaseline = 0.1; // Meters
+  public static double linearStdDevBaseline = 0.2; // Meters
   public static double angularStdDevBaseline = 100; // Radians
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
   public static double[] cameraStdDevFactors =
       new double[] {
-        1.0, // Camera 0
-        1.0, // Camera 1
+        4.0, // Camera 0
+        4.0, // Camera 1
         1.0, // Camera 2
         1.0
       };
@@ -125,14 +125,16 @@ public class VisionConstants {
   public static double angularStdDevMegatag2Factor =
       Double.POSITIVE_INFINITY; // No rotation data available
 
-      public static final Transform3d calibrationJigLeftPose = new Transform3d(
-                            -Units.inchesToMeters(38),
-                            Units.inchesToMeters(10),
-                            Units.inchesToMeters(7.25),
-                            new Rotation3d());
-    public static final Transform3d calibraitionJigRightPose = new Transform3d(
-                            -Units.inchesToMeters(38.25),
-                            -Units.inchesToMeters(10),
-                            Units.inchesToMeters(7.25),
-                            new Rotation3d());
+  public static final Transform3d calibrationJigLeftPose =
+      new Transform3d(
+          -Units.inchesToMeters(38),
+          Units.inchesToMeters(10),
+          Units.inchesToMeters(7.25),
+          new Rotation3d());
+  public static final Transform3d calibraitionJigRightPose =
+      new Transform3d(
+          -Units.inchesToMeters(38.25),
+          -Units.inchesToMeters(10),
+          Units.inchesToMeters(7.25),
+          new Rotation3d());
 }
