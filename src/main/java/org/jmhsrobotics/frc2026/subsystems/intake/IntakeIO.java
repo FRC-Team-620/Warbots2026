@@ -10,6 +10,7 @@ public interface IntakeIO {
     public double intakeMotorTemperatureCelcius;
     public double RPM;
     public double outputSpeedDutyCycle;
+    public boolean stalled;
   }
 
   public default void setPIDF(

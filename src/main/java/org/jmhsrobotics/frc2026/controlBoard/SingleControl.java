@@ -47,6 +47,11 @@ public class SingleControl implements ControlBoard {
   }
 
   @Override
+  public Trigger faceDriveDirection() {
+    return null;
+  }
+
+  @Override
   public Trigger turbo() {
     return driver.leftBumper();
   }

@@ -15,11 +15,14 @@ package org.jmhsrobotics.frc2026.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.jmhsrobotics.frc2026.util.VisonPosition;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -41,6 +44,11 @@ public class VisionIOPhotonVision implements VisionIO {
     camera = new PhotonCamera(name);
     this.robotToCamera = robotToCamera;
     this.name = name;
+    // this.robotToCamera = VisonPosition.loadCameraConfig(name, robotToCamera);
+    // new InstantCommand(()->{
+    //   this.robotToCamera = VisonPosition.computeRobotToCamera(null, robotToCamera);
+    // });
+    // SmartDashboard.putData("CamCal/"+name, null);
   }
 
   @Override
@@ -65,6 +73,27 @@ public class VisionIOPhotonVision implements VisionIO {
           if (DEBUG) {
             Logger.recordOutput(
                 "DEBUG/" + this.name + "/" + i, new Pose3d().plus(target.bestCameraToTarget));
+            Logger.recordOutput(
+                "DEBUG/" + this.name + "/a" + i,
+                VisonPosition.computeRobotToCamera(
+                        new Pose3d(
+                            -Units.inchesToMeters(38),
+                            Units.inchesToMeters(10),
+                            Units.inchesToMeters(7.25),
+                            new Rotation3d()),
+                        target.bestCameraToTarget)
+                    .toString());
+
+            Logger.recordOutput(
+                "DEBUG/" + this.name + "/b" + i,
+                VisonPosition.computeRobotToCamera(
+                        new Pose3d(
+                            -Units.inchesToMeters(38.25),
+                            -Units.inchesToMeters(10),
+                            Units.inchesToMeters(7.25),
+                            new Rotation3d()),
+                        target.bestCameraToTarget) // TODO PUT RIGHT OFFSET
+                    .toString());
           }
           inputs.tagPoses[i] =
               new TagPose(

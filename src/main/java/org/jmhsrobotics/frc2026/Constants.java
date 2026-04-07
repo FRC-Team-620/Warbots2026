@@ -43,6 +43,7 @@ public final class Constants {
     // TODO update CANIds
     public static final int kCanAndGyroID = 0;
     public static final int kIntakeMotorID = 41;
+    public static final int kIntakeFollowerMotorID = 42;
     public static final int kSlapdownMotorID = 40;
     public static final int kIndexerMotorID = 2;
     public static final int kClimberMotorID = 30;
@@ -86,18 +87,23 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.25;
+    public static final double kP = 0.5;
     public static final double kI = 0.0;
     public static final double kD = 0.05;
 
+    public static final double kOnboardP = 0.0007;
+    public static final double kOnboardI = 0.0;
+    public static final double kOnboardD = 0.0;
+    public static final double kOnboardV = 0.00188;
+
     public static final double kBaseRPM = 3500;
-    public static final double kShooterTolerance = 1000;
+    public static final double kShooterTolerance = 100;
     public static final double kShooterDutyCycle = 0.6;
     public static final double kHoodTolerance = 0.05;
-    public static final double kShooterRPMOffset = 300.0;
+    public static final double kShooterRPMOffset = 0.0;
 
     public static final double kHubSetPointRPM = 2600.0;
-    public static final double kAutoHubSetPointRPM = 2750.0;
+    public static final double kAutoHubSetPointRPM = 2600.0;
     // FeedForward Constants - These are just guesses, will need to be tuned
     public static final double kS = 0.2; // Static Component of Friction
     public static final double kV = 0.12521; // Velocity Gain
@@ -107,13 +113,15 @@ public final class Constants {
   public static class Intake {
     public static final double kBaseRPM = 3000;
 
-    public static final double kSpeedDutyCycle = 1;
+    public static final double kSpeedDutyCycle = 1.0;
   }
 
   public static class Slapdown {
     public static final double kSlapdownUpPositionDegrees = 60; // TODO update this (IMPORTANT)
     public static final double kSlapdownDownPositionDegrees = 180; // TODO update this (IMPORTANT)
     public static final double kSlapdownToleranceDegrees = 5; // TODO update this (IMPORTANT)
+    public static final double kSlapdownJiggleUpDegrees = 70;
+    public static final double kSlapdownJiggleDownDegrees = 150;
 
     public static final double kSlapdownP = 0.1;
     public static final double kSlapdownI = 0.0;

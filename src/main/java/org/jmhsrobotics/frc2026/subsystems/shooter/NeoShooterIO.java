@@ -5,31 +5,33 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
+import org.littletonrobotics.junction.Logger;
 
 public class NeoShooterIO implements ShooterIO {
-  private SparkMax leftFlywheelMotorLeader =
-      new SparkMax(Constants.CAN.kLeftFlywheelMotorID, MotorType.kBrushless);
-  private SparkMax centerFlywheelMotor =
-      new SparkMax(Constants.CAN.kCenterFlywheelMotorID, MotorType.kBrushless);
-  private SparkMax rightFlywheelMotor =
-      new SparkMax(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
+  private SparkFlex leftFlywheelMotor =
+      new SparkFlex(Constants.CAN.kLeftFlywheelMotorID, MotorType.kBrushless);
+  private SparkFlex centerFlywheelMotor =
+      new SparkFlex(Constants.CAN.kCenterFlywheelMotorID, MotorType.kBrushless);
+  private SparkFlex rightFlywheelMotor =
+      new SparkFlex(Constants.CAN.kRightFlywheelMotorID, MotorType.kBrushless);
 
-  private SparkMaxConfig motorConfigLeft;
-  private SparkMaxConfig motorConfigFollowerRight;
-  private SparkMaxConfig motorConfigMiddleLeader;
-  private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotorLeader.getEncoder();
+  private SparkFlexConfig motorConfigLeftFollower;
+  private SparkFlexConfig motorConfigRightFollower;
+  private SparkFlexConfig motorConfigMiddleLeader;
+  private RelativeEncoder leftFlywheelEncoder = leftFlywheelMotor.getEncoder();
   private RelativeEncoder centerFlywheelEncoder = centerFlywheelMotor.getEncoder();
   private RelativeEncoder rightFlywheelEncoder = rightFlywheelMotor.getEncoder();
   private double voltage;
 
   private SparkClosedLoopController leftFlywheelPIDController =
-      leftFlywheelMotorLeader.getClosedLoopController();
+      leftFlywheelMotor.getClosedLoopController();
   private SparkClosedLoopController centerFlywheelPIDController =
       centerFlywheelMotor.getClosedLoopController();
   private SparkClosedLoopController rightFlywheelPIDController =
@@ -40,63 +42,67 @@ public class NeoShooterIO implements ShooterIO {
 
   public NeoShooterIO() {
     // leftFlywheelMotor
-    motorConfigLeft = new SparkMaxConfig();
-    motorConfigLeft
+    motorConfigLeftFollower = new SparkFlexConfig();
+    motorConfigLeftFollower
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .follow(Constants.CAN.kCenterFlywheelMotorID, false)
         //  .voltageCompensation(12)
-        .inverted(true)
-        .closedLoop
-        .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+        .inverted(true);
+    // .closedLoop
+    // .pid(
+    //     Constants.ShooterConstants.kOnboardP,
+    //     Constants.ShooterConstants.kOnboardI,
+    //     Constants.ShooterConstants.kOnboardD)
     // .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     // .maxOutput(1)
     // .minOutput(0);
 
-    motorConfigFollowerRight = new SparkMaxConfig();
-    motorConfigMiddleLeader = new SparkMaxConfig();
-
-    motorConfigFollowerRight
+    motorConfigRightFollower = new SparkFlexConfig();
+    motorConfigRightFollower
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .inverted(false)
-        .follow(Constants.CAN.kCenterFlywheelMotorID, true)
-        .closedLoop
-        .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+        .follow(Constants.CAN.kCenterFlywheelMotorID, true);
+    // .closedLoop
+    // .pid(
+    //     Constants.ShooterConstants.kOnboardP,
+    //     Constants.ShooterConstants.kOnboardI,
+    //     Constants.ShooterConstants.kOnboardD);
     // .voltageCompensation(12);
     //    .follow(leftFlywheelMotorLeader, true);
 
-    motorConfigMiddleLeader = new SparkMaxConfig();
+    motorConfigMiddleLeader = new SparkFlexConfig();
     motorConfigMiddleLeader
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(50)
         .inverted(true)
         .closedLoop
         .pid(
-            Constants.ShooterConstants.kP,
-            Constants.ShooterConstants.kI,
-            Constants.ShooterConstants.kD);
+            Constants.ShooterConstants.kOnboardP,
+            Constants.ShooterConstants.kOnboardI,
+            Constants.ShooterConstants.kOnboardD)
+        .maxOutput(1)
+        .minOutput(0);
+    motorConfigMiddleLeader.closedLoop.feedForward.kV(Constants.ShooterConstants.kOnboardV);
     // .voltageCompensation(12);
     // .follow(leftFlywheelMotorLeader, false);
-    motorConfigMiddleLeader
-        .encoder
-        .quadratureMeasurementPeriod(1)
-        .quadratureAverageDepth(2)
-        .uvwMeasurementPeriod(8)
-        .uvwAverageDepth(2);
+
+    // quadratureMeasurementPeriod is ACTUALLY 6 not 3, gets multiplied by 2 when set
+    motorConfigMiddleLeader.encoder.quadratureMeasurementPeriod(3).quadratureAverageDepth(30);
+    motorConfigMiddleLeader.signals.appliedOutputPeriodMs(5);
+
+    //     .uvwMeasurementPeriod(8)
+    //     .uvwAverageDepth(2);
 
     SparkUtil.tryUntilOk(
-        leftFlywheelMotorLeader,
+        leftFlywheelMotor,
         5,
         () ->
-            leftFlywheelMotorLeader.configure(
-                motorConfigLeft, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+            leftFlywheelMotor.configure(
+                motorConfigLeftFollower,
+                ResetMode.kResetSafeParameters,
+                PersistMode.kPersistParameters));
 
     SparkUtil.tryUntilOk(
         centerFlywheelMotor,
@@ -112,7 +118,7 @@ public class NeoShooterIO implements ShooterIO {
         5,
         () ->
             rightFlywheelMotor.configure(
-                motorConfigFollowerRight,
+                motorConfigRightFollower,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters));
     // TODO set motorConfig values
@@ -144,27 +150,47 @@ public class NeoShooterIO implements ShooterIO {
     // value);
     // pidController.setSetpoint(this.velocityRPM,
     // ControlType.kMAXMotionVelocityControl);
+
+    // SparkUtil.ifOk(
+    //     leftFlywheelMotor,
+    //     leftFlywheelMotor::getOutputCurrent,
+    //     (value) -> inputs.currentAMPS = value);
+    // SparkUtil.ifOk(
+    //     leftFlywheelMotor, leftFlywheelEncoder::getVelocity, (value) -> inputs.velocityRPM =
+    // value);
+
+    // SparkUtil.ifOk(
+    //     leftFlywheelMotor, leftFlywheelEncoder::getPosition, (value) -> inputs.positionROT =
+    // value);
+    // SparkUtil.ifOk(
+    //     leftFlywheelMotor, leftFlywheelMotor::getBusVoltage, (value) -> inputs.voltage = value);
+    // SparkUtil.ifOk(
+    //     leftFlywheelMotor, leftFlywheelMotor::getMotorTemperature, (value) -> inputs.tempC =
+    // value);
+
     SparkUtil.ifOk(
-        leftFlywheelMotorLeader,
-        leftFlywheelMotorLeader::getOutputCurrent,
+        centerFlywheelMotor,
+        centerFlywheelMotor::getOutputCurrent,
         (value) -> inputs.currentAMPS = value);
     SparkUtil.ifOk(
-        leftFlywheelMotorLeader,
-        leftFlywheelEncoder::getVelocity,
+        centerFlywheelMotor,
+        centerFlywheelEncoder::getVelocity,
         (value) -> inputs.velocityRPM = value);
 
     SparkUtil.ifOk(
-        leftFlywheelMotorLeader,
-        leftFlywheelEncoder::getPosition,
+        centerFlywheelMotor,
+        centerFlywheelEncoder::getPosition,
         (value) -> inputs.positionROT = value);
     SparkUtil.ifOk(
-        leftFlywheelMotorLeader,
-        leftFlywheelMotorLeader::getBusVoltage,
-        (value) -> inputs.voltage = value);
+        centerFlywheelMotor, centerFlywheelMotor::getBusVoltage, (value) -> inputs.voltage = value);
     SparkUtil.ifOk(
-        leftFlywheelMotorLeader,
-        leftFlywheelMotorLeader::getMotorTemperature,
+        centerFlywheelMotor,
+        centerFlywheelMotor::getMotorTemperature,
         (value) -> inputs.tempC = value);
+
+    Logger.recordOutput("LeftFlywheelVelocity", leftFlywheelEncoder.getVelocity());
+    Logger.recordOutput("CenterFlywheelVelocity", centerFlywheelEncoder.getVelocity());
+    Logger.recordOutput("RightFlywheelVelocity", rightFlywheelEncoder.getVelocity());
 
     inputs.appliedVoltage = voltage;
     inputs.goalRPM = this.goalRPM;
@@ -173,9 +199,7 @@ public class NeoShooterIO implements ShooterIO {
   @Override
   public void setRPM(double velocityRPM) {
     this.goalRPM = velocityRPM;
-    // leftFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
     centerFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
-    //  rightFlywheelPIDController.setSetpoint(velocityRPM, ControlType.kVelocity);
   }
 
   @Override
@@ -216,10 +240,10 @@ public class NeoShooterIO implements ShooterIO {
     var brakeConfig = new SparkMaxConfig();
     brakeConfig.idleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
     SparkUtil.tryUntilOk(
-        leftFlywheelMotorLeader,
+        leftFlywheelMotor,
         5,
         () ->
-            leftFlywheelMotorLeader.configure(
+            leftFlywheelMotor.configure(
                 brakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 }

@@ -21,7 +21,7 @@ public class NeoIntakeIO implements IntakeIO {
 
     intakeMotorConfig = new SparkMaxConfig();
     intakeMotorConfig
-        .idleMode(IdleMode.kBrake)
+        .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(30)
         .voltageCompensation(12)
         .inverted(false);
@@ -45,6 +45,10 @@ public class NeoIntakeIO implements IntakeIO {
         intakeMotor,
         intakeMotor::getMotorTemperature,
         (value) -> inputs.intakeMotorTemperatureCelcius = value);
+
+    boolean isStalled =
+        Math.abs(speedDutyCycle) > 0.1 && Math.abs(intakeMotor.getEncoder().getVelocity()) < 10.0;
+    inputs.stalled = isStalled;
   }
 
   @Override
