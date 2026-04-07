@@ -347,7 +347,11 @@ public class RobotContainer {
                             led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
                     .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
-    control.extakeFuel().onTrue(new IntakeMoveAntiJam(intake, -(Constants.Intake.kSpeedDutyCycle)));
+    control
+        .extakeFuel()
+        .onTrue(
+            new IntakeMoveAntiJam(intake, -(Constants.Intake.kSpeedDutyCycle))
+                .alongWith(new IndexerMove(indexer, -Constants.Indexer.kSpeedDutyCycle)));
 
     // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
