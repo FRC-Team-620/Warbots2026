@@ -58,4 +58,15 @@ public class GyroIOPigeon2 implements GyroIO {
     yawTimestampQueue.clear();
     yawPositionQueue.clear();
   }
+
+  @Override
+  public double getPitch() {
+    return pigeon.getPitch().getValueAsDouble(); // Phoenix 6 (recommended)
+    // return m_pigeon.getPitch();                   // older style
+  }
+
+  @Override
+  public double getRoll() {
+    return pigeon.getRoll().getValueAsDouble();
+  }
 }

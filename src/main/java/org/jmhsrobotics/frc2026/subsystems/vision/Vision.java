@@ -204,4 +204,9 @@ public class Vision extends SubsystemBase {
         double timestampSeconds,
         Matrix<N3, N1> visionMeasurementStdDevs);
   }
+
+  // TODO: Create a method to determine how accurately the robot is aimed
+  public double getTargetConfidence() {
+    return 0.75;
+  }
 }

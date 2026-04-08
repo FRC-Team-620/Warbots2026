@@ -453,4 +453,19 @@ public class Drive extends SubsystemBase {
   public ModuleThrifty[] getSwerveModules() {
     return modules;
   }
+
+  /**
+   * Returns the robot's pitch in degrees (positive = nose up). This is the tilt forward/backward.
+   */
+  public double getPitchDegrees() {
+    return gyroIO.getPitch(); // or m_gyroIO.getPitch() depending on your exact setup
+  }
+
+  /**
+   * Returns the robot's roll in degrees (positive = right side down). This is the side-to-side
+   * tilt.
+   */
+  public double getRollDegrees() {
+    return gyroIO.getRoll(); // or m_gyroIO.getRoll()
+  }
 }

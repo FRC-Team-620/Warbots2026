@@ -48,4 +48,16 @@ public class GyroIOBoron implements GyroIO {
     yawTimestampQueue.clear();
     yawPositionQueue.clear();
   }
+
+  @Override
+  public double getPitch() {
+    // Boron (CTRE CANivore / similar) typically uses the same style as Pigeon2
+    // Adjust based on your exact Boron hardware API
+    return canandgyro.getPitch(); // Phoenix 6 style (most common in 2026)
+  }
+
+  @Override
+  public double getRoll() {
+    return canandgyro.getRoll(); // Phoenix 6
+  }
 }

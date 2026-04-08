@@ -46,4 +46,14 @@ public class GyroIONavX implements GyroIO {
     yawTimestampQueue.clear();
     yawPositionQueue.clear();
   }
+
+  @Override
+  public double getPitch() {
+    return navX.getPitch();
+  }
+
+  @Override
+  public double getRoll() {
+    return navX.getRoll();
+  }
 }

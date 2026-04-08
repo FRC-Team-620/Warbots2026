@@ -28,4 +28,8 @@ public interface GyroIO {
   }
 
   public default void updateInputs(GyroIOInputs inputs) {}
+
+  double getPitch();
+
+  double getRoll();
 }
