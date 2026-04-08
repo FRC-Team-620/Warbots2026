@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
-
+    hoodPosition = SmartDashboard.getNumber("Hood Position", 0.31);
     leftServo.setPosition(hoodPosition);
     rightServo.setPosition(hoodPosition);
 
@@ -165,20 +165,20 @@ public class Shooter extends SubsystemBase {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
     map.put(1.3, 2600.0);
-    map.put(2.0, 2550.0);
-    map.put(3.0, 2700.0);
+    // map.put(2.0, 2550.0);
+    map.put(3.0, 3400.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
     // (distance, hood height)
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
+    // map.put(2.0, 0.5);
     map.put(1.3, 0.31);
-    map.put(2.0, 0.5);
-    map.put(3.0, 0.6);
-    // map.put(4.0, 0.63);
-    // map.put(5.0, 0.7);
-    // map.put(5.5, 0.75);
+    map.put(3.0, 0.31);
+    map.put(4.0, 0.63);
+    map.put(5.0, 0.7);
+    map.put(5.5, 0.75);
   }
 
   public boolean isActive() {
