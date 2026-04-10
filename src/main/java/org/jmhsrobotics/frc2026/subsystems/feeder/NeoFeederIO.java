@@ -19,6 +19,7 @@ public class NeoFeederIO implements FeederIO {
         .smartCurrentLimit(40)
         .voltageCompensation(12)
         .inverted(false);
+    feederMotorConfig.signals.appliedOutputPeriodMs(20);
   }
 
   public void updateInputs(FeederIO.FeederIOInputs inputs) {
