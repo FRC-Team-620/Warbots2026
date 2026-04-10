@@ -36,6 +36,7 @@ public class VortexIntakeIO implements IntakeIO {
         .smartCurrentLimit(30)
         .voltageCompensation(12)
         .follow(Constants.CAN.kIntakeMotorID, true);
+        intakeFollowerMotorConfig.signals.appliedOutputPeriodMs(500);
 
     // Create the leader instance
     SparkUtil.tryUntilOk(

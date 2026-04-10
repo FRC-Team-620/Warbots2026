@@ -49,6 +49,7 @@ public class NeoShooterIO implements ShooterIO {
         .follow(Constants.CAN.kCenterFlywheelMotorID, false)
         //  .voltageCompensation(12)
         .inverted(true);
+         motorConfigLeftFollower.signals.appliedOutputPeriodMs(500); // Frame 0
     // .closedLoop
     // .pid(
     //     Constants.ShooterConstants.kOnboardP,
@@ -64,6 +65,8 @@ public class NeoShooterIO implements ShooterIO {
         .smartCurrentLimit(50)
         .inverted(false)
         .follow(Constants.CAN.kCenterFlywheelMotorID, true);
+    motorConfigRightFollower.signals.appliedOutputPeriodMs(500); // Frame 0
+    // motorConfigRightFollower.signals.set(500); // Frame 0
     // .closedLoop
     // .pid(
     //     Constants.ShooterConstants.kOnboardP,

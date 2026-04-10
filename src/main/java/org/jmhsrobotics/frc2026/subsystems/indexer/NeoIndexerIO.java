@@ -24,7 +24,7 @@ public class NeoIndexerIO implements IndexerIO {
         .smartCurrentLimit(20)
         .voltageCompensation(12)
         .inverted(true);
-
+    motorConfig.signals.appliedOutputPeriodMs(20);
     SparkUtil.tryUntilOk(
         motor,
         5,
