@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.jmhsrobotics.frc2026.commands.AimingAuto;
+import org.jmhsrobotics.frc2026.commands.AlignToAngle;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
 import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
@@ -268,11 +269,17 @@ public class RobotContainer {
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
-    control
-        .shooterSpinup()
-        .onTrue(new DistanceAdjustingShoot(shooter, drive))
-        .onFalse(new ShooterSpinup(shooter, 0));
-
+    // control
+    //     .shooterSpinup()
+    //     .onTrue(new DistanceAdjustingShoot(shooter, drive))
+    //     .onFalse(new ShooterSpinup(shooter, 0));
+    var yeetCmd =
+        new ParallelCommandGroup(
+            new AlignToAngle(drive, control),
+            Commands.runOnce(() -> shooter.setHoodPosition(0.5)),
+            new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    control.fieldYeet().whileTrue(yeetCmd);
+    control.fieldYeet().onFalse(Commands.runOnce(() -> shooter.setHoodPosition(0.31)));
     // control
     //     .shooterSpinup()
     //     .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
@@ -369,7 +376,7 @@ public class RobotContainer {
                           Rotation2d.fromDegrees(isRed ? 180 : 0)));
                 },
                 drive));
-
+    SmartDashboard.putData("Field Yeet", yeetCmd);
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));

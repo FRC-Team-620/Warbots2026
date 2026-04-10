@@ -69,8 +69,12 @@ public class DoubleControl implements ControlBoard {
 
   // ========Operator Controls========
 
+  // @Override
+  // public Trigger shooterSpinup() {
+  //   return operator.y();
+  // }
   @Override
-  public Trigger shooterSpinup() {
+  public Trigger fieldYeet() {
     return operator.y();
   }
 
