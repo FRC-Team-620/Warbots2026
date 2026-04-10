@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
-    hoodPosition = SmartDashboard.getNumber("Hood Position", 0.31);
+    // hoodPosition = SmartDashboard.getNumber("Hood Position", 0.31);
     leftServo.setPosition(hoodPosition);
     rightServo.setPosition(hoodPosition);
 
