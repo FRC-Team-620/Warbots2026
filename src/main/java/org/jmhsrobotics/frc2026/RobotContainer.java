@@ -94,6 +94,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
+
   public final Shooter shooter;
   private final LED led;
   private final ControlBoard control;
