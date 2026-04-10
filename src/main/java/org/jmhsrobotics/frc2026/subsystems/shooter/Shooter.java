@@ -183,7 +183,8 @@ public class Shooter extends SubsystemBase {
     map.put(1.3, 0.31);
     map.put(2.334, 0.31);
     map.put(Units.inchesToMeters(37) + totalOffset, 0.31);
-    map.put(Units.inchesToMeters(50) + totalOffset, 0.34);
+    map.put(Units.inchesToMeters(50) + totalOffset, 0.32);
+    map.put(Units.inchesToMeters(70) + totalOffset, 0.36);
   }
 
   public boolean isActive() {
