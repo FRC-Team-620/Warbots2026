@@ -1,6 +1,7 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
@@ -26,6 +27,10 @@ public class Shooter extends SubsystemBase {
   private InterpolatingDoubleTreeMap rpmMap;
   private InterpolatingDoubleTreeMap hoodMap;
   private double hoodRealPosition = 0.0;
+
+  private double hubOffset = .584;
+  private double robotOffset = .4191;
+  private double totalOffset = hubOffset + robotOffset;
 
   private double hoodPosition = 0.31;
 
@@ -166,7 +171,7 @@ public class Shooter extends SubsystemBase {
     // map.put(4.00, 4000.0);
     map.put(1.3, 2600.0);
     // map.put(2.0, 2550.0);
-    map.put(3.0, 3400.0);
+    map.put(Units.inchesToMeters(37) + totalOffset, 3400.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
@@ -174,11 +179,11 @@ public class Shooter extends SubsystemBase {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
     // map.put(2.0, 0.5);
+    // 16.5 in / .4191 m from edge of bumper to center of bot
     map.put(1.3, 0.31);
-    map.put(3.0, 0.31);
-    map.put(4.0, 0.63);
-    map.put(5.0, 0.7);
-    map.put(5.5, 0.75);
+    map.put(2.334, 0.31);
+    map.put(Units.inchesToMeters(37) + totalOffset, 0.31);
+    map.put(Units.inchesToMeters(50) + totalOffset, 0.34);
   }
 
   public boolean isActive() {
