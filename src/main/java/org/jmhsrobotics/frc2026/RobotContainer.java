@@ -7,7 +7,6 @@ package org.jmhsrobotics.frc2026;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.reduxrobotics.canand.CanandEventLoop;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -438,24 +437,25 @@ public class RobotContainer {
   }
 
   private void registerNamedCommands() {
-    NamedCommands.registerCommand(
-        "Intake Down", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
-    NamedCommands.registerCommand(
-        "Intake Up", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
-    NamedCommands.registerCommand(
-        "Intake On", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
-    NamedCommands.registerCommand("Intake Off", new IntakeMove(intake, 0));
-    NamedCommands.registerCommand(
-        "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
-    NamedCommands.registerCommand("Shooter Stop", new ShooterSpinup(shooter, 0));
-    NamedCommands.registerCommand(
-        "Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
-    NamedCommands.registerCommand(
-        "Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
-    NamedCommands.registerCommand("Indexer Off", new IndexerMove(indexer, 0));
-    NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control));
-    NamedCommands.registerCommand(
-        "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
+    // NamedCommands.registerCommand(
+    //     "Intake Down", new SlapdownMove(slapdown,
+    // Constants.Slapdown.kSlapdownDownPositionDegrees));
+    // NamedCommands.registerCommand(
+    //     "Intake Up", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
+    // NamedCommands.registerCommand(
+    //     "Intake On", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    // NamedCommands.registerCommand("Intake Off", new IntakeMove(intake, 0));
+    // NamedCommands.registerCommand(
+    //     "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    // NamedCommands.registerCommand("Shooter Stop", new ShooterSpinup(shooter, 0));
+    // NamedCommands.registerCommand(
+    //     "Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
+    // NamedCommands.registerCommand(
+    //     "Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
+    // NamedCommands.registerCommand("Indexer Off", new IndexerMove(indexer, 0));
+    // NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control));
+    // NamedCommands.registerCommand(
+    //     "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
   }
 
   /**
