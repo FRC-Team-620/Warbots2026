@@ -460,8 +460,9 @@ public class RobotContainer {
     // "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
     NamedCommands.registerCommand(
         "Preload Auto",
-        new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE)
+        new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartRED)
             .withTimeout(5.0));
+    NamedCommands.registerCommand("Slapdown Jiggle", new SlapdownJiggle(slapdown));
   }
 
   /**
