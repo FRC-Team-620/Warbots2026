@@ -52,7 +52,7 @@ public class NeoSlapdownIO implements SlapdownIO {
         .appliedOutputPeriodMs(20)
         .busVoltagePeriodMs(20)
         .outputCurrentPeriodMs(20);
-
+    slapdownMotorConfig.signals.appliedOutputPeriodMs(20);
     slapdownMotorConfig
         .closedLoop
         .pid(

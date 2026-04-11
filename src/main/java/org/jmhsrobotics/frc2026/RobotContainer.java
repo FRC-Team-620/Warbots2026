@@ -28,10 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import org.jmhsrobotics.frc2026.commands.AimingAuto;
+import org.jmhsrobotics.frc2026.commands.AlignToAngle;
 import org.jmhsrobotics.frc2026.commands.AlignToHub;
-import org.jmhsrobotics.frc2026.commands.ClimberExtendHooks;
-import org.jmhsrobotics.frc2026.commands.ClimberMove;
-import org.jmhsrobotics.frc2026.commands.ClimberRetractHooks;
 import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
@@ -52,10 +50,6 @@ import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
-import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
-import org.jmhsrobotics.frc2026.subsystems.climber.ClimberIO;
-import org.jmhsrobotics.frc2026.subsystems.climber.NeoClimberIO;
-import org.jmhsrobotics.frc2026.subsystems.climber.SimClimberIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
@@ -102,13 +96,13 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   public final Drive drive;
+
   public final Shooter shooter;
   private final LED led;
   private final ControlBoard control;
   private final Intake intake;
   public final Slapdown slapdown;
   private final Indexer indexer;
-  private final Climber climber;
   private final Vision vision;
   private final Feeder feeder;
   private final SysIdRoutine routine;
@@ -142,7 +136,6 @@ public class RobotContainer {
         intake = new Intake(new VortexIntakeIO());
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
-        climber = new Climber(new NeoClimberIO());
         vision =
             new Vision(
                 drive::addVisionMeasurement,
@@ -171,7 +164,6 @@ public class RobotContainer {
         intake = new Intake(new SimIntakeIO());
         indexer = new Indexer(new SimIndexerIO());
         slapdown = new Slapdown(new SimSlapdownIO());
-        climber = new Climber(new SimClimberIO());
         vision =
             new Vision(
                 drive::addVisionMeasurement,
@@ -196,7 +188,6 @@ public class RobotContainer {
         intake = new Intake(new IntakeIO() {});
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
-        climber = new Climber(new ClimberIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         feeder = new Feeder(new FeederIO() {});
         break;
@@ -281,11 +272,17 @@ public class RobotContainer {
     // led.setDefaultCommand(getAutonomousCommand());
 
     // Shooter Bindings
-    control
-        .shooterSpinup()
-        .onTrue(new DistanceAdjustingShoot(shooter, drive))
-        .onFalse(new ShooterSpinup(shooter, 0));
-
+    // control
+    //     .shooterSpinup()
+    //     .onTrue(new DistanceAdjustingShoot(shooter, drive))
+    //     .onFalse(new ShooterSpinup(shooter, 0));
+    var yeetCmd =
+        new ParallelCommandGroup(
+            new AlignToAngle(drive, control),
+            Commands.runOnce(() -> shooter.setHoodPosition(0.5)),
+            new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+    control.fieldYeet().whileTrue(yeetCmd);
+    control.fieldYeet().onFalse(Commands.runOnce(() -> shooter.setHoodPosition(0.31)));
     // control
     //     .shooterSpinup()
     //     .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
@@ -350,31 +347,20 @@ public class RobotContainer {
                             led.setPattern(LEDPattern.solid(Color.kYellow).blink(Seconds.of(0.1))))
                     .withTimeout(1.5)));
     control.intakeOff().onTrue(new IntakeMove(intake, 0));
-    control.extakeFuel().onTrue(new IntakeMoveAntiJam(intake, -(Constants.Intake.kSpeedDutyCycle)));
+    control
+        .extakeFuel()
+        .onTrue(
+            new IntakeMoveAntiJam(intake, -(Constants.Intake.kSpeedDutyCycle))
+                .alongWith(new IndexerMove(indexer, -Constants.Indexer.kSpeedDutyCycle)));
 
     // Indexer Binding
     control.indexOn().onTrue(new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     control.indexOn().onFalse(new IndexerMove(indexer, 0));
 
-    // Climber Bindings
-    control
-        .climberUp()
-        .onTrue(new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle))
-        .onFalse(new ClimberMove(climber, 0));
-    control
-        .climberDown()
-        .onTrue(new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle))
-        .onFalse(new ClimberMove(climber, 0));
-
     control.turbo().onTrue(Commands.runOnce(() -> drive.setTurboMode(true)));
     control.turbo().onFalse(Commands.runOnce(() -> drive.setTurboMode(false)));
     control.slowdown().onTrue(Commands.runOnce(() -> drive.setSlowdownMode(true)));
     control.slowdown().onFalse(Commands.runOnce(() -> drive.setSlowdownMode(false)));
-
-    // extend climber
-    control.ClimberExtendHooks().onTrue(new ClimberExtendHooks(climber));
-    // retract climber
-    control.ClimberRetractHooks().onTrue(new ClimberRetractHooks(climber));
 
     control.autoAim().whileTrue(new AlignToHub(drive, control));
     control.faceDriveDirection().whileTrue(new FaceDriveDirection(drive, control));
@@ -393,17 +379,10 @@ public class RobotContainer {
                           Rotation2d.fromDegrees(isRed ? 180 : 0)));
                 },
                 drive));
-
+    SmartDashboard.putData("Field Yeet", yeetCmd);
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
     SmartDashboard.putData("Indexer Half Speed", new IndexerMove(indexer, 0.5));
-    SmartDashboard.putData(
-        "Climber Up", new ClimberMove(climber, Constants.Climber.kSpeedDutyCycle));
-    SmartDashboard.putData(
-        "Climber Down", new ClimberMove(climber, -Constants.Climber.kSpeedDutyCycle));
-    SmartDashboard.putData("Climber Stop", new ClimberMove(climber, 0));
-    SmartDashboard.putData("Climber Extend", new ClimberExtendHooks(climber));
-    SmartDashboard.putData("Climber Retract", new ClimberRetractHooks(climber));
     // SmartDashboard.putData("Intake Full Speed", new IntakeMove(intake));
     SmartDashboard.putData(
         "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));

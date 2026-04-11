@@ -27,7 +27,8 @@ public interface ControlBoard {
 
   // =======Operator Controls=======
 
-  public Trigger shooterSpinup();
+  // public Trigger shooterSpinup();
+  public Trigger fieldYeet();
 
   public Trigger dutyCycleShoot();
 
