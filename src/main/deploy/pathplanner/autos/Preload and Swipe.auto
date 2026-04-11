@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Preload Auto"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Hub To Center"
@@ -51,19 +45,6 @@
           "type": "path",
           "data": {
             "pathName": "Center to Shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": null
-                }
-              }
-            ]
           }
         }
       ]
