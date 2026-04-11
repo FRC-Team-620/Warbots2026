@@ -477,6 +477,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control));
     NamedCommands.registerCommand(
         "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
+    NamedCommands.registerCommand("Preload Auto", new PreloadAuto(drive, shooter, indexer, feeder, null));
   }
 
   /**
