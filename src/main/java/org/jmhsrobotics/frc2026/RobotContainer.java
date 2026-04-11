@@ -280,8 +280,8 @@ public class RobotContainer {
     var yeetCmd =
         new ParallelCommandGroup(
             new AlignToAngle(drive, control),
-            Commands.runOnce(() -> shooter.setHoodPosition(0.5)),
-            new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+            Commands.runOnce(() -> shooter.setHoodPosition(0.7)),
+            new ShooterSpinup(shooter, Constants.ShooterConstants.kYeetRPM));
     control.fieldYeet().whileTrue(yeetCmd);
     control.fieldYeet().onFalse(Commands.runOnce(() -> shooter.setHoodPosition(0.31)));
     // control
