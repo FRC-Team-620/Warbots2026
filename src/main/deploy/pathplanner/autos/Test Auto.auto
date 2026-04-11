@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Single Point"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Preload Auto"
@@ -19,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Hub To Depot"
+            "pathName": "DriveForward"
           }
         },
         {
@@ -33,15 +27,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "Depot Sweep"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "Intake On"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MoveToDepot"
                 }
               }
             ]
@@ -50,32 +44,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Sweep To Shoot"
+            "pathName": "OutpostToShoot"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shooter Spinup"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Indexer On"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Feed"
-                }
-              }
-            ]
+            "name": "Align To Hub"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shooter Spinup"
           }
         }
       ]

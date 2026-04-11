@@ -447,7 +447,8 @@ public class RobotContainer {
         "Intake On", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     NamedCommands.registerCommand("Intake Off", new IntakeMove(intake, 0));
     NamedCommands.registerCommand(
-        "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+        "Shooter Spinup",
+        new ShooterSpinup(shooter, Constants.ShooterConstants.kAutoHubSetPointRPM));
     NamedCommands.registerCommand("Shooter Stop", new ShooterSpinup(shooter, 0));
     NamedCommands.registerCommand(
         "Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
@@ -460,7 +461,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Preload Auto",
         new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE)
-            .withTimeout(7.0));
+            .withTimeout(5.0));
   }
 
   /**
