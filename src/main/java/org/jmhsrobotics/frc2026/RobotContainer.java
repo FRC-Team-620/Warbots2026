@@ -454,7 +454,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     NamedCommands.registerCommand("Indexer Off", new IndexerMove(indexer, 0));
-    NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control));
+    NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control).withTimeout(1.5));
     // NamedCommands.registerCommand(
     // "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
     NamedCommands.registerCommand(
