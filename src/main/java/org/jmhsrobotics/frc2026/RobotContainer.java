@@ -455,13 +455,17 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
     NamedCommands.registerCommand("Indexer Off", new IndexerMove(indexer, 0));
-    NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control).withTimeout(1.5));
+    NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control).withTimeout(1));
     // NamedCommands.registerCommand(
     // "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
     NamedCommands.registerCommand(
-        "Preload Auto",
+        "Preload Auto Red",
         new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartRED)
-            .withTimeout(5.0));
+            .withTimeout(4.0));
+    NamedCommands.registerCommand(
+        "Preload Auto Blue",
+        new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE)
+            .withTimeout(4.0));
     NamedCommands.registerCommand("Slapdown Jiggle", new SlapdownJiggle(slapdown));
   }
 

@@ -27,7 +27,7 @@ public class PathPlannerPreload extends SequentialCommandGroup {
         new SequentialCommandGroup(
             Commands.runOnce(() -> drive.setPose(pose), drive),
             new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)
-                .withTimeout(1.0)
+                .withTimeout(0.5)
                 .andThen(
                     new ParallelCommandGroup(
                         new ShooterSpinup(shooter, Constants.ShooterConstants.kAutoHubSetPointRPM),
