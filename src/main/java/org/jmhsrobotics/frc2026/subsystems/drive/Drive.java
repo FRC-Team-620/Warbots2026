@@ -107,7 +107,7 @@ public class Drive extends SubsystemBase {
         this::getChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(30, 0.0, 0.0), new PIDConstants(20, 0.0, 0.0)),
+            new PIDConstants(20, 0.0, 0.0), new PIDConstants(5, 0.0, 0.0)),
         DriveConstants.thriftyConstants.ppConfig,
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
@@ -389,10 +389,14 @@ public class Drive extends SubsystemBase {
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.addVisionMeasurement(
-        new Pose2d(visionRobotPoseMeters.getX(), visionRobotPoseMeters.getY(), this.getRotation()),
-        timestampSeconds,
-        visionMeasurementStdDevs);
+
+    if (!DriverStation.isAutonomousEnabled()) { // TEMP Disable Vision in Auto
+      poseEstimator.addVisionMeasurement(
+          new Pose2d(
+              visionRobotPoseMeters.getX(), visionRobotPoseMeters.getY(), this.getRotation()),
+          timestampSeconds,
+          visionMeasurementStdDevs);
+    }
   }
 
   /** Returns the maximum linear speed in meters per sec. */

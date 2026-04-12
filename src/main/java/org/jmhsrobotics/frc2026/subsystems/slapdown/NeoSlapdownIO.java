@@ -24,6 +24,7 @@ public class NeoSlapdownIO implements SlapdownIO {
   private SparkClosedLoopController slapdownPIDController;
 
   private double setPointDegrees = Constants.Slapdown.kSlapdownUpPositionDegrees;
+  private boolean hasZeroed = false;
 
   public NeoSlapdownIO() {
     // slapdown is 40:1 ratio
@@ -77,6 +78,23 @@ public class NeoSlapdownIO implements SlapdownIO {
 
   public void updateInputs(SlapdownIOInputs inputs) {
     SparkUtil.sparkStickyFault = false;
+
+    if (!hasZeroed) {
+      var enc = slapdownMotor.getEncoder();
+      var abs = slapdownMotor.getAbsoluteEncoder();
+      SparkUtil.ifOk(
+          slapdownMotor,
+          abs::getPosition,
+          (value) -> {
+            SparkUtil.tryUntilOk(
+                slapdownMotor,
+                10,
+                () -> {
+                  return enc.setPosition(value);
+                });
+            hasZeroed = true;
+          });
+    }
 
     // slapdown
     SparkUtil.ifOk(

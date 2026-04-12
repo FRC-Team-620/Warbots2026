@@ -7,6 +7,7 @@ package org.jmhsrobotics.frc2026;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.reduxrobotics.canand.CanandEventLoop;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -39,6 +41,7 @@ import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
+import org.jmhsrobotics.frc2026.commands.PathPlannerPreload;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
@@ -204,6 +207,8 @@ public class RobotContainer {
 
     led = new LED();
 
+    registerNamedCommands();
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
     // (current values 2.2 and 0.3 are from 2025 season)
@@ -276,8 +281,8 @@ public class RobotContainer {
     var yeetCmd =
         new ParallelCommandGroup(
             new AlignToAngle(drive, control),
-            Commands.runOnce(() -> shooter.setHoodPosition(0.5)),
-            new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
+            Commands.runOnce(() -> shooter.setHoodPosition(0.7)),
+            new ShooterSpinup(shooter, Constants.ShooterConstants.kYeetRPM));
     control.fieldYeet().whileTrue(yeetCmd);
     control.fieldYeet().onFalse(Commands.runOnce(() -> shooter.setHoodPosition(0.31)));
     // control
@@ -376,6 +381,14 @@ public class RobotContainer {
                           Rotation2d.fromDegrees(isRed ? 180 : 0)));
                 },
                 drive));
+    SmartDashboard.putData(
+        "Set Pos to Hub (Bumper)",
+        new InstantCommand(
+                () -> {
+                  drive.setPose(Constants.Auto.hubStartRED);
+                },
+                drive)
+            .ignoringDisable(true));
     SmartDashboard.putData("Field Yeet", yeetCmd);
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
@@ -432,6 +445,37 @@ public class RobotContainer {
                     () -> led.setPattern(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.1))),
                     led)
                 .withTimeout(1.5));
+  }
+
+  private void registerNamedCommands() {
+    NamedCommands.registerCommand(
+        "Intake Down", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees));
+    NamedCommands.registerCommand(
+        "Intake Up", new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees));
+    NamedCommands.registerCommand(
+        "Intake On", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
+    NamedCommands.registerCommand("Intake Off", new IntakeMove(intake, 0));
+    NamedCommands.registerCommand(
+        "Shooter Spinup",
+        new ShooterSpinup(shooter, Constants.ShooterConstants.kAutoHubSetPointRPM));
+    NamedCommands.registerCommand("Shooter Stop", new ShooterSpinup(shooter, 0));
+    NamedCommands.registerCommand(
+        "Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
+    NamedCommands.registerCommand(
+        "Indexer On", new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle));
+    NamedCommands.registerCommand("Indexer Off", new IndexerMove(indexer, 0));
+    NamedCommands.registerCommand("Align To Hub", new AlignToHub(drive, control).withTimeout(1));
+    // NamedCommands.registerCommand(
+    // "DistanceAdjustingShoot", new DistanceAdjustingShoot(shooter, drive));
+    NamedCommands.registerCommand(
+        "Preload Auto Red",
+        new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartRED)
+            .withTimeout(4.0));
+    NamedCommands.registerCommand(
+        "Preload Auto Blue",
+        new PathPlannerPreload(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE)
+            .withTimeout(4.0));
+    NamedCommands.registerCommand("Slapdown Jiggle", new SlapdownJiggle(slapdown));
   }
 
   /**
