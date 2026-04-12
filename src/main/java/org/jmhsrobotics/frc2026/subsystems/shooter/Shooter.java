@@ -181,7 +181,7 @@ public class Shooter extends SubsystemBase {
     // map.put(2.0, 0.5);
     // 16.5 in / .4191 m from edge of bumper to center of bot
     map.put(1.3, 0.31);
-    map.put(2.334, 0.31);
+    // map.put(2.334, 0.31);
     map.put(Units.inchesToMeters(37) + totalOffset, 0.31);
     map.put(Units.inchesToMeters(50) + totalOffset, 0.32);
     map.put(Units.inchesToMeters(70) + totalOffset, 0.36);
