@@ -2,6 +2,7 @@ package org.jmhsrobotics.frc2026.commands;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.jmhsrobotics.frc2026.FieldConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
@@ -29,7 +30,8 @@ public class DistanceAdjustingShoot extends Command {
   @Override
   public void execute() {
 
-    if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == Alliance.Blue) {
       this.distance =
           this.getDistance(
               FieldConstants.Hub.topCenterPoint.toTranslation2d(),
