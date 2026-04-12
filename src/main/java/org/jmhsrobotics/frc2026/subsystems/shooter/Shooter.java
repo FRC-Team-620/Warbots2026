@@ -29,6 +29,10 @@ public class Shooter extends SubsystemBase {
 
   private double hoodPosition = 0.31;
 
+  private double hubOffset = 0.584;
+  private double robotOffset = 0.4191;
+  private double totalOffset = hubOffset + robotOffset;
+
   public Shooter(ShooterIO shooterIO) {
 
     this.shooterIO = shooterIO;
@@ -154,7 +158,15 @@ public class Shooter extends SubsystemBase {
   }
 
   public double calculateEstimatedRPM(double distance) {
+    // return linearFunc(distance);
     return rpmMap.get(distance);
+  }
+
+  private double linearFunc(double distance) {
+    if (distance < 1.364) {
+      return 2600;
+    }
+    return 696.8811 * distance + 1672.78751;
   }
 
   public double calculateHoodPosition(double distance) {
@@ -164,9 +176,12 @@ public class Shooter extends SubsystemBase {
   public void createRPMMap(InterpolatingDoubleTreeMap map) {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(1.3, 2600.0);
-    // map.put(2.0, 2550.0);
-    map.put(3.0, 3400.0);
+    map.put(1.364, 2600.0);
+    map.put(1.789, 3000.0);
+    map.put(2.151, 3100.0);
+    map.put(2.888, 3700.0);
+    map.put(5.0, 5157.0);
+    // map.put(Units.inchesToMeters(37) + totalOffset, 3400.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
@@ -175,10 +190,13 @@ public class Shooter extends SubsystemBase {
     // map.put(4.00, 4000.0);
     // map.put(2.0, 0.5);
     map.put(1.3, 0.31);
-    map.put(3.0, 0.31);
-    map.put(4.0, 0.63);
-    map.put(5.0, 0.7);
-    map.put(5.5, 0.75);
+    map.put(2.888, 0.31);
+    map.put(5.0, 0.31);
+    // map.put(Units.inchesToMeters(50) + totalOffset, 0.5);
+    // map.put(3.0, 0.31);
+    // map.put(4.0, 0.63);
+    // map.put(5.0, 0.7);
+    // map.put(5.5, 0.75);
   }
 
   public boolean isActive() {

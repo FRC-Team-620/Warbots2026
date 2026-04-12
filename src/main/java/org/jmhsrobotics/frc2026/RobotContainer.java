@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -380,6 +381,14 @@ public class RobotContainer {
                           Rotation2d.fromDegrees(isRed ? 180 : 0)));
                 },
                 drive));
+    SmartDashboard.putData(
+        "Set Pos to Hub (Bumper)",
+        new InstantCommand(
+                () -> {
+                  drive.setPose(Constants.Auto.hubStartRED);
+                },
+                drive)
+            .ignoringDisable(true));
     SmartDashboard.putData("Field Yeet", yeetCmd);
     SmartDashboard.putData("Indexer Full Speed", new IndexerMove(indexer, 1));
     SmartDashboard.putData("Indexer Stop", new IndexerMove(indexer, 0));
