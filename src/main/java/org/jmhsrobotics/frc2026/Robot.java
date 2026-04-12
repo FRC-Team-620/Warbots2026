@@ -88,9 +88,21 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     SmartDashboard.putNumber("MatchTime", Timer.getFPGATimestamp());
+
     Logger.recordOutput(
-        "Vision/CameraPosition",
-        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.rexCalibration));
+        "Vision/Camera0Position",
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.codyCalibration));
+    Logger.recordOutput(
+        "Vision/Camera1Position",
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.fivesCalibration));
+
+    Logger.recordOutput(
+        "Vision/CalibrationJigLeft",
+        new Pose3d(m_robotContainer.drive.getPose()).plus(VisionConstants.calibrationJigLeftPose));
+    Logger.recordOutput(
+        "Vision/CalibrationJigRight",
+        new Pose3d(m_robotContainer.drive.getPose())
+            .plus(VisionConstants.calibraitionJigRightPose));
     CommandScheduler.getInstance().run();
   }
 

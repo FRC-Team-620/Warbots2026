@@ -1,7 +1,5 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.Servo;
@@ -19,16 +17,6 @@ public class Shooter extends SubsystemBase {
   private Servo leftServo = new Servo(0);
   private Servo rightServo = new Servo(1);
 
-  private PIDController rpmController =
-      new PIDController(
-          Constants.ShooterConstants.kP,
-          Constants.ShooterConstants.kI,
-          Constants.ShooterConstants.kD);
-  private SimpleMotorFeedforward ff =
-      new SimpleMotorFeedforward(
-          Constants.ShooterConstants.kS,
-          Constants.ShooterConstants.kV,
-          Constants.ShooterConstants.kA);
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -39,7 +27,7 @@ public class Shooter extends SubsystemBase {
   private InterpolatingDoubleTreeMap hoodMap;
   private double hoodRealPosition = 0.0;
 
-  private double hoodPosition = 0.30;
+  private double hoodPosition = 0.31;
 
   public Shooter(ShooterIO shooterIO) {
 
@@ -48,36 +36,13 @@ public class Shooter extends SubsystemBase {
     createRPMMap(rpmMap);
     this.hoodMap = new InterpolatingDoubleTreeMap();
     createHoodMap(hoodMap);
-    SmartDashboard.putData("ShooterFlywheel/pid", rpmController);
     SmartDashboard.putNumber("Hood Position", hoodPosition);
   }
 
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
-
-    if (isClosedLoop) {
-      // final double maxPercentOutput = 1;
-      // // calculate PID output
-      // double centiVeloctiyRPM = shooterInputs.velocityRPM / 100.0;
-      // double centiGoalSpeedRPM = this.goalSpeedRPM / 100.0;
-      // double pidControllerOutput =
-      //     this.rpmController.calculate(centiVeloctiyRPM, centiGoalSpeedRPM);
-
-      // double clampedOutput =
-      //     MathUtil.clamp(pidControllerOutput, -maxPercentOutput, maxPercentOutput);
-      // shooterIO.setSpeed(clampedOutput);
-      double velRPS = shooterInputs.velocityRPM / 60.0;
-      double goalRPS = this.goalSpeedRPM / 60.0;
-
-      double pidControllerVoltage = this.rpmController.calculate(velRPS, goalRPS);
-
-      // double ffVolts =
-      //     ff.calculateWithVelocities(shooterInputs.velocityRPM / 60.0, this.goalSpeedRPM / 60.0);
-      double ffVolts = ff.calculate(goalRPS);
-      shooterIO.setVoltage(ffVolts + pidControllerVoltage); // TODO May want to clamp this.
-    }
-
+    // hoodPosition = SmartDashboard.getNumber("Hood Position", 0.31);
     leftServo.setPosition(hoodPosition);
     rightServo.setPosition(hoodPosition);
 
@@ -119,13 +84,7 @@ public class Shooter extends SubsystemBase {
   public void setRPM(double velocityTargetRPM) {
     // TODO: what and why?
     Logger.recordOutput("Shooter/velocityTarget", velocityTargetRPM);
-    if (velocityTargetRPM > 0) {
-      accelerationTimer.start();
-    } else {
-      accelerationTimer.reset();
-      accelerationTimer.stop();
-    }
-    this.isClosedLoop = true;
+    shooterIO.setRPM(velocityTargetRPM);
     // set global RPM goal
     this.goalSpeedRPM = velocityTargetRPM;
 
@@ -169,6 +128,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stop() {
+    this.goalSpeedRPM = 0.0;
+    this.isClosedLoop = false;
     shooterIO.stop();
   }
 
@@ -203,18 +164,18 @@ public class Shooter extends SubsystemBase {
   public void createRPMMap(InterpolatingDoubleTreeMap map) {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(1.3, 3700.0);
-    map.put(2.0, 3900.0);
-    map.put(3.0, 4800.0);
+    map.put(1.3, 2600.0);
+    // map.put(2.0, 2550.0);
+    map.put(3.0, 3400.0);
   }
 
   public void createHoodMap(InterpolatingDoubleTreeMap map) {
     // (distance, hood height)
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
-    map.put(1.3, 0.2);
-    map.put(2.1, 0.35);
-    map.put(3.0, 0.5);
+    // map.put(2.0, 0.5);
+    map.put(1.3, 0.31);
+    map.put(3.0, 0.31);
     map.put(4.0, 0.63);
     map.put(5.0, 0.7);
     map.put(5.5, 0.75);
