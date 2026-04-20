@@ -10,6 +10,7 @@ import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
+import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.vision.Vision;
 
 public class AimingAuto extends SequentialCommandGroup {
@@ -23,6 +24,7 @@ public class AimingAuto extends SequentialCommandGroup {
       Shooter shooter,
       Indexer indexer,
       Feeder feeder,
+      Slapdown slapdown,
       Pose2d pose,
       ControlBoard control) {
     // this.drive = drive;

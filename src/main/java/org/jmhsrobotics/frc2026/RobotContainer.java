@@ -111,6 +111,8 @@ public class RobotContainer {
   public FuelSim fuelSim = new FuelSim("FuelSim");
   public BallTracker ballTracker;
 
+  private final Command zeroSlapdown;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     SmartDashboard.putString("/CurrentSimMode", Constants.currentMode.toString());
@@ -204,6 +206,14 @@ public class RobotContainer {
 
     led = new LED();
 
+    zeroSlapdown =
+        new ZeroSlapdownCommand(
+            slapdown,
+            Constants.Slapdown.kTimeoutSeconds,
+            Constants.Slapdown.kHomingCurrentAmps,
+            Constants.Slapdown.kHomingGoalAngle,
+            Constants.Slapdown.kSpeedDutyCycle);
+
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // TODO: Tweak 'seconds' and 'velocityMPS' parameters of DriveTimeCommand to updated values
     // (current values 2.2 and 0.3 are from 2025 season)
@@ -214,18 +224,31 @@ public class RobotContainer {
     autoChooser.addOption(
         "LeftTrenchAutoBLUE",
         new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartBLUE, control));
+            drive,
+            shooter,
+            indexer,
+            feeder,
+            slapdown,
+            Constants.Auto.leftTrenchStartBLUE,
+            control));
     autoChooser.addOption(
         "LeftBumpAutoBLUE",
-        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartBLUE, control));
+        new AimingAuto(
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftBumpStartBLUE, control));
     autoChooser.addOption(
         "RightTrenchAutoBLUE",
         new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartBLUE, control));
+            drive,
+            shooter,
+            indexer,
+            feeder,
+            slapdown,
+            Constants.Auto.rightTrenchStartBLUE,
+            control));
     autoChooser.addOption(
         "RightBumpAutoBLUE",
         new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartBLUE, control));
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.rightBumpStartBLUE, control));
 
     autoChooser.addOption(
         "FrontHubAutoRED",
@@ -233,17 +256,25 @@ public class RobotContainer {
     autoChooser.addOption(
         "LeftTrenchAutoRED",
         new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartRED, control));
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftTrenchStartRED, control));
     autoChooser.addOption(
         "LeftBumpAutoRED",
-        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartRED, control));
+        new AimingAuto(
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.leftBumpStartRED, control));
     autoChooser.addOption(
         "RightTrenchAutoRED",
         new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartRED, control));
+            drive,
+            shooter,
+            indexer,
+            feeder,
+            slapdown,
+            Constants.Auto.rightTrenchStartRED,
+            control));
     autoChooser.addOption(
         "RightBumpAutoRED",
-        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartRED, control));
+        new AimingAuto(
+            drive, shooter, indexer, feeder, slapdown, Constants.Auto.rightBumpStartRED, control));
     // Configure the trigger bindings
 
     ballTracker = new BallTracker(drive::getPose, 10, 3);
@@ -398,7 +429,7 @@ public class RobotContainer {
 
     SmartDashboard.putData("TuneFlywheel", new TuneRPMCommand(shooter));
 
-    SmartDashboard.putData("Zero Slapdown", new ZeroSlapdownCommand(slapdown, 0.3, 20, 60, -0.1));
+    SmartDashboard.putData("Zero Slapdown", zeroSlapdown);
     SmartDashboard.putData("Set Slapdown to Absolute", new SetSlapdownToAbs(slapdown));
     // SmartDashboard.putData("autoCmds/frontHubAuto", new PreloadAuto(drive, shooter,
     // Constants.Auto.hubStart));
@@ -441,6 +472,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.get();
+    Command auto = autoChooser.get();
+    return zeroSlapdown.andThen(auto);
   }
 }
