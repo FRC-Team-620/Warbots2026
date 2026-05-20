@@ -13,6 +13,7 @@
 
 package org.jmhsrobotics.frc2026.subsystems.drive;
 
+import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -341,4 +342,7 @@ public class DriveConstants {
                 1),
             moduleTranslations);
   }
+
+  public static final CANBus kCANBus = new CANBus("rio");
+  
 }

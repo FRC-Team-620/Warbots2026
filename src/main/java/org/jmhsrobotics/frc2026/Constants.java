@@ -6,6 +6,8 @@ package org.jmhsrobotics.frc2026;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
@@ -24,6 +26,8 @@ public final class Constants {
   public static final double ksimTimestep = 0.02;
   public static final double krealTimeStep = ksimTimestep;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+  public static final CANBus kCANBus = new CANBus("rio");
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
