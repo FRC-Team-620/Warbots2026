@@ -153,6 +153,19 @@ public class DriveConstants {
             moduleTranslations);
   }
 
+  public static class talonConstants{
+    // TBD
+    public static final int frontLeftDriveCanId = 10;
+    public static final int backLeftDriveCanId = 13;
+    public static final int frontRightDriveCanId = 11;
+    public static final int backRightDriveCanId = 12;
+
+    public static final int frontLeftTurnCanId = 20;
+    public static final int backLeftTurnCanId = 23;
+    public static final int frontRightTurnCanId = 21;
+    public static final int backRightTurnCanId = 22;
+  }
+
   public static class thriftyConstants {
     public static final DCMotor driveGearbox = DCMotor.getNEO(1);
     public static final DCMotor turnGearbox = DCMotor.getNEO(1);
@@ -344,5 +357,4 @@ public class DriveConstants {
   }
 
   public static final CANBus kCANBus = new CANBus("rio");
-  
 }

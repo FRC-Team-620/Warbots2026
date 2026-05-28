@@ -35,7 +35,9 @@ import edu.wpi.first.units.measure.Voltage;
 // import frc.robot.generated.TunerConstants;
 import java.util.Queue;
 
+import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
+import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.talonConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.thriftyConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.SparkOdometryThread;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
@@ -50,6 +52,7 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       constants;
+
 
   // Hardware objects
   private final TalonFX driveTalon;
@@ -95,37 +98,37 @@ public class ModuleIOTalonFX implements ModuleIO {
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
   public ModuleIOTalonFX(int module) {
-    this.constants = constants;
+    // this.constants = constants;
 
     // TODO: change out the constants listed for the correct CAN IDs
     driveTalon = 
         new TalonFX(
             switch (module) {
-                case 0 -> constants.DriveMotorId;
-                case 1 -> constants.DriveMotorId;
-                case 2 -> constants.DriveMotorId;
-                case 3 -> constants.DriveMotorId;
+              case 0 -> talonConstants.frontLeftDriveCanId;
+              case 1 -> talonConstants.frontRightDriveCanId;
+              case 2 -> talonConstants.backLeftDriveCanId;
+              case 3 -> talonConstants.backRightDriveCanId;
                 default -> 0;
         }, 
         DriveConstants.kCANBus);
     turnTalon = 
         new TalonFX(
             switch (module) {
-                case 0 -> constants.DriveMotorId;
-                case 1 -> constants.DriveMotorId;
-                case 2 -> constants.DriveMotorId;
-                case 3 -> constants.DriveMotorId;
+              case 0 -> talonConstants.frontLeftTurnCanId;
+              case 1 -> talonConstants.frontRightTurnCanId;
+              case 2 -> talonConstants.backLeftTurnCanId;
+              case 3 -> talonConstants.backRightTurnCanId;
                 default -> 0;
         }, 
         DriveConstants.kCANBus);
 
-    // TODO: adapt this for the CANcoder
+    // TODO: Change to the correct device IDs in 
     cancoder = new CANcoder(
         switch (module) {
-                case 0 -> constants.DriveMotorId;
-                case 1 -> constants.DriveMotorId;
-                case 2 -> constants.DriveMotorId;
-                case 3 -> constants.DriveMotorId;
+                case 0 -> talonConstants.frontLeftCancoderId;
+                case 1 -> talonConstants.backLeftCancoderId;
+                case 2 -> talonConstants.frontRightCancoderId;
+                case 3 -> talonConstants.backRightCancoderId;
                 default -> 0;
         }, 
         DriveConstants.kCANBus);
