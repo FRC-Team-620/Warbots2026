@@ -164,6 +164,13 @@ public class DriveConstants {
     public static final int backLeftTurnCanId = 23;
     public static final int frontRightTurnCanId = 21;
     public static final int backRightTurnCanId = 22;
+
+    //TODO: figure out device IDs for each CANcoder
+    public static final int frontLeftCancoderId = 0;
+    public static final int backLeftCancoderId = 0;
+    public static final int frontRightCancoderId = 0;
+    public static final int backRightCancoderId = 0;
+
   }
 
   public static class thriftyConstants {
