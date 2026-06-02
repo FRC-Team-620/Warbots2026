@@ -171,6 +171,8 @@ public class DriveConstants {
     public static final int frontRightCancoderId = 0;
     public static final int backRightCancoderId = 0;
 
+    public static final double ODOMETRY_FREQUENCY = kCANBus.isNetworkFD() ? 250.0 : 100.0;
+
   }
 
   public static class thriftyConstants {

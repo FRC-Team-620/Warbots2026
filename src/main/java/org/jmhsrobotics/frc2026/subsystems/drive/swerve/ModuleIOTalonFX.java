@@ -35,12 +35,10 @@ import edu.wpi.first.units.measure.Voltage;
 // import frc.robot.generated.TunerConstants;
 import java.util.Queue;
 
-import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
+import org.jmhsrobotics.frc2026.subsystems.drive.PhoenixOdometryThread;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.talonConstants;
-import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.thriftyConstants;
-import org.jmhsrobotics.frc2026.subsystems.drive.SparkOdometryThread;
-import org.jmhsrobotics.frc2026.util.SparkUtil;
+import org.jmhsrobotics.frc2026.util.PhoenixUtil;
 
 /**
  * Module IO implementation for Talon FX drive motor controller, Talon FX turn motor controller, and
@@ -97,8 +95,9 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final Debouncer turnEncoderConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
-  public ModuleIOTalonFX(int module) {
-    // this.constants = constants;
+  public ModuleIOTalonFX(SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          constants, int module) {
+    this.constants = constants;
 
     // TODO: change out the constants listed for the correct CAN IDs
     driveTalon = 
@@ -146,8 +145,8 @@ public class ModuleIOTalonFX implements ModuleIO {
         constants.DriveMotorInverted
             ? InvertedValue.Clockwise_Positive
             : InvertedValue.CounterClockwise_Positive;
-    tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
-    tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
+    PhoenixUtil.tryUntilOk(5, () -> driveTalon.getConfigurator().apply(driveConfig, 0.25));
+    PhoenixUtil.tryUntilOk(5, () -> driveTalon.setPosition(0.0, 0.25));
 
     // Configure turn motor
     var turnConfig = new TalonFXConfiguration();
@@ -173,7 +172,7 @@ public class ModuleIOTalonFX implements ModuleIO {
         constants.SteerMotorInverted
             ? InvertedValue.Clockwise_Positive
             : InvertedValue.CounterClockwise_Positive;
-    tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
+    PhoenixUtil.tryUntilOk(5, () -> turnTalon.getConfigurator().apply(turnConfig, 0.25));
 
     // Configure CANCoder
     CANcoderConfiguration cancoderConfig = constants.EncoderInitialConfigs;
@@ -204,7 +203,7 @@ public class ModuleIOTalonFX implements ModuleIO {
 
     // Configure periodic frames
     BaseStatusSignal.setUpdateFrequencyForAll(
-        Drive.ODOMETRY_FREQUENCY, drivePosition, turnPosition);
+        talonConstants.ODOMETRY_FREQUENCY, drivePosition, turnPosition);
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0,
         driveVelocity,

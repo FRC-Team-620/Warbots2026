@@ -30,6 +30,8 @@ public interface ModuleIO {
     public double driveCurrentAmps = 0.0;
 
     public boolean turnConnected = false;
+    public boolean turnEncoderConnected = false;
+    public Rotation2d turnAbsolutePosition = Rotation2d.kZero;
     public Rotation2d turnPosition = new Rotation2d();
     public double doubleTurnPosition = (double) turnPosition.getDegrees();
     public double turnVelocityRadPerSec = 0.0;
