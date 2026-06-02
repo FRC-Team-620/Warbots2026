@@ -153,7 +153,7 @@ public class DriveConstants {
             moduleTranslations);
   }
 
-  public static class talonConstants{
+  public static class talonConstants {
     // TBD
     public static final int frontLeftDriveCanId = 10;
     public static final int backLeftDriveCanId = 13;
@@ -165,14 +165,13 @@ public class DriveConstants {
     public static final int frontRightTurnCanId = 21;
     public static final int backRightTurnCanId = 22;
 
-    //TODO: figure out device IDs for each CANcoder
+    // TODO: figure out device IDs for each CANcoder
     public static final int frontLeftCancoderId = 0;
     public static final int backLeftCancoderId = 0;
     public static final int frontRightCancoderId = 0;
     public static final int backRightCancoderId = 0;
 
     public static final double ODOMETRY_FREQUENCY = kCANBus.isNetworkFD() ? 250.0 : 100.0;
-
   }
 
   public static class thriftyConstants {

@@ -34,10 +34,9 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 // import frc.robot.generated.TunerConstants;
 import java.util.Queue;
-
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
-import org.jmhsrobotics.frc2026.subsystems.drive.PhoenixOdometryThread;
 import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants.talonConstants;
+import org.jmhsrobotics.frc2026.subsystems.drive.PhoenixOdometryThread;
 import org.jmhsrobotics.frc2026.util.PhoenixUtil;
 
 /**
@@ -50,7 +49,6 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
       constants;
-
 
   // Hardware objects
   private final TalonFX driveTalon;
@@ -95,42 +93,45 @@ public class ModuleIOTalonFX implements ModuleIO {
   private final Debouncer turnEncoderConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.kFalling);
 
-  public ModuleIOTalonFX(SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
-          constants, int module) {
+  public ModuleIOTalonFX(
+      SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+          constants,
+      int module) {
     this.constants = constants;
 
     // TODO: change out the constants listed for the correct CAN IDs
-    driveTalon = 
+    driveTalon =
         new TalonFX(
             switch (module) {
               case 0 -> talonConstants.frontLeftDriveCanId;
               case 1 -> talonConstants.frontRightDriveCanId;
               case 2 -> talonConstants.backLeftDriveCanId;
               case 3 -> talonConstants.backRightDriveCanId;
-                default -> 0;
-        }, 
-        DriveConstants.kCANBus);
-    turnTalon = 
+              default -> 0;
+            },
+            DriveConstants.kCANBus);
+    turnTalon =
         new TalonFX(
             switch (module) {
               case 0 -> talonConstants.frontLeftTurnCanId;
               case 1 -> talonConstants.frontRightTurnCanId;
               case 2 -> talonConstants.backLeftTurnCanId;
               case 3 -> talonConstants.backRightTurnCanId;
-                default -> 0;
-        }, 
-        DriveConstants.kCANBus);
+              default -> 0;
+            },
+            DriveConstants.kCANBus);
 
-    // TODO: Change to the correct device IDs in 
-    cancoder = new CANcoder(
-        switch (module) {
-                case 0 -> talonConstants.frontLeftCancoderId;
-                case 1 -> talonConstants.backLeftCancoderId;
-                case 2 -> talonConstants.frontRightCancoderId;
-                case 3 -> talonConstants.backRightCancoderId;
-                default -> 0;
-        }, 
-        DriveConstants.kCANBus);
+    // TODO: Change to the correct device IDs in
+    cancoder =
+        new CANcoder(
+            switch (module) {
+              case 0 -> talonConstants.frontLeftCancoderId;
+              case 1 -> talonConstants.backLeftCancoderId;
+              case 2 -> talonConstants.frontRightCancoderId;
+              case 3 -> talonConstants.backRightCancoderId;
+              default -> 0;
+            },
+            DriveConstants.kCANBus);
 
     // Configure drive motor
     var driveConfig = constants.DriveMotorInitialConfigs;
@@ -158,8 +159,9 @@ public class ModuleIOTalonFX implements ModuleIO {
           case RemoteCANcoder -> FeedbackSensorSourceValue.RemoteCANcoder;
           case FusedCANcoder -> FeedbackSensorSourceValue.FusedCANcoder;
           case SyncCANcoder -> FeedbackSensorSourceValue.SyncCANcoder;
-          default -> throw new RuntimeException(
-              "You have selected a turn feedback source that is not supported by the default implementation of ModuleIOTalonFX. Please check the AdvantageKit documentation for more information on alternative configurations: https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations");
+          default ->
+              throw new RuntimeException(
+                  "You have selected a turn feedback source that is not supported by the default implementation of ModuleIOTalonFX. Please check the AdvantageKit documentation for more information on alternative configurations: https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations");
         };
     turnConfig.Feedback.RotorToSensorRatio = constants.SteerMotorGearRatio;
     turnConfig.MotionMagic.MotionMagicCruiseVelocity = 100.0 / constants.SteerMotorGearRatio;
@@ -290,8 +292,8 @@ public class ModuleIOTalonFX implements ModuleIO {
     turnTalon.setControl(
         switch (constants.SteerMotorClosedLoopOutput) {
           case Voltage -> positionVoltageRequest.withPosition(rotation.getRotations());
-          case TorqueCurrentFOC -> positionTorqueCurrentRequest.withPosition(
-              rotation.getRotations());
+          case TorqueCurrentFOC ->
+              positionTorqueCurrentRequest.withPosition(rotation.getRotations());
         });
   }
 }
