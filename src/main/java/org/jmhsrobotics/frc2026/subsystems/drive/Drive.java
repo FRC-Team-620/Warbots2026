@@ -47,7 +47,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
-import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleThrifty;
+import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleTalonFX;
+import org.jmhsrobotics.frc2026.temp.TunerConstants;
 import org.jmhsrobotics.frc2026.util.LocalADStarAK;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -56,8 +57,8 @@ public class Drive extends SubsystemBase {
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
-  private final ModuleThrifty[] modules =
-      new ModuleThrifty[4]; // FL, FR, BL, BR //FIXME: this is wrong should be IO or inputs
+  private final ModuleTalonFX[] modules =
+      new ModuleTalonFX[4]; // FL, FR, BL, BR //FIXME: this is wrong should be IO or inputs
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
@@ -89,10 +90,10 @@ public class Drive extends SubsystemBase {
       ModuleIO blModuleIO,
       ModuleIO brModuleIO) {
     this.gyroIO = gyroIO;
-    modules[0] = new ModuleThrifty(flModuleIO, 0);
-    modules[1] = new ModuleThrifty(frModuleIO, 1);
-    modules[2] = new ModuleThrifty(blModuleIO, 2);
-    modules[3] = new ModuleThrifty(brModuleIO, 3);
+    modules[0] = new ModuleTalonFX(flModuleIO, 0, TunerConstants.FrontLeft);
+    modules[1] = new ModuleTalonFX(frModuleIO, 1, TunerConstants.FrontRight);
+    modules[2] = new ModuleTalonFX(blModuleIO, 2, TunerConstants.BackLeft);
+    modules[3] = new ModuleTalonFX(brModuleIO, 3, TunerConstants.BackRight);
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -420,11 +421,11 @@ public class Drive extends SubsystemBase {
   public void changeMaxSpeedMetersPerSec() {}
 
   /** Sets all Motor Controllers to brake or coast mode */
-  public void setBrakeMode(boolean enable) {
-    for (var module : modules) {
-      module.setBrakeMode(enable);
-    }
-  }
+  // public void setBrakeMode(boolean enable) {
+  //   for (var module : modules) {
+  //     module.setBrakeMode(enable);
+  //   }
+  // }
 
   public void setAutoAlignComplete(boolean isAligned) {
     this.autoAlignComplete = isAligned;
@@ -450,7 +451,7 @@ public class Drive extends SubsystemBase {
     return slowdownMode;
   }
 
-  public ModuleThrifty[] getSwerveModules() {
+  public ModuleTalonFX[] getSwerveModules() {
     return modules;
   }
 }

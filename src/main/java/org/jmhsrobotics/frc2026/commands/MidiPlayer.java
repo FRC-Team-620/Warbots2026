@@ -1,27 +1,38 @@
 package org.jmhsrobotics.frc2026.commands;
 
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.jmhsrobotics.frc2026.subsystems.climber.Climber;
 
-public class Midiplayer extends Command {
-  private ModuleIOTalonFX device;
+public class MidiPlayer extends Command {
 
-  public ClimberRetractHooks(Climber climber) {
-    Orchestra m_orchestra = new Orchestra();
+  private Orchestra sing;
 
-    // Add a single device to the orchestra
-    m_orchestra.addInstrument(m_motor);
+  public MidiPlayer(TalonFX device, TalonFX device2, String filepath) {
 
-    // Attempt to load the chrp
-    var status = m_orchestra.loadMusic("");
+    this.sing = new Orchestra();
 
-    if (!status.isOK()) {
-        // log error
-    }
+    sing.addInstrument(device);
+    sing.addInstrument(device2);
+    sing.loadMusic(filepath);
   }
 
   @Override
   public void initialize() {
-    m_orchestra.play();
+    sing.play();
+  }
+
+  @Override
+  public void execute() {}
+
+  @Override
+  public void end(boolean interrupted) {
+    sing.stop();
+    sing.clearInstruments();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
   }
 }

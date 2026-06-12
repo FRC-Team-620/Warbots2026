@@ -6,6 +6,7 @@ package org.jmhsrobotics.frc2026;
 
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.reduxrobotics.canand.CanandEventLoop;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -39,6 +40,7 @@ import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
 import org.jmhsrobotics.frc2026.commands.LEDToControlMode;
+import org.jmhsrobotics.frc2026.commands.MidiPlayer;
 import org.jmhsrobotics.frc2026.commands.PreloadAuto;
 import org.jmhsrobotics.frc2026.commands.SetSlapdownToAbs;
 import org.jmhsrobotics.frc2026.commands.ShooterSetDutyCycle;
@@ -54,33 +56,28 @@ import org.jmhsrobotics.frc2026.subsystems.drive.GyroIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
-import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOTalonFX;
 import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
-import org.jmhsrobotics.frc2026.subsystems.feeder.NeoFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.feeder.SimFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
-import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
-import org.jmhsrobotics.frc2026.subsystems.intake.VortexIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
-import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
-import org.jmhsrobotics.frc2026.subsystems.slapdown.NeoSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.vision.Vision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
-import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
+import org.jmhsrobotics.frc2026.temp.TunerConstants;
 import org.jmhsrobotics.frc2026.util.BallTracker;
 import org.jmhsrobotics.frc2026.util.FuelSim;
 import org.littletonrobotics.junction.Logger;
@@ -111,6 +108,9 @@ public class RobotContainer {
   public FuelSim fuelSim = new FuelSim("FuelSim");
   public BallTracker ballTracker;
 
+  public TalonFX musicMotor = new TalonFX(20);
+  public TalonFX musicMotor2 = new TalonFX(10);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     SmartDashboard.putString("/CurrentSimMode", Constants.currentMode.toString());
@@ -124,25 +124,31 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIOBoron(),
-                new ModuleIOThrifty(0),
-                new ModuleIOThrifty(1),
-                new ModuleIOThrifty(2),
-                new ModuleIOThrifty(3));
+                new ModuleIOTalonFX(TunerConstants.FrontLeft, 0),
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {});
 
-        shooter = new Shooter(new NeoShooterIO());
+        // shooter = new Shooter(new NeoShooterIO());
+        shooter = new Shooter(new ShooterIO() {});
+        intake = new Intake(new IntakeIO() {});
+        slapdown = new Slapdown(new SlapdownIO() {});
+        indexer = new Indexer(new IndexerIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        feeder = new Feeder(new FeederIO() {});
         // Old Code - Keep here in case we need to revert to Neo Motor
         // intake = new Intake(new NeoIntakeIO());
-        intake = new Intake(new VortexIntakeIO());
-        slapdown = new Slapdown(new NeoSlapdownIO());
-        indexer = new Indexer(new NeoIndexerIO());
-        vision =
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVision(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0),
-                new VisionIOPhotonVision(
-                    VisionConstants.camera1Name, VisionConstants.robotToCamera1));
-        feeder = new Feeder(new NeoFeederIO());
+        // intake = new Intake(new VortexIntakeIO());
+        // slapdown = new Slapdown(new NeoSlapdownIO());
+        // indexer = new Indexer(new NeoIndexerIO());
+        // vision =
+        //     new Vision(
+        //         drive::addVisionMeasurement,
+        //         new VisionIOPhotonVision(
+        //             VisionConstants.camera0Name, VisionConstants.robotToCamera0),
+        //         new VisionIOPhotonVision(
+        //             VisionConstants.camera1Name, VisionConstants.robotToCamera1));
+        // feeder = new Feeder(new NeoFeederIO());
         break;
 
       case SIM:
@@ -408,6 +414,9 @@ public class RobotContainer {
     SmartDashboard.putData("SysID/DynamicTestR", routine.dynamic(Direction.kReverse));
     SmartDashboard.putData("SysID/QuasistaticTestR", routine.quasistatic(Direction.kReverse));
     SmartDashboard.putData("AntiJam Intake", new IntakeMoveAntiJam(intake, 1));
+
+    // Plays loaded midi file
+    SmartDashboard.putData("Play MIDI", new MidiPlayer(musicMotor, musicMotor2, "rock.chrp"));
   }
 
   /**

@@ -155,6 +155,8 @@ public class DriveConstants {
 
   public static class talonConstants {
     // TBD
+    public static final boolean turnInverted = false;
+
     public static final int frontLeftDriveCanId = 10;
     public static final int backLeftDriveCanId = 13;
     public static final int frontRightDriveCanId = 11;
@@ -172,6 +174,33 @@ public class DriveConstants {
     public static final int backRightCancoderId = 0;
 
     public static final double ODOMETRY_FREQUENCY = kCANBus.isNetworkFD() ? 250.0 : 100.0;
+
+    // private static final int kFrontLeftDriveMotorId = 10;
+    // private static final int kFrontLeftSteerMotorId = 20;
+    // private static final int kFrontLeftEncoderId = 0;
+    // // TODO: figure out ofset by running motor
+    // private static final Angle kFrontLeftEncoderOffset = Rotations.of(0);
+    // private static final boolean kFrontLeftSteerMotorInverted = true;
+    // private static final boolean kFrontLeftEncoderInverted = false;
+    // // TODO: figure out leftX and leftY by running motor
+    // private static final Distance kFrontLeftXPos = Inches.of(10);
+    // private static final Distance kFrontLeftYPos = Inches.of(10);
+
+    // private static final boolean kInvertLeftSide = false;
+
+    //   public static final SwerveModuleConstants<
+    //       TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+    //   FrontLeft =
+    //       ConstantCreator.createModuleConstants(
+    //           kFrontLeftSteerMotorId,
+    //           kFrontLeftDriveMotorId,
+    //           kFrontLeftEncoderId,
+    //           kFrontLeftEncoderOffset,
+    //           kFrontLeftXPos,
+    //           kFrontLeftYPos,
+    //           kInvertLeftSide,
+    //           kFrontLeftSteerMotorInverted,
+    //           kFrontLeftEncoderInverted);
   }
 
   public static class thriftyConstants {
