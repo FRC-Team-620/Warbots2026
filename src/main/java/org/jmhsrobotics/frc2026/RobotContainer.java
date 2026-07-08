@@ -49,12 +49,13 @@ import org.jmhsrobotics.frc2026.commands.TuneRPMCommand;
 import org.jmhsrobotics.frc2026.commands.ZeroSlapdownCommand;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.controlBoard.DoubleControl;
+import org.jmhsrobotics.frc2026.generated.TunerConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
-import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOThrifty;
+import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOTalonFX;
 import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
 import org.jmhsrobotics.frc2026.subsystems.feeder.NeoFeederIO;
@@ -124,10 +125,14 @@ public class RobotContainer {
         drive =
             new Drive(
                 new GyroIOBoron(),
-                new ModuleIOThrifty(0),
-                new ModuleIOThrifty(1),
-                new ModuleIOThrifty(2),
-                new ModuleIOThrifty(3));
+                new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                new ModuleIOTalonFX(TunerConstants.FrontRight),
+                new ModuleIOTalonFX(TunerConstants.BackLeft),
+                new ModuleIOTalonFX(TunerConstants.BackRight));
+        // new ModuleIOThrifty(0),
+        // new ModuleIOThrifty(1),
+        // new ModuleIOThrifty(2),
+        // new ModuleIOThrifty(3));
 
         shooter = new Shooter(new NeoShooterIO());
         // Old Code - Keep here in case we need to revert to Neo Motor

@@ -46,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.jmhsrobotics.frc2026.Constants;
+import org.jmhsrobotics.frc2026.generated.TunerConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleThrifty;
 import org.jmhsrobotics.frc2026.util.LocalADStarAK;
@@ -54,6 +55,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   static final Lock odometryLock = new ReentrantLock();
+  public static final double ODOMETRY_FREQUENCY =
+      TunerConstants.kCANBus.isNetworkFD() ? 250.0 : 100.0;
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final ModuleThrifty[] modules =
