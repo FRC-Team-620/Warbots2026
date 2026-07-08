@@ -58,29 +58,23 @@ import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOTalonFX;
 import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
-import org.jmhsrobotics.frc2026.subsystems.feeder.NeoFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.feeder.SimFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
-import org.jmhsrobotics.frc2026.subsystems.indexer.NeoIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
-import org.jmhsrobotics.frc2026.subsystems.intake.VortexIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
-import org.jmhsrobotics.frc2026.subsystems.shooter.NeoShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
-import org.jmhsrobotics.frc2026.subsystems.slapdown.NeoSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.vision.Vision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionConstants;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIO;
-import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVision;
 import org.jmhsrobotics.frc2026.subsystems.vision.VisionIOPhotonVisionSim;
 import org.jmhsrobotics.frc2026.util.BallTracker;
 import org.jmhsrobotics.frc2026.util.FuelSim;
@@ -134,10 +128,11 @@ public class RobotContainer {
         // new ModuleIOThrifty(2),
         // new ModuleIOThrifty(3));
 
+        /* this is the old code. im switchin to default
         shooter = new Shooter(new NeoShooterIO());
         // Old Code - Keep here in case we need to revert to Neo Motor
         // intake = new Intake(new NeoIntakeIO());
-        intake = new Intake(new VortexIntakeIO());
+        intake = new Intake(new NeoIntakeIO());
         slapdown = new Slapdown(new NeoSlapdownIO());
         indexer = new Indexer(new NeoIndexerIO());
         vision =
@@ -148,6 +143,13 @@ public class RobotContainer {
                 new VisionIOPhotonVision(
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         feeder = new Feeder(new NeoFeederIO());
+        */
+        shooter = new Shooter(new ShooterIO() {});
+        intake = new Intake(new IntakeIO() {});
+        slapdown = new Slapdown(new SlapdownIO() {});
+        indexer = new Indexer(new IndexerIO() {});
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        feeder = new Feeder(new FeederIO() {});
         break;
 
       case SIM:

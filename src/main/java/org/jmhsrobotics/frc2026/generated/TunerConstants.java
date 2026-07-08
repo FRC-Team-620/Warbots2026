@@ -9,6 +9,8 @@ package org.jmhsrobotics.frc2026.generated;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.jmhsrobotics.frc2026.subsystems.drive.DriveConstants;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.hardware.*;
@@ -90,7 +92,7 @@ public class TunerConstants {
 
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.69);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(DriveConstants.getMaxSpeed());
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
