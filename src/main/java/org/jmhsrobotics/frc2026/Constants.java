@@ -42,15 +42,26 @@ public final class Constants {
   public static class CAN {
     // TODO update CANIds
     public static final int kCanAndGyroID = 35;
+
     public static final int kIntakeMotorID = 41;
     public static final int kIntakeFollowerMotorID = 42;
+
     public static final int kSlapdownMotorID = 40;
+
     public static final int kIndexerMotorID = 2;
-    public static final int kClimberMotorID = 30;
-    public static final int kShooterIntakeMotorID = 53;
+
+    public static final int kLeftTopShooterMotorID = 50;
+    public static final int kLeftBottomShooterMotorID = 51;
+    public static final int kRightTopShooterMotorID = 52;
+    public static final int kRightBottomShooterMotorID = 53;
+    public static final int kShooterIntakeMotorID = 54;
+
+    //old shooter & climber constants (delete em?)
     public static final int kLeftFlywheelMotorID = 50;
     public static final int kCenterFlywheelMotorID = 51;
     public static final int kRightFlywheelMotorID = 52;
+
+    public static final int kClimberMotorID = 30;
   }
 
   public static class DoryCAN {

@@ -43,14 +43,16 @@ public class DriveConstants {
       SmartDashboard.getNumber("DriveTuning/autoMaxRotRPS", 3);
 
   // as of Mar 12, 2026 we are running Thrifty Swerve with 12:18 gearing = 15ft/s (for NEOs)
-    // 15.5 for krakens with 12:18
+  // 15.5 for krakens with 12:18
   public static final double theoreticalMaxSpeedFeetPerSec = 15.5;
   public static final double theoreticalMaxSpeedMetersPerSec =
       Units.feetToMeters(
           theoreticalMaxSpeedFeetPerSec); // ft to meters because thrifty gives us ft/s
-    public static double getMaxSpeed(){
-        return theoreticalMaxSpeedMetersPerSec;
-    }
+
+  public static double getMaxSpeed() {
+    return theoreticalMaxSpeedMetersPerSec;
+  }
+
   // change coefficients when we want to implement turbo
   public static final double turboCoefficient = 1;
   public static final double nonTurboCoefficient = 0.9;
