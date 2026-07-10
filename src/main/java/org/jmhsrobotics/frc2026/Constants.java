@@ -56,7 +56,7 @@ public final class Constants {
     public static final int kRightBottomShooterMotorID = 53;
     public static final int kShooterIntakeMotorID = 54;
 
-    //old shooter & climber constants (delete em?)
+    // old shooter & climber constants (delete em?)
     public static final int kLeftFlywheelMotorID = 50;
     public static final int kCenterFlywheelMotorID = 51;
     public static final int kRightFlywheelMotorID = 52;

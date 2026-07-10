@@ -66,6 +66,7 @@ import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
+import org.jmhsrobotics.frc2026.subsystems.shooter.KrakenShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
@@ -144,7 +145,7 @@ public class RobotContainer {
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         feeder = new Feeder(new NeoFeederIO());
         */
-        shooter = new Shooter(new ShooterIO() {});
+        shooter = new Shooter(new KrakenShooterIO());
         intake = new Intake(new IntakeIO() {});
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
