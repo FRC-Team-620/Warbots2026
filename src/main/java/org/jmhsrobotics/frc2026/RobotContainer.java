@@ -61,6 +61,7 @@ import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
 import org.jmhsrobotics.frc2026.subsystems.feeder.SimFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
+import org.jmhsrobotics.frc2026.subsystems.indexer.KrakenIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
@@ -149,7 +150,7 @@ public class RobotContainer {
         shooter = new Shooter(new KrakenShooterIO());
         intake = new Intake(new KrakenIntakeIO());
         slapdown = new Slapdown(new SlapdownIO() {});
-        indexer = new Indexer(new IndexerIO() {});
+        indexer = new Indexer(new KrakenIndexerIO());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         // we uh, we dont have a feeder anymore
         // I am however leaving the blank implement bc i dont wanna deal with errors
