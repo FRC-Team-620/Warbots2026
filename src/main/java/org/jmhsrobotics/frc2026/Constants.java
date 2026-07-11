@@ -127,9 +127,9 @@ public final class Constants {
 
     // public static final double kHubSetPointRPM = 2600.0;
     // public static final double kAutoHubSetPointRPM = 2600.0;
-
     public static final double kHubSetPointRPM = 60;
     public static final double kAutoHubSetPointRPM = 60;
+
     // FeedForward Constants - These are just guesses, will need to be tuned
     public static final double kS = 0.2; // Static Component of Friction
     public static final double kV = 0.12521; // Velocity Gain

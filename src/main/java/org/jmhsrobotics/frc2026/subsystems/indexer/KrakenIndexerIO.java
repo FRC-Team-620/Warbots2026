@@ -34,7 +34,7 @@ public class KrakenIndexerIO implements IndexerIO {
     MotorAlignmentValue leftAlignment = MotorAlignmentValue.Aligned;
     MotorAlignmentValue rightAlignment = MotorAlignmentValue.Opposed;
 
-    //lead motor (front left)
+    // lead motor (front left)
     leadMotorConfig = new TalonFXConfiguration();
     leadMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     // TESTING: change from 5 to 20
@@ -43,7 +43,7 @@ public class KrakenIndexerIO implements IndexerIO {
     leadMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig);
 
-    //follower config (everything else)
+    // follower config (everything else)
     followMotorConfig = new TalonFXConfiguration();
     followMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     // TESTING: change from 5 to 20
@@ -56,9 +56,10 @@ public class KrakenIndexerIO implements IndexerIO {
 
     PhoenixUtil.tryUntilOk(5, () -> frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig));
     PhoenixUtil.tryUntilOk(5, () -> backLeftIndexMotor.getConfigurator().apply(followMotorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> frontRightIndexMotor.getConfigurator().apply(followMotorConfig));
+    PhoenixUtil.tryUntilOk(
+        5, () -> frontRightIndexMotor.getConfigurator().apply(followMotorConfig));
     PhoenixUtil.tryUntilOk(5, () -> backRightIndexMotor.getConfigurator().apply(followMotorConfig));
-    
+
     backLeftIndexMotor.setControl(
         new Follower(Constants.CAN.kFrontLeftIndexerMotorID, leftAlignment));
     frontRightIndexMotor.setControl(
@@ -83,12 +84,15 @@ public class KrakenIndexerIO implements IndexerIO {
   }
 
   public void setBrakeMode(boolean enable) {
-    followMotorConfig.MotorOutput.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-    leadMotorConfig.MotorOutput.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    followMotorConfig.MotorOutput.NeutralMode =
+        enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    leadMotorConfig.MotorOutput.NeutralMode =
+        enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 
     PhoenixUtil.tryUntilOk(5, () -> frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig));
     PhoenixUtil.tryUntilOk(5, () -> backLeftIndexMotor.getConfigurator().apply(followMotorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> frontRightIndexMotor.getConfigurator().apply(followMotorConfig));
+    PhoenixUtil.tryUntilOk(
+        5, () -> frontRightIndexMotor.getConfigurator().apply(followMotorConfig));
     PhoenixUtil.tryUntilOk(5, () -> backRightIndexMotor.getConfigurator().apply(followMotorConfig));
   }
 }
