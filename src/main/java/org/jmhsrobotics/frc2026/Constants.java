@@ -54,7 +54,6 @@ public final class Constants {
     public static final int kLeftBottomShooterMotorID = 51;
     public static final int kRightTopShooterMotorID = 52;
     public static final int kRightBottomShooterMotorID = 53;
-    public static final int kShooterIntakeMotorID = 54;
 
     // old shooter & climber constants (delete em?)
     public static final int kLeftFlywheelMotorID = 50;
@@ -62,6 +61,9 @@ public final class Constants {
     public static final int kRightFlywheelMotorID = 52;
 
     public static final int kClimberMotorID = 30;
+
+    // also, feeder dont rlly exist anymore...
+    public static final int kShooterIntakeMotorID = 54;
   }
 
   public static class DoryCAN {
@@ -127,7 +129,8 @@ public final class Constants {
   }
 
   public static class Intake {
-    public static final double kBaseRPM = 3000;
+    // public static final double kBaseRPM = 3000;
+    public static final double kBaseRPM = 60;
 
     public static final double kSpeedDutyCycle = 1.0;
   }
