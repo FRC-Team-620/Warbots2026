@@ -40,20 +40,28 @@ public final class Constants {
   }
 
   public static class CAN {
-    // TODO update CANIds
+    //10s are drive
+    //20s are turn
+    //30s are encoders + gyro
+    //40s are indexer
+    //50s are shooter (adjacent)
+    //60s are slapdown + intake
+
     public static final int kCanAndGyroID = 35;
 
-    public static final int kIntakeMotorID = 41;
-    public static final int kIntakeFollowerMotorID = 42;
-
-    public static final int kSlapdownMotorID = 40;
-
-    public static final int kIndexerMotorID = 2;
+    public static final int kFrontLeftIndexerMotorID = 40;
+    public static final int kBackLeftIndexerMotorID = 41;
+    public static final int kFrontRightIndexerMotorID = 42;
+    public static final int kBackRightIndexerMotorID = 43;
 
     public static final int kLeftTopShooterMotorID = 50;
     public static final int kLeftBottomShooterMotorID = 51;
     public static final int kRightTopShooterMotorID = 52;
     public static final int kRightBottomShooterMotorID = 53;
+
+    public static final int kSlapdownMotorID = 60;
+    public static final int kIntakeMotorID = 61;
+    public static final int kIntakeFollowerMotorID = 62;
 
     // old shooter & climber constants (delete em?)
     public static final int kLeftFlywheelMotorID = 50;
