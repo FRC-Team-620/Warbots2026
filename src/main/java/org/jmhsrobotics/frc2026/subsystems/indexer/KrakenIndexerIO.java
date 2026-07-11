@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -19,7 +20,8 @@ public class KrakenIndexerIO implements IndexerIO {
   private TalonFX frontRightIndexMotor = new TalonFX(Constants.CAN.kFrontRightIndexerMotorID);
   private TalonFX backRightIndexMotor = new TalonFX(Constants.CAN.kBackRightIndexerMotorID);
 
-  private TalonFXConfiguration motorConfig;
+  private TalonFXConfiguration followMotorConfig;
+  private TalonFXConfiguration leadMotorConfig;
 
   private final StatusSignal<Current> indexerCurrent = frontLeftIndexMotor.getStatorCurrent();
   private final StatusSignal<Temperature> indexerTemp = frontLeftIndexMotor.getDeviceTemp();
@@ -32,22 +34,31 @@ public class KrakenIndexerIO implements IndexerIO {
     MotorAlignmentValue leftAlignment = MotorAlignmentValue.Aligned;
     MotorAlignmentValue rightAlignment = MotorAlignmentValue.Opposed;
 
-    motorConfig = new TalonFXConfiguration();
-    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    //lead motor (front left)
+    leadMotorConfig = new TalonFXConfiguration();
+    leadMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     // TESTING: change from 5 to 20
-    motorConfig.CurrentLimits.StatorCurrentLimit = 5;
-    motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    leadMotorConfig.CurrentLimits.StatorCurrentLimit = 5;
+    leadMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    leadMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig);
 
-    frontLeftIndexMotor.getConfigurator().apply(motorConfig);
-    backLeftIndexMotor.getConfigurator().apply(motorConfig);
-    frontRightIndexMotor.getConfigurator().apply(motorConfig);
-    backRightIndexMotor.getConfigurator().apply(motorConfig);
+    //follower config (everything else)
+    followMotorConfig = new TalonFXConfiguration();
+    followMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    // TESTING: change from 5 to 20
+    followMotorConfig.CurrentLimits.StatorCurrentLimit = 5;
+    followMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    PhoenixUtil.tryUntilOk(5, () -> frontLeftIndexMotor.getConfigurator().apply(motorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> backLeftIndexMotor.getConfigurator().apply(motorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> frontRightIndexMotor.getConfigurator().apply(motorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> backRightIndexMotor.getConfigurator().apply(motorConfig));
+    backLeftIndexMotor.getConfigurator().apply(followMotorConfig);
+    frontRightIndexMotor.getConfigurator().apply(followMotorConfig);
+    backRightIndexMotor.getConfigurator().apply(followMotorConfig);
 
+    PhoenixUtil.tryUntilOk(5, () -> frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> backLeftIndexMotor.getConfigurator().apply(followMotorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> frontRightIndexMotor.getConfigurator().apply(followMotorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> backRightIndexMotor.getConfigurator().apply(followMotorConfig));
+    
     backLeftIndexMotor.setControl(
         new Follower(Constants.CAN.kFrontLeftIndexerMotorID, leftAlignment));
     frontRightIndexMotor.setControl(
@@ -72,11 +83,12 @@ public class KrakenIndexerIO implements IndexerIO {
   }
 
   public void setBrakeMode(boolean enable) {
-    motorConfig.MotorOutput.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    followMotorConfig.MotorOutput.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    leadMotorConfig.MotorOutput.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
 
-    PhoenixUtil.tryUntilOk(5, () -> frontLeftIndexMotor.getConfigurator().apply(motorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> backLeftIndexMotor.getConfigurator().apply(motorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> frontRightIndexMotor.getConfigurator().apply(motorConfig));
-    PhoenixUtil.tryUntilOk(5, () -> backRightIndexMotor.getConfigurator().apply(motorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> backLeftIndexMotor.getConfigurator().apply(followMotorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> frontRightIndexMotor.getConfigurator().apply(followMotorConfig));
+    PhoenixUtil.tryUntilOk(5, () -> backRightIndexMotor.getConfigurator().apply(followMotorConfig));
   }
 }
