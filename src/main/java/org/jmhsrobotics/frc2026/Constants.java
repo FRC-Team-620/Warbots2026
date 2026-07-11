@@ -40,12 +40,12 @@ public final class Constants {
   }
 
   public static class CAN {
-    //10s are drive
-    //20s are turn
-    //30s are encoders + gyro
-    //40s are indexer
-    //50s are shooter (adjacent)
-    //60s are slapdown + intake
+    // 10s are drive
+    // 20s are turn
+    // 30s are encoders + gyro
+    // 40s are indexer
+    // 50s are shooter (adjacent)
+    // 60s are slapdown + intake
 
     public static final int kCanAndGyroID = 35;
 
