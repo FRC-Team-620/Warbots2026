@@ -47,7 +47,8 @@ public class KrakenShooterIO implements ShooterIO {
 
   private double voltage;
 
-  // i was told by claude that talons don't need PID controls... and that only the leader needs this thing
+  // i was told by claude that talons don't need PID controls... and that only the leader needs this
+  // thing
   private final VelocityVoltage leftTopVelocityRequest = new VelocityVoltage(0);
 
   private double velocityRPM;
@@ -60,7 +61,9 @@ public class KrakenShooterIO implements ShooterIO {
     // top left motor (FOLLOWER)
     motorConfigLeftBottonFollower = new TalonFXConfiguration();
     motorConfigLeftBottonFollower.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorConfigLeftBottonFollower.CurrentLimits.StatorCurrentLimit = 50;
+    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
+    // comp/practice.
+    motorConfigLeftBottonFollower.CurrentLimits.StatorCurrentLimit = 5;
     motorConfigLeftBottonFollower.CurrentLimits.StatorCurrentLimitEnable = true;
 
     leftBottomMotor.getConfigurator().apply(motorConfigLeftBottonFollower);
@@ -70,7 +73,9 @@ public class KrakenShooterIO implements ShooterIO {
     // top right motor (FOLLOWER)
     motorConfigRightTopFollower = new TalonFXConfiguration();
     motorConfigRightTopFollower.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorConfigRightTopFollower.CurrentLimits.StatorCurrentLimit = 50;
+    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
+    // comp/practice.
+    motorConfigRightTopFollower.CurrentLimits.StatorCurrentLimit = 5;
     motorConfigRightTopFollower.CurrentLimits.StatorCurrentLimitEnable = true;
 
     rightTopMotor.getConfigurator().apply(motorConfigRightTopFollower);
@@ -79,29 +84,40 @@ public class KrakenShooterIO implements ShooterIO {
     // bottom right motor (FOLLOWER)
     motorConfigRightBottomFollower = new TalonFXConfiguration();
     motorConfigRightBottomFollower.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorConfigRightBottomFollower.CurrentLimits.StatorCurrentLimit = 50;
+    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
+    // comp/practice.
+    motorConfigRightBottomFollower.CurrentLimits.StatorCurrentLimit = 5;
     motorConfigRightBottomFollower.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    rightTopMotor.getConfigurator().apply(motorConfigRightBottomFollower);
-    rightTopMotor.setControl(new Follower(Constants.CAN.kLeftTopShooterMotorID, rightAlignment));
+    // CLAUDE: was applying config and Follower control to rightTopMotor a second time here instead
+    // of rightBottomMotor, so rightBottomMotor never got configured or set to follow.
+    rightBottomMotor.getConfigurator().apply(motorConfigRightBottomFollower);
+    rightBottomMotor.setControl(new Follower(Constants.CAN.kLeftTopShooterMotorID, rightAlignment));
 
     // top left (LEADER)
     /* NOTE: THERE IS NO MIN AND MAX EQUIVALET SO WE HAVE TO MAKE SURE TO NEVER MAKE IT NEGATIVE */
     motorConfigLeftTopLeader = new TalonFXConfiguration();
     motorConfigLeftTopLeader.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimit = 50;
+    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
+    // comp/practice.
+    motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimit = 5;
     motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimitEnable = true;
 
     // THIS IS WHAT I CHANGE IF IT SPINS THE WRONG WAY
     motorConfigLeftTopLeader.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    // PID (Slot0) — matches old .closedLoop.pid(kOnboardP, kOnboardI, kOnboardD)
-    motorConfigLeftTopLeader.Slot0.kP = Constants.ShooterConstants.kOnboardP;
-    motorConfigLeftTopLeader.Slot0.kI = Constants.ShooterConstants.kOnboardI;
-    motorConfigLeftTopLeader.Slot0.kD = Constants.ShooterConstants.kOnboardD;
+    // CLAUDE: switched off kOnboardP/I/D/V here — those are REV SparkMax onboard-PID gains
+    // (duty cycle per RPM of error) and are ~720x too small for Phoenix6 VelocityVoltage, which
+    // expects volts per rotation/sec. That's why the motor wasn't spinning on the bench (commanded
+    // voltage was ~0.003V at 60 RPM). Using the volts-scaled kP/kD/kV/kS/kA constants instead.
+    motorConfigLeftTopLeader.Slot0.kP = Constants.ShooterConstants.kP;
+    motorConfigLeftTopLeader.Slot0.kI = Constants.ShooterConstants.kI;
+    motorConfigLeftTopLeader.Slot0.kD = Constants.ShooterConstants.kD;
 
-    // feedforward — matches old .closedLoop.feedForward.kV(kOnboardV)
-    motorConfigLeftTopLeader.Slot0.kV = Constants.ShooterConstants.kOnboardV;
+    // feedforward
+    motorConfigLeftTopLeader.Slot0.kS = Constants.ShooterConstants.kS;
+    motorConfigLeftTopLeader.Slot0.kV = Constants.ShooterConstants.kV;
+    motorConfigLeftTopLeader.Slot0.kA = Constants.ShooterConstants.kA;
 
     leftTopMotor.getConfigurator().apply(motorConfigLeftTopLeader);
 
