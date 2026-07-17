@@ -32,11 +32,13 @@ public class KrakenIntakeIO implements IntakeIO {
   private double speedDutyCycle;
 
   public KrakenIntakeIO() {
+    // TESTING: change to 30 (fact check);
+    final int updatedCurrent = 5;
+
     // LEADER CONFIG (left)
     intakeLeaderConfig = new TalonFXConfiguration();
     intakeLeaderConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TESTING: change from 5 to 30
-    intakeLeaderConfig.CurrentLimits.StatorCurrentLimit = 5;
+    intakeLeaderConfig.CurrentLimits.StatorCurrentLimit = updatedCurrent;
     intakeLeaderConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     // umm.. i was told i dont need to do voltage compensation
     intakeLeaderConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -45,8 +47,7 @@ public class KrakenIntakeIO implements IntakeIO {
     // FOLLOWER CONFIG (right)
     intakeFollowerConfig = new TalonFXConfiguration();
     intakeFollowerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TESTING: change from 5 to 30
-    intakeFollowerConfig.CurrentLimits.StatorCurrentLimit = 5;
+    intakeFollowerConfig.CurrentLimits.StatorCurrentLimit = updatedCurrent;
     intakeFollowerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     intakeFollowerMotor.getConfigurator().apply(intakeFollowerConfig);
     intakeFollowerMotor.setControl(

@@ -38,10 +38,13 @@ public class KrakenShooterIO implements ShooterIO {
   private final StatusSignal<AngularVelocity> rightTopVelocity = rightTopMotor.getVelocity();
   private final StatusSignal<AngularVelocity> rightBottomVelocity = rightBottomMotor.getVelocity();
 
+  // private TalonFXConfiguration motorConfigLeftTopLeader;
+  // private TalonFXConfiguration motorConfigLeftBottonFollower;
+  // private TalonFXConfiguration motorConfigRightTopFollower;
+  // private TalonFXConfiguration motorConfigRightBottomFollower;
+
   private TalonFXConfiguration motorConfigLeftTopLeader;
-  private TalonFXConfiguration motorConfigLeftBottonFollower;
-  private TalonFXConfiguration motorConfigRightTopFollower;
-  private TalonFXConfiguration motorConfigRightBottomFollower;
+  private TalonFXConfiguration followerConfig;
 
   /* RELATIVE ENCODERS SEEM TO BE UNNEEDED (CAN CALL .GETVELOCITY() ETC ON TALONFX OBJECT) */
 
@@ -57,50 +60,28 @@ public class KrakenShooterIO implements ShooterIO {
   public KrakenShooterIO() {
     MotorAlignmentValue leftAlignment = MotorAlignmentValue.Aligned;
     MotorAlignmentValue rightAlignment = MotorAlignmentValue.Opposed;
+    // TESTING: change to 50
+    final int updatedCurrent = 5;
 
-    // top left motor (FOLLOWER)
-    motorConfigLeftBottonFollower = new TalonFXConfiguration();
-    motorConfigLeftBottonFollower.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
-    // comp/practice.
-    motorConfigLeftBottonFollower.CurrentLimits.StatorCurrentLimit = 5;
-    motorConfigLeftBottonFollower.CurrentLimits.StatorCurrentLimitEnable = true;
+    followerConfig = new TalonFXConfiguration();
+    followerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    followerConfig.CurrentLimits.StatorCurrentLimit = updatedCurrent;
+    followerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
-    leftBottomMotor.getConfigurator().apply(motorConfigLeftBottonFollower);
+    leftBottomMotor.getConfigurator().apply(followerConfig);
     leftBottomMotor.setControl(new Follower(Constants.CAN.kLeftTopShooterMotorID, leftAlignment));
-    // new Follower((int) which CAN id it has to follow, (custom data type) invert y/n)
 
-    // top right motor (FOLLOWER)
-    motorConfigRightTopFollower = new TalonFXConfiguration();
-    motorConfigRightTopFollower.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
-    // comp/practice.
-    motorConfigRightTopFollower.CurrentLimits.StatorCurrentLimit = 5;
-    motorConfigRightTopFollower.CurrentLimits.StatorCurrentLimitEnable = true;
-
-    rightTopMotor.getConfigurator().apply(motorConfigRightTopFollower);
+    rightTopMotor.getConfigurator().apply(followerConfig);
     rightTopMotor.setControl(new Follower(Constants.CAN.kLeftTopShooterMotorID, rightAlignment));
 
-    // bottom right motor (FOLLOWER)
-    motorConfigRightBottomFollower = new TalonFXConfiguration();
-    motorConfigRightBottomFollower.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
-    // comp/practice.
-    motorConfigRightBottomFollower.CurrentLimits.StatorCurrentLimit = 5;
-    motorConfigRightBottomFollower.CurrentLimits.StatorCurrentLimitEnable = true;
-
-    // CLAUDE: was applying config and Follower control to rightTopMotor a second time here instead
-    // of rightBottomMotor, so rightBottomMotor never got configured or set to follow.
-    rightBottomMotor.getConfigurator().apply(motorConfigRightBottomFollower);
+    rightBottomMotor.getConfigurator().apply(followerConfig);
     rightBottomMotor.setControl(new Follower(Constants.CAN.kLeftTopShooterMotorID, rightAlignment));
 
     // top left (LEADER)
     /* NOTE: THERE IS NO MIN AND MAX EQUIVALET SO WE HAVE TO MAKE SURE TO NEVER MAKE IT NEGATIVE */
     motorConfigLeftTopLeader = new TalonFXConfiguration();
     motorConfigLeftTopLeader.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TEMP SAFETY LIMIT for handheld bench testing: was 50, lowered to 5. Restore to 50 before
-    // comp/practice.
-    motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimit = 5;
+    motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimit = updatedCurrent;
     motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimitEnable = true;
 
     // THIS IS WHAT I CHANGE IF IT SPINS THE WRONG WAY
@@ -128,12 +109,9 @@ public class KrakenShooterIO implements ShooterIO {
     leftTopMotor.getMotorVoltage().setUpdateFrequency(200);
 
     PhoenixUtil.tryUntilOk(5, () -> leftTopMotor.getConfigurator().apply(motorConfigLeftTopLeader));
-    PhoenixUtil.tryUntilOk(
-        5, () -> leftBottomMotor.getConfigurator().apply(motorConfigLeftBottonFollower));
-    PhoenixUtil.tryUntilOk(
-        5, () -> rightTopMotor.getConfigurator().apply(motorConfigRightTopFollower));
-    PhoenixUtil.tryUntilOk(
-        5, () -> rightBottomMotor.getConfigurator().apply(motorConfigRightBottomFollower));
+    PhoenixUtil.tryUntilOk(5, () -> leftBottomMotor.getConfigurator().apply(followerConfig));
+    PhoenixUtil.tryUntilOk(5, () -> rightTopMotor.getConfigurator().apply(followerConfig));
+    PhoenixUtil.tryUntilOk(5, () -> rightBottomMotor.getConfigurator().apply(followerConfig));
   }
 
   @Override

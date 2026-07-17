@@ -33,12 +33,13 @@ public class KrakenIndexerIO implements IndexerIO {
   public KrakenIndexerIO() {
     MotorAlignmentValue leftAlignment = MotorAlignmentValue.Aligned;
     MotorAlignmentValue rightAlignment = MotorAlignmentValue.Opposed;
+    // TESTING: change to 20 (fact check)
+    final int updatedCurrent = 5;
 
     // lead motor (front left)
     leadMotorConfig = new TalonFXConfiguration();
     leadMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TESTING: change from 5 to 20
-    leadMotorConfig.CurrentLimits.StatorCurrentLimit = 5;
+    leadMotorConfig.CurrentLimits.StatorCurrentLimit = updatedCurrent;
     leadMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     leadMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     frontLeftIndexMotor.getConfigurator().apply(leadMotorConfig);
@@ -46,8 +47,7 @@ public class KrakenIndexerIO implements IndexerIO {
     // follower config (everything else)
     followMotorConfig = new TalonFXConfiguration();
     followMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    // TESTING: change from 5 to 20
-    followMotorConfig.CurrentLimits.StatorCurrentLimit = 5;
+    followMotorConfig.CurrentLimits.StatorCurrentLimit = updatedCurrent;
     followMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
     backLeftIndexMotor.getConfigurator().apply(followMotorConfig);
