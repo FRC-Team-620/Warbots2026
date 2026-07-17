@@ -1,10 +1,13 @@
 package org.jmhsrobotics.frc2026.subsystems.shooter;
 
+// HOOD REMOVAL (2026-07-17): the current robot's shooter has no hood, unlike the
+// old REV-era design. Removed hood servo fields/logic, setHoodPosition(),
+// calculateHoodPosition(), createHoodMap(), setServoPosition(), getServoPosition(),
+// getServoGoal(), and the hoodMap/hoodPosition/hoodRealPosition fields. Also deleted
+// commands/HoodDown.java entirely, since it existed only to drive the hood servo.
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.jmhsrobotics.frc2026.Constants;
@@ -14,9 +17,6 @@ public class Shooter extends SubsystemBase {
   private ShooterIO shooterIO;
   private ShooterIOInputsAutoLogged shooterInputs = new ShooterIOInputsAutoLogged();
 
-  private Servo leftServo = new Servo(0);
-  private Servo rightServo = new Servo(1);
-
   private Timer accelerationTimer = new Timer();
 
   private boolean isActive = false;
@@ -24,27 +24,17 @@ public class Shooter extends SubsystemBase {
   private double rpmPidOutput = 0;
   private boolean isClosedLoop = false;
   private InterpolatingDoubleTreeMap rpmMap;
-  private InterpolatingDoubleTreeMap hoodMap;
-  private double hoodRealPosition = 0.0;
-
-  private double hoodPosition = 0.31;
 
   public Shooter(ShooterIO shooterIO) {
 
     this.shooterIO = shooterIO;
     this.rpmMap = new InterpolatingDoubleTreeMap();
     createRPMMap(rpmMap);
-    this.hoodMap = new InterpolatingDoubleTreeMap();
-    createHoodMap(hoodMap);
-    SmartDashboard.putNumber("Hood Position", hoodPosition);
   }
 
   @Override
   public void periodic() {
     shooterIO.updateInputs(shooterInputs);
-    // hoodPosition = SmartDashboard.getNumber("Hood Position", 0.31);
-    leftServo.setPosition(hoodPosition);
-    rightServo.setPosition(hoodPosition);
 
     /* ----------------RPM Control------------------------ TODO: move to dedicated util method*/
     // TODO: move to constants
@@ -77,8 +67,6 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/RPS", shooterInputs.velocityRPM / 60);
 
     Logger.recordOutput("Shooter/isClosedLoop", this.isClosedLoop);
-
-    Logger.recordOutput("Shooter/Hood Position", this.hoodPosition);
   }
 
   public void setRPM(double velocityTargetRPM) {
@@ -123,10 +111,6 @@ public class Shooter extends SubsystemBase {
     shooterIO.setVoltage(voltage.baseUnitMagnitude());
   }
 
-  public void setHoodPosition(double position) {
-    this.hoodPosition = position;
-  }
-
   public void stop() {
     this.goalSpeedRPM = 0.0;
     this.isClosedLoop = false;
@@ -157,10 +141,6 @@ public class Shooter extends SubsystemBase {
     return rpmMap.get(distance);
   }
 
-  public double calculateHoodPosition(double distance) {
-    return hoodMap.get(distance);
-  }
-
   public void createRPMMap(InterpolatingDoubleTreeMap map) {
     // map.put(1.255, 3500.0);
     // map.put(4.00, 4000.0);
@@ -169,33 +149,8 @@ public class Shooter extends SubsystemBase {
     map.put(3.0, 3400.0);
   }
 
-  public void createHoodMap(InterpolatingDoubleTreeMap map) {
-    // (distance, hood height)
-    // map.put(1.255, 3500.0);
-    // map.put(4.00, 4000.0);
-    // map.put(2.0, 0.5);
-    map.put(1.3, 0.31);
-    map.put(3.0, 0.31);
-    map.put(4.0, 0.63);
-    map.put(5.0, 0.7);
-    map.put(5.5, 0.75);
-  }
-
   public boolean isActive() {
     return isActive;
-  }
-
-  public void setServoPosition(double position) {
-    leftServo.setPosition(position);
-    rightServo.setPosition(position);
-  }
-
-  public double getServoPosition() {
-    return leftServo.getPosition();
-  }
-
-  public double getServoGoal() {
-    return hoodPosition;
   }
 
   public boolean atMaxRPM() {

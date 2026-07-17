@@ -4,6 +4,8 @@
 
 package org.jmhsrobotics.frc2026;
 
+// HOOD REMOVAL (2026-07-17): removed ShooterConstants.kHoodTolerance — see
+// subsystems/shooter/Shooter.java for the full note.
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -122,7 +124,6 @@ public final class Constants {
     public static final double kShooterTolerance = 100;
     // public static final double kShooterDutyCycle = 0.6;
     public static final double kShooterDutyCycle = 0.05;
-    public static final double kHoodTolerance = 0.05;
     public static final double kShooterRPMOffset = 0.0;
 
     // public static final double kHubSetPointRPM = 2600.0;

@@ -1,5 +1,7 @@
 package org.jmhsrobotics.frc2026.controlBoard;
 
+// HOOD REMOVAL (2026-07-17): removed the hoodDown() trigger — see
+// subsystems/shooter/Shooter.java for the full note.
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,8 +24,6 @@ public interface ControlBoard {
   public Trigger turbo();
 
   public Trigger slowdown();
-
-  public Trigger hoodDown();
 
   // =======Operator Controls=======
 

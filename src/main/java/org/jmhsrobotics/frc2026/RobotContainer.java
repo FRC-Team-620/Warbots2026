@@ -4,6 +4,9 @@
 
 package org.jmhsrobotics.frc2026;
 
+// HOOD REMOVAL (2026-07-17): removed the HoodDown import/binding and the
+// setHoodPosition(...) calls in configureBindings() — see
+// subsystems/shooter/Shooter.java for the full note.
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -34,7 +37,6 @@ import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.FaceDriveDirection;
 import org.jmhsrobotics.frc2026.commands.Feed;
-import org.jmhsrobotics.frc2026.commands.HoodDown;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
@@ -288,10 +290,8 @@ public class RobotContainer {
     var yeetCmd =
         new ParallelCommandGroup(
             new AlignToAngle(drive, control),
-            Commands.runOnce(() -> shooter.setHoodPosition(0.5)),
             new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
     control.fieldYeet().whileTrue(yeetCmd);
-    control.fieldYeet().onFalse(Commands.runOnce(() -> shooter.setHoodPosition(0.31)));
     // control
     //     .shooterSpinup()
     //     .onTrue(new ShooterSetDutyCycle(shooter, Constants.ShooterConstants.kShooterDutyCycle))
@@ -301,9 +301,7 @@ public class RobotContainer {
         .dutyCycleShoot()
         .whileTrue(
             new ParallelCommandGroup(
-                new SequentialCommandGroup(
-                    Commands.runOnce(() -> shooter.setHoodPosition(0.31)),
-                    new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM))));
+                new ShooterSpinup(shooter, Constants.ShooterConstants.kHubSetPointRPM)));
     // new SlapdownJiggle(slapdown),
     // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
     // new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle)));
@@ -327,8 +325,6 @@ public class RobotContainer {
                 // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
                 new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
     // .onFalse(new IndependentFeed(feeder, 0));
-
-    control.hoodDown().onTrue(new HoodDown(shooter));
 
     // Slapdown Bindings
     control

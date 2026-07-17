@@ -1,5 +1,7 @@
 package org.jmhsrobotics.frc2026.controlBoard;
 
+// HOOD REMOVAL (2026-07-17): removed the hoodDown() override — see
+// subsystems/shooter/Shooter.java for the full note.
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -60,11 +62,6 @@ public class DoubleControl implements ControlBoard {
   @Override
   public Trigger slowdown() {
     return driver.leftStick();
-  }
-
-  @Override
-  public Trigger hoodDown() {
-    return driver.rightStick();
   }
 
   // ========Operator Controls========

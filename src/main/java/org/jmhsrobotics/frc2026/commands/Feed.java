@@ -1,8 +1,9 @@
 package org.jmhsrobotics.frc2026.commands;
 
-import edu.wpi.first.math.MathUtil;
+// HOOD REMOVAL (2026-07-17): feeding used to also wait for the hood to reach its
+// target position; now it only gates on the shooter reaching its RPM goal — see
+// Shooter.java for the full note.
 import edu.wpi.first.wpilibj2.command.Command;
-import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 
@@ -26,14 +27,7 @@ public class Feed extends Command {
   @Override
   public void execute() {
     if (shooter.atRPMGoal()) {
-      if (MathUtil.isNear(
-          shooter.getServoGoal(),
-          shooter.getServoPosition(),
-          Constants.ShooterConstants.kHoodTolerance)) {
-        this.feeder.setFeederSpeed(this.speed);
-      } else {
-        this.feeder.setFeederSpeed(0);
-      }
+      this.feeder.setFeederSpeed(this.speed);
     } else {
       this.feeder.setFeederSpeed(0);
     }
