@@ -7,6 +7,11 @@ package org.jmhsrobotics.frc2026;
 // HOOD REMOVAL (2026-07-17): removed the HoodDown import/binding and the
 // setHoodPosition(...) calls in configureBindings() — see
 // subsystems/shooter/Shooter.java for the full note.
+// FEEDER REMOVED (2026-07-19): commented out the feeder field, its imports and
+// construction in all three IO branches, the feeder arg passed to PreloadAuto/
+// AimingAuto, and the Feed(...) calls in configureBindings() and the SmartDashboard
+// test button. The Feeder subsystem, FeederIO impls, Feed.java and
+// IndependentFeed.java are left in place untouched/unused per request.
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -58,9 +63,6 @@ import org.jmhsrobotics.frc2026.subsystems.drive.GyroIOBoron;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIO;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOTalonFX;
-import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
-import org.jmhsrobotics.frc2026.subsystems.feeder.FeederIO;
-import org.jmhsrobotics.frc2026.subsystems.feeder.SimFeederIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.KrakenIndexerIO;
@@ -103,7 +105,7 @@ public class RobotContainer {
   public final Slapdown slapdown;
   private final Indexer indexer;
   private final Vision vision;
-  private final Feeder feeder;
+  // private final Feeder feeder;
   private final SysIdRoutine routine;
 
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -156,7 +158,7 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         // we uh, we dont have a feeder anymore
         // I am however leaving the blank implement bc i dont wanna deal with errors
-        feeder = new Feeder(new FeederIO() {});
+        // feeder = new Feeder(new FeederIO() {});
         break;
 
       case SIM:
@@ -184,7 +186,7 @@ public class RobotContainer {
                     VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
-        feeder = new Feeder(new SimFeederIO());
+        // feeder = new Feeder(new SimFeederIO());
         break;
 
       default:
@@ -202,7 +204,7 @@ public class RobotContainer {
         slapdown = new Slapdown(new SlapdownIO() {});
         indexer = new Indexer(new IndexerIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-        feeder = new Feeder(new FeederIO() {});
+        // feeder = new Feeder(new FeederIO() {});
         break;
     }
 
@@ -224,40 +226,35 @@ public class RobotContainer {
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
     autoChooser.addOption(
         "FrontHubAutoBLUE",
-        new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStartBLUE));
+        new PreloadAuto(drive, shooter, indexer, Constants.Auto.hubStartBLUE));
     autoChooser.addOption(
         "LeftTrenchAutoBLUE",
-        new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartBLUE, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.leftTrenchStartBLUE, control));
     autoChooser.addOption(
         "LeftBumpAutoBLUE",
-        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartBLUE, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.leftBumpStartBLUE, control));
     autoChooser.addOption(
         "RightTrenchAutoBLUE",
-        new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartBLUE, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.rightTrenchStartBLUE, control));
     autoChooser.addOption(
         "RightBumpAutoBLUE",
-        new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartBLUE, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.rightBumpStartBLUE, control));
 
     autoChooser.addOption(
         "FrontHubAutoRED",
-        new PreloadAuto(drive, shooter, indexer, feeder, Constants.Auto.hubStartRED));
+        new PreloadAuto(drive, shooter, indexer, Constants.Auto.hubStartRED));
     autoChooser.addOption(
         "LeftTrenchAutoRED",
-        new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.leftTrenchStartRED, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.leftTrenchStartRED, control));
     autoChooser.addOption(
         "LeftBumpAutoRED",
-        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.leftBumpStartRED, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.leftBumpStartRED, control));
     autoChooser.addOption(
         "RightTrenchAutoRED",
-        new AimingAuto(
-            drive, shooter, indexer, feeder, Constants.Auto.rightTrenchStartRED, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.rightTrenchStartRED, control));
     autoChooser.addOption(
         "RightBumpAutoRED",
-        new AimingAuto(drive, shooter, indexer, feeder, Constants.Auto.rightBumpStartRED, control));
+        new AimingAuto(drive, shooter, indexer, Constants.Auto.rightBumpStartRED, control));
     // Configure the trigger bindings
 
     ballTracker = new BallTracker(drive::getPose, 10, 3);
@@ -310,17 +307,18 @@ public class RobotContainer {
         .feedAndShoot()
         .onTrue(
             new ParallelCommandGroup(
-                new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
+                // new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
                 new DistanceAdjustingShoot(shooter, drive)))
         .onFalse(
             new ParallelCommandGroup(
-                new Feed(feeder, 0, shooter), new ShooterSetDutyCycle(shooter, 0)));
+                // new Feed(feeder, 0, shooter),
+                new ShooterSetDutyCycle(shooter, 0)));
 
     control
         .runFeeder()
         .whileTrue(
             new ParallelCommandGroup(
-                new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
+                // new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter),
                 // new IndependentFeed(feeder, Constants.Feeder.kSpeedDutyCycle),
                 // new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle),
                 new WaitCommand(0.6).andThen(new SlapdownJiggle(slapdown))));
@@ -392,7 +390,7 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Shooter Spinup", new ShooterSpinup(shooter, Constants.ShooterConstants.kBaseRPM));
     SmartDashboard.putData("Shooter Stop", new ShooterSpinup(shooter, 0));
-    SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
+    // SmartDashboard.putData("Feed", new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter));
     SmartDashboard.putData("Intake Move", new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle));
     SmartDashboard.putData(
         "Slapdown Down", new SlapdownMove(slapdown, 180)); // TODO: Add to Constants
