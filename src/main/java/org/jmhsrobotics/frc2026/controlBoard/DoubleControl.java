@@ -31,12 +31,12 @@ public class DoubleControl implements ControlBoard {
 
   @Override
   public double translationX() {
-    return driver.getLeftX();
+    return -driver.getLeftX();
   }
 
   @Override
   public double translationY() {
-    return driver.getLeftY();
+    return -driver.getLeftY();
   }
 
   @Override

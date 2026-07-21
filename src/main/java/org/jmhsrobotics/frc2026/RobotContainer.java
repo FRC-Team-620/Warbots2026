@@ -41,7 +41,6 @@ import org.jmhsrobotics.frc2026.commands.DistanceAdjustingShoot;
 import org.jmhsrobotics.frc2026.commands.DriveCommand;
 import org.jmhsrobotics.frc2026.commands.DriveTimeCommand;
 import org.jmhsrobotics.frc2026.commands.FaceDriveDirection;
-import org.jmhsrobotics.frc2026.commands.Feed;
 import org.jmhsrobotics.frc2026.commands.IndexerMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMove;
 import org.jmhsrobotics.frc2026.commands.IntakeMoveAntiJam;
@@ -225,8 +224,7 @@ public class RobotContainer {
     // (current values 2.2 and 0.3 are from 2025 season)
     autoChooser.addDefaultOption("BaseLineAuto", new DriveTimeCommand(2.2, 0.3, drive));
     autoChooser.addOption(
-        "FrontHubAutoBLUE",
-        new PreloadAuto(drive, shooter, indexer, Constants.Auto.hubStartBLUE));
+        "FrontHubAutoBLUE", new PreloadAuto(drive, shooter, indexer, Constants.Auto.hubStartBLUE));
     autoChooser.addOption(
         "LeftTrenchAutoBLUE",
         new AimingAuto(drive, shooter, indexer, Constants.Auto.leftTrenchStartBLUE, control));
@@ -241,8 +239,7 @@ public class RobotContainer {
         new AimingAuto(drive, shooter, indexer, Constants.Auto.rightBumpStartBLUE, control));
 
     autoChooser.addOption(
-        "FrontHubAutoRED",
-        new PreloadAuto(drive, shooter, indexer, Constants.Auto.hubStartRED));
+        "FrontHubAutoRED", new PreloadAuto(drive, shooter, indexer, Constants.Auto.hubStartRED));
     autoChooser.addOption(
         "LeftTrenchAutoRED",
         new AimingAuto(drive, shooter, indexer, Constants.Auto.leftTrenchStartRED, control));
