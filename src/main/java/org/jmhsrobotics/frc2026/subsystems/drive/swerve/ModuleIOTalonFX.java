@@ -33,6 +33,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.Timer;
 import java.util.Queue;
 import org.jmhsrobotics.frc2026.generated.TunerConstants;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
@@ -213,17 +214,21 @@ public class ModuleIOTalonFX implements ModuleIO {
     inputs.turnAppliedVolts = turnAppliedVolts.getValueAsDouble();
     inputs.turnCurrentAmps = turnCurrent.getValueAsDouble();
 
-    // Update odometry inputs
-    inputs.odometryTimestamps =
-        timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
-    inputs.odometryDrivePositionsRad =
-        drivePositionQueue.stream()
-            .mapToDouble((Double value) -> Units.rotationsToRadians(value))
-            .toArray();
-    inputs.odometryTurnPositions =
-        turnPositionQueue.stream()
-            .map((Double value) -> Rotation2d.fromRotations(value))
-            .toArray(Rotation2d[]::new);
+    // Update odometry inputs (50Hz because high-frequency odometry in sim doesn't matter)
+    inputs.odometryTimestamps = new double[] {Timer.getFPGATimestamp()};
+    inputs.odometryDrivePositionsRad = new double[] {inputs.drivePositionRad};
+    inputs.odometryTurnPositions = new Rotation2d[] {inputs.turnPosition};
+    // // Update odometry inputs
+    // inputs.odometryTimestamps =
+    //     timestampQueue.stream().mapToDouble((Double value) -> value).toArray();
+    // inputs.odometryDrivePositionsRad =
+    //     drivePositionQueue.stream()
+    //         .mapToDouble((Double value) -> Units.rotationsToRadians(value))
+    //         .toArray();
+    // inputs.odometryTurnPositions =
+    //     turnPositionQueue.stream()
+    //         .map((Double value) -> Rotation2d.fromRotations(value))
+    //         .toArray(Rotation2d[]::new);
     timestampQueue.clear();
     drivePositionQueue.clear();
     turnPositionQueue.clear();
