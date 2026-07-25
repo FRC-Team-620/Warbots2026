@@ -110,14 +110,14 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.5;
+    public static final double kP = 0.3;
     public static final double kI = 0.0;
-    public static final double kD = 0.05;
+    public static final double kD = 0.0;
 
-    public static final double kOnboardP = 0.0007;
+    public static final double kOnboardP = 0;
     public static final double kOnboardI = 0.0;
     public static final double kOnboardD = 0.0;
-    public static final double kOnboardV = 0.00188;
+    public static final double kOnboardV = 0;
 
     // public static final double kBaseRPM = 3400;
     public static final double kBaseRPM = 60;

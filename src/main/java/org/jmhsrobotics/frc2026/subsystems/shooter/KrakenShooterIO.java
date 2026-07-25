@@ -20,7 +20,7 @@ import org.littletonrobotics.junction.Logger;
 
 // all of this will be refernced off NeoShooterIO so... take that as you may
 public class KrakenShooterIO implements ShooterIO {
-  public final int testRPM = 60;
+  // public final int testRPM = 3400;
 
   private TalonFX leftTopMotor = new TalonFX(Constants.CAN.kLeftTopShooterMotorID);
   private TalonFX leftBottomMotor = new TalonFX(Constants.CAN.kLeftBottomShooterMotorID);
@@ -61,7 +61,7 @@ public class KrakenShooterIO implements ShooterIO {
     MotorAlignmentValue leftAlignment = MotorAlignmentValue.Aligned;
     MotorAlignmentValue rightAlignment = MotorAlignmentValue.Opposed;
     // TESTING: change to 50
-    final int updatedCurrent = 5;
+    final int updatedCurrent = 50;
 
     followerConfig = new TalonFXConfiguration();
     followerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
@@ -81,8 +81,8 @@ public class KrakenShooterIO implements ShooterIO {
     /* NOTE: THERE IS NO MIN AND MAX EQUIVALET SO WE HAVE TO MAKE SURE TO NEVER MAKE IT NEGATIVE */
     motorConfigLeftTopLeader = new TalonFXConfiguration();
     motorConfigLeftTopLeader.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimit = updatedCurrent;
-    motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimitEnable = true;
+    // motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimit = updatedCurrent;
+    // motorConfigLeftTopLeader.CurrentLimits.StatorCurrentLimitEnable = true;
 
     // THIS IS WHAT I CHANGE IF IT SPINS THE WRONG WAY
     motorConfigLeftTopLeader.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;

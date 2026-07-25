@@ -64,11 +64,13 @@ import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOSimRev;
 import org.jmhsrobotics.frc2026.subsystems.drive.swerve.ModuleIOTalonFX;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.indexer.IndexerIO;
+import org.jmhsrobotics.frc2026.subsystems.indexer.KrakenIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
+import org.jmhsrobotics.frc2026.subsystems.shooter.KrakenShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
@@ -148,10 +150,10 @@ public class RobotContainer {
         feeder = new Feeder(new NeoFeederIO());
         */
         // shooter = new Shooter(new KrakenShooterIO());
-        shooter = new Shooter(new ShooterIO() {});
+        shooter = new Shooter(new KrakenShooterIO());
         intake = new Intake(new IntakeIO() {});
         slapdown = new Slapdown(new SlapdownIO() {});
-        indexer = new Indexer(new IndexerIO() {});
+        indexer = new Indexer(new KrakenIndexerIO());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         // we uh, we dont have a feeder anymore
         // I am however leaving the blank implement bc i dont wanna deal with errors

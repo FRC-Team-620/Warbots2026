@@ -34,7 +34,7 @@ public class KrakenIndexerIO implements IndexerIO {
     MotorAlignmentValue leftAlignment = MotorAlignmentValue.Aligned;
     MotorAlignmentValue rightAlignment = MotorAlignmentValue.Opposed;
     // TESTING: change to 20 (fact check)
-    final int updatedCurrent = 5;
+    final int updatedCurrent = 20;
 
     // lead motor (front left)
     leadMotorConfig = new TalonFXConfiguration();
