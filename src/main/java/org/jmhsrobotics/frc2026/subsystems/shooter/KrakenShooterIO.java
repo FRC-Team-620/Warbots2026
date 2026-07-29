@@ -176,7 +176,8 @@ public class KrakenShooterIO implements ShooterIO {
   @Override
   public void setRPM(double velocityRPM) {
     this.goalRPM = velocityRPM;
-    leftTopMotor.setControl(leftTopVelocityRequest.withVelocity((velocityRPM) / 60.0));
+    this.setVoltage(velocityRPM / 1000);
+    // leftTopMotor.setControl(leftTopVelocityRequest.withVelocity((velocityRPM) / 60.0));
   }
 
   @Override
