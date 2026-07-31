@@ -25,7 +25,7 @@ import org.littletonrobotics.junction.Logger;
 
 // import frc.robot.subsystems.drive.ModuleIOInputsAutoLogged;
 
-public class ModuleThrifty {
+public class Module {
   private final ModuleIO io;
   private final ModuleIOInputsAutoLogged inputs = new ModuleIOInputsAutoLogged();
   private final int index;
@@ -34,7 +34,7 @@ public class ModuleThrifty {
   private final Alert turnDisconnectedAlert;
   private SwerveModulePosition[] odometryPositions = new SwerveModulePosition[] {};
 
-  public ModuleThrifty(ModuleIO io, int index) {
+  public Module(ModuleIO io, int index) {
     this.io = io;
     this.index = index;
     driveDisconnectedAlert =

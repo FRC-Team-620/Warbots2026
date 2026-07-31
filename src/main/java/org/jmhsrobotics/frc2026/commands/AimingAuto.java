@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.controlBoard.ControlBoard;
 import org.jmhsrobotics.frc2026.subsystems.drive.Drive;
-import org.jmhsrobotics.frc2026.subsystems.feeder.Feeder;
 import org.jmhsrobotics.frc2026.subsystems.indexer.Indexer;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.vision.Vision;
@@ -18,13 +17,10 @@ public class AimingAuto extends SequentialCommandGroup {
   private Vision vision;
 
   // x - 3.642  y - 0.452
+  // feeder removed (2026-07-19): dropped the Feeder param since RobotContainer no
+  // longer constructs one — see RobotContainer.java for the full note.
   public AimingAuto(
-      Drive drive,
-      Shooter shooter,
-      Indexer indexer,
-      Feeder feeder,
-      Pose2d pose,
-      ControlBoard control) {
+      Drive drive, Shooter shooter, Indexer indexer, Pose2d pose, ControlBoard control) {
     // this.drive = drive;
     // this.shooter = shooter;
 
@@ -35,7 +31,8 @@ public class AimingAuto extends SequentialCommandGroup {
             new ParallelCommandGroup(
                 new AlignToHub(drive, control),
                 new DistanceAdjustingShoot(shooter, drive),
-                new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle),
-                new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter))));
+                new IndexerMove(indexer, Constants.Indexer.kSpeedDutyCycle)
+                // new Feed(feeder, Constants.Feeder.kSpeedDutyCycle, shooter)
+                )));
   }
 }

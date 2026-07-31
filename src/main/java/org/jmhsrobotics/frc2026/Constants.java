@@ -4,6 +4,8 @@
 
 package org.jmhsrobotics.frc2026;
 
+// HOOD REMOVAL (2026-07-17): removed ShooterConstants.kHoodTolerance — see
+// subsystems/shooter/Shooter.java for the full note.
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -40,17 +42,38 @@ public final class Constants {
   }
 
   public static class CAN {
-    // TODO update CANIds
-    public static final int kCanAndGyroID = 7;
-    public static final int kIntakeMotorID = 41;
-    public static final int kIntakeFollowerMotorID = 42;
-    public static final int kSlapdownMotorID = 40;
-    public static final int kIndexerMotorID = 2;
-    public static final int kClimberMotorID = 30;
-    public static final int kShooterIntakeMotorID = 53;
+    // 10s are drive
+    // 20s are turn
+    // 30s are encoders + gyro
+    // 40s are indexer
+    // 50s are shooter (adjacent)
+    // 60s are slapdown + intake
+
+    public static final int kCanAndGyroID = 35;
+
+    public static final int kFrontLeftIndexerMotorID = 40;
+    public static final int kBackLeftIndexerMotorID = 41;
+    public static final int kFrontRightIndexerMotorID = 42;
+    public static final int kBackRightIndexerMotorID = 43;
+
+    public static final int kLeftTopShooterMotorID = 50;
+    public static final int kLeftBottomShooterMotorID = 51;
+    public static final int kRightTopShooterMotorID = 52;
+    public static final int kRightBottomShooterMotorID = 53;
+
+    public static final int kSlapdownMotorID = 60;
+    public static final int kIntakeMotorID = 61;
+    public static final int kIntakeFollowerMotorID = 62;
+
+    // old shooter & climber constants (delete em?)
     public static final int kLeftFlywheelMotorID = 50;
     public static final int kCenterFlywheelMotorID = 51;
     public static final int kRightFlywheelMotorID = 52;
+
+    public static final int kClimberMotorID = 30;
+
+    // also, feeder dont rlly exist anymore...
+    public static final int kShooterIntakeMotorID = 54;
   }
 
   public static class DoryCAN {
@@ -87,23 +110,27 @@ public final class Constants {
 
   public static class ShooterConstants {
 
-    public static final double kP = 0.5;
+    public static final double kP = 0.3;
     public static final double kI = 0.0;
-    public static final double kD = 0.05;
+    public static final double kD = 0.0;
 
-    public static final double kOnboardP = 0.0007;
+    public static final double kOnboardP = 0;
     public static final double kOnboardI = 0.0;
     public static final double kOnboardD = 0.0;
-    public static final double kOnboardV = 0.00188;
+    public static final double kOnboardV = 0;
 
-    public static final double kBaseRPM = 3400;
+    // public static final double kBaseRPM = 3400;
+    public static final double kBaseRPM = 60;
     public static final double kShooterTolerance = 100;
-    public static final double kShooterDutyCycle = 0.6;
-    public static final double kHoodTolerance = 0.05;
+    // public static final double kShooterDutyCycle = 0.6;
+    public static final double kShooterDutyCycle = 0.05;
     public static final double kShooterRPMOffset = 0.0;
 
-    public static final double kHubSetPointRPM = 2600.0;
-    public static final double kAutoHubSetPointRPM = 2600.0;
+    // public static final double kHubSetPointRPM = 2600.0;
+    // public static final double kAutoHubSetPointRPM = 2600.0;
+    public static final double kHubSetPointRPM = 60;
+    public static final double kAutoHubSetPointRPM = 60;
+
     // FeedForward Constants - These are just guesses, will need to be tuned
     public static final double kS = 0.2; // Static Component of Friction
     public static final double kV = 0.12521; // Velocity Gain
@@ -111,7 +138,8 @@ public final class Constants {
   }
 
   public static class Intake {
-    public static final double kBaseRPM = 3000;
+    // public static final double kBaseRPM = 3000;
+    public static final double kBaseRPM = 60;
 
     public static final double kSpeedDutyCycle = 1.0;
   }
@@ -123,9 +151,9 @@ public final class Constants {
     public static final double kSlapdownJiggleUpDegrees = 70;
     public static final double kSlapdownJiggleDownDegrees = 150;
 
-    public static final double kSlapdownP = 0.1;
+    public static final double kSlapdownP = 20.0;
     public static final double kSlapdownI = 0.0;
-    public static final double kSlapdownD = 0.001;
+    public static final double kSlapdownD = 0.0;
   }
 
   public static class Indexer {

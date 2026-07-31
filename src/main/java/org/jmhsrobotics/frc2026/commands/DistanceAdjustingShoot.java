@@ -1,5 +1,7 @@
 package org.jmhsrobotics.frc2026.commands;
 
+// HOOD REMOVAL (2026-07-17): dropped the hood-position calculation/set calls —
+// see Shooter.java for the full note.
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,10 +44,7 @@ public class DistanceAdjustingShoot extends Command {
     }
     double goalRPM = this.shooter.calculateEstimatedRPM(distance);
     Logger.recordOutput("Shooter/DistanceAdjustedGoal", goalRPM);
-    double hoodPosition = this.shooter.calculateHoodPosition(distance);
-    Logger.recordOutput("Shooter/Hood Position", hoodPosition);
     this.shooter.setRPM(goalRPM);
-    this.shooter.setHoodPosition(hoodPosition);
     // if (goalRPM > 0) {
     //   this.shooter.setRPM(goalRPM);
     // } else {

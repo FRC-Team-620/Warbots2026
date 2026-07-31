@@ -11,7 +11,8 @@ import org.jmhsrobotics.frc2026.Constants;
 import org.jmhsrobotics.frc2026.util.SparkUtil;
 
 public class NeoIndexerIO implements IndexerIO {
-  private SparkMax motor = new SparkMax(Constants.CAN.kIndexerMotorID, MotorType.kBrushless);
+  private SparkMax motor =
+      new SparkMax(Constants.CAN.kFrontLeftIndexerMotorID, MotorType.kBrushless);
   private SparkMaxConfig motorConfig;
   private RelativeEncoder encoder = motor.getEncoder();
   private double speedRPM;
