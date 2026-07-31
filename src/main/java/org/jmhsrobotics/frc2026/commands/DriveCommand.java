@@ -131,7 +131,7 @@ public class DriveCommand extends Command {
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
 
-    ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
+    ChassisSpeeds speeds = new ChassisSpeeds(xSpeed * 2, ySpeed * 2, rotationSpeed);
     speeds =
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,

@@ -33,7 +33,7 @@ public class KrakenIntakeIO implements IntakeIO {
 
   public KrakenIntakeIO() {
     // TESTING: change to 30 (fact check);
-    final int updatedCurrent = 5;
+    final int updatedCurrent = 20;
 
     // LEADER CONFIG (left)
     intakeLeaderConfig = new TalonFXConfiguration();

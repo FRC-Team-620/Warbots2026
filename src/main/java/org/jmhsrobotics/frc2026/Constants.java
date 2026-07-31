@@ -151,9 +151,9 @@ public final class Constants {
     public static final double kSlapdownJiggleUpDegrees = 70;
     public static final double kSlapdownJiggleDownDegrees = 150;
 
-    public static final double kSlapdownP = 0.1;
+    public static final double kSlapdownP = 20.0;
     public static final double kSlapdownI = 0.0;
-    public static final double kSlapdownD = 0.001;
+    public static final double kSlapdownD = 0.0;
   }
 
   public static class Indexer {

@@ -68,12 +68,14 @@ import org.jmhsrobotics.frc2026.subsystems.indexer.KrakenIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.indexer.SimIndexerIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.Intake;
 import org.jmhsrobotics.frc2026.subsystems.intake.IntakeIO;
+import org.jmhsrobotics.frc2026.subsystems.intake.KrakenIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.intake.SimIntakeIO;
 import org.jmhsrobotics.frc2026.subsystems.led.LED;
 import org.jmhsrobotics.frc2026.subsystems.shooter.KrakenShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.Shooter;
 import org.jmhsrobotics.frc2026.subsystems.shooter.ShooterIO;
 import org.jmhsrobotics.frc2026.subsystems.shooter.SimShooterIO;
+import org.jmhsrobotics.frc2026.subsystems.slapdown.KrakenSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SimSlapdownIO;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.Slapdown;
 import org.jmhsrobotics.frc2026.subsystems.slapdown.SlapdownIO;
@@ -149,10 +151,9 @@ public class RobotContainer {
                     VisionConstants.camera1Name, VisionConstants.robotToCamera1));
         feeder = new Feeder(new NeoFeederIO());
         */
-        // shooter = new Shooter(new KrakenShooterIO());
         shooter = new Shooter(new KrakenShooterIO());
-        intake = new Intake(new IntakeIO() {});
-        slapdown = new Slapdown(new SlapdownIO() {});
+        intake = new Intake(new KrakenIntakeIO());
+        slapdown = new Slapdown(new KrakenSlapdownIO());
         indexer = new Indexer(new KrakenIndexerIO());
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         // we uh, we dont have a feeder anymore
@@ -326,15 +327,16 @@ public class RobotContainer {
         .slapdownMoveDown()
         .onTrue(
             new SequentialCommandGroup(
-                new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees)
-                    .withTimeout(1.5),
+                // new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownDownPositionDegrees)
+                new SlapdownMove(slapdown, 0).withTimeout(1.5),
                 new IntakeMoveAntiJam(intake, Constants.Intake.kSpeedDutyCycle)));
     control
         .slapdownMoveUp()
         .onTrue(
             new ParallelRaceGroup(
                 new IntakeMove(intake, Constants.Intake.kSpeedDutyCycle / 3),
-                new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
+                // new SlapdownMove(slapdown, Constants.Slapdown.kSlapdownUpPositionDegrees)));
+                new SlapdownMove(slapdown, 0.3)));
 
     // Intake Bindings
     control

@@ -35,7 +35,7 @@ public class KrakenSlapdownIO implements SlapdownIO {
     // slapdown is 20:1 ratio
 
     // TESTING: change to 35 (fact check)
-    final int updatedCurrent = 5;
+    final int updatedCurrent = 35;
 
     slapdownKrakenMotorConfig = new TalonFXConfiguration();
     slapdownKrakenMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
