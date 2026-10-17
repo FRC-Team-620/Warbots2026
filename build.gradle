@@ -215,7 +215,7 @@ spotless {
 def controlDiagramTool = 'docs/controls/tools/ControlDiagramGenerator.java'
 tasks.register('controlDiagrams', Exec) {
     group = 'documentation'
-    description = 'Generate versioned controller diagrams and MASTER.md from the ControlBoard classes'
+    description = 'Generate versioned controller diagrams and MASTER_CONTROLLER-LAYOUT.md from the controlBoard files'
     workingDir projectDir
     def toolArgs = ['generate']
     if (project.hasProperty('note')) {

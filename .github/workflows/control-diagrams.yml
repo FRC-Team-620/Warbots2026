@@ -1,12 +1,13 @@
 name: Controller Diagrams
 
-# Regenerates docs/controls diagrams + MASTER.md whenever keybindings change, and commits the
-# result back to the same branch. Commits made with GITHUB_TOKEN do not re-trigger workflows.
+# Regenerates docs/controls diagrams + MASTER_CONTROLLER-LAYOUT.md whenever keybindings change, and
+# commits the result back to the same branch. Only the keybinding files (controlBoard/) and the
+# diagram's own config trigger it; other robot code never does, to avoid merge conflicts.
+# Commits made with GITHUB_TOKEN do not re-trigger workflows.
 on:
   push:
     paths:
       - 'src/main/java/org/jmhsrobotics/frc2026/controlBoard/**'
-      - 'src/main/java/org/jmhsrobotics/frc2026/RobotContainer.java'
       - 'docs/controls/*.properties'
       - 'docs/controls/controller-layouts/**'
       - 'docs/controls/tools/**'
@@ -41,7 +42,7 @@ jobs:
 
       - name: Commit updated diagrams
         run: |
-          git add docs/controls/diagrams docs/controls/MASTER.md docs/controls/controller-layouts
+          git add docs/controls/diagrams docs/controls/MASTER_CONTROLLER-LAYOUT.md docs/controls/controller-layouts
           if git diff --cached --quiet; then
             echo "Diagrams already up to date"
             exit 0

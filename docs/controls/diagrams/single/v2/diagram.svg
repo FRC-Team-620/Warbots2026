@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="678" viewBox="0 0 1280 678" font-family="Helvetica, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="40.0" y="44.0" font-size="26" font-weight="700" fill="#111827" text-anchor="start">Warbots 2026  -  Unified Controller  -  v2</text>
+<text x="40.0" y="68.0" font-size="13" font-weight="400" fill="#6b7280" text-anchor="start">Generated 2026-10-17 from SingleControl.java @ 7152242</text>
+<text x="40.0" y="96.0" font-size="20" font-weight="700" fill="#111827" text-anchor="start">Driver + Operator  ·  port 0</text>
+<line x1="40" y1="106" x2="1240" y2="106" stroke="#e5e7eb" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 340" x="390" y="130" width="500" height="340">
+  <g fill="none" stroke="#2b2b2b" stroke-width="3" stroke-linejoin="round">
+    <!-- triggers -->
+    <rect x="108" y="6" width="74" height="30" rx="10" fill="#d9d9d9"/>
+    <rect x="318" y="6" width="74" height="30" rx="10" fill="#d9d9d9"/>
+    <!-- bumpers -->
+    <rect x="92" y="40" width="116" height="20" rx="10" fill="#c4c4c4"/>
+    <rect x="292" y="40" width="116" height="20" rx="10" fill="#c4c4c4"/>
+    <!-- body -->
+    <path fill="#efefef" d="M120 62 C 62 62, 32 112, 22 200 C 12 282, 34 332, 78 332 C 112 332, 132 292, 162 256 L 338 256 C 368 292, 388 332, 422 332 C 466 332, 488 282, 478 200 C 468 112, 438 62, 380 62 Z"/>
+    <!-- guide button -->
+    <circle cx="250" cy="100" r="18" fill="#d9d9d9"/>
+    <!-- back / start -->
+    <rect x="203" y="132" width="24" height="14" rx="7" fill="#c4c4c4"/>
+    <rect x="273" y="132" width="24" height="14" rx="7" fill="#c4c4c4"/>
+    <!-- left stick -->
+    <circle cx="140" cy="140" r="36" fill="#d9d9d9"/>
+    <circle cx="140" cy="140" r="24" fill="#bdbdbd"/>
+    <!-- right stick -->
+    <circle cx="305" cy="215" r="36" fill="#d9d9d9"/>
+    <circle cx="305" cy="215" r="24" fill="#bdbdbd"/>
+    <!-- d-pad -->
+    <path fill="#c4c4c4" d="M183 180 h24 v23 h23 v24 h-23 v23 h-24 v-23 h-23 v-24 h23 Z"/>
+  </g>
+  <!-- face buttons -->
+  <g stroke="#2b2b2b" stroke-width="3">
+    <circle cx="372" cy="106" r="15" fill="#f2c94c"/>
+    <circle cx="340" cy="138" r="15" fill="#5b8def"/>
+    <circle cx="404" cy="138" r="15" fill="#e05a4f"/>
+    <circle cx="372" cy="170" r="15" fill="#5cb85c"/>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="15" fill="#ffffff" text-anchor="middle">
+    <text x="372" y="111">Y</text><text x="340" y="143">X</text>
+    <text x="404" y="143">B</text><text x="372" y="175">A</text>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="12" fill="#2b2b2b" text-anchor="middle">
+    <text x="145" y="26">LT</text><text x="355" y="26">RT</text>
+    <text x="150" y="55">LB</text><text x="350" y="55">RB</text>
+    <text x="140" y="144">L</text><text x="305" y="219">R</text>
+  </g>
+</svg>
+<path d="M510.0 151.0 L378 151.0 L356 151.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M510.0 151.0 L378 151.0 L356 151.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="510.0" cy="151.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="156.0" font-size="15" font-weight="700" fill="#111827" text-anchor="end">LT</text>
+<text x="350.0" y="173.0" font-size="14" font-weight="400" fill="#c2410c" text-anchor="end">Feed + distance-adjusted shoot</text>
+<path d="M490.0 180.0 L378 195.0 L356 195.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M490.0 180.0 L378 195.0 L356 195.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="490.0" cy="180.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="200.0" font-size="15" font-weight="700" fill="#dc2626" text-anchor="end">LB  - CONFLICT</text>
+<text x="350.0" y="217.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="end">Indexer on (hold)</text>
+<text x="350.0" y="234.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="end">Turbo (hold)</text>
+<path d="M502.0 270.0 L378 270.0 L356 270.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M502.0 270.0 L378 270.0 L356 270.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="502.0" cy="270.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="275.0" font-size="15" font-weight="700" fill="#111827" text-anchor="end">Left stick</text>
+<text x="350.0" y="292.0" font-size="14" font-weight="400" fill="#1c64d1" text-anchor="end">X axis: Drive left / right</text>
+<text x="350.0" y="309.0" font-size="14" font-weight="400" fill="#1c64d1" text-anchor="end">Y axis: Drive forward / back</text>
+<text x="350.0" y="326.0" font-size="14" font-weight="400" fill="#c2410c" text-anchor="end">press: Spin up for hub shot (hold)</text>
+<path d="M585.0 316.0 L378 348.0 L356 348.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M585.0 316.0 L378 348.0 L356 348.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="585.0" cy="316.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="353.0" font-size="15" font-weight="700" fill="#111827" text-anchor="end">D-pad up</text>
+<text x="350.0" y="370.0" font-size="14" font-weight="400" fill="#0e7490" text-anchor="end">Climber up</text>
+<path d="M556.0 345.0 L378 392.0 L356 392.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M556.0 345.0 L378 392.0 L356 392.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="556.0" cy="345.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="397.0" font-size="15" font-weight="700" fill="#dc2626" text-anchor="end">D-pad left  - CONFLICT</text>
+<text x="350.0" y="414.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="end">Climber extend hooks</text>
+<text x="350.0" y="431.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="end">Slapdown down + start intake</text>
+<path d="M614.0 345.0 L378 453.0 L356 453.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M614.0 345.0 L378 453.0 L356 453.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="614.0" cy="345.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="458.0" font-size="15" font-weight="700" fill="#dc2626" text-anchor="end">D-pad right  - CONFLICT</text>
+<text x="350.0" y="475.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="end">Climber retract hooks</text>
+<text x="350.0" y="492.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="end">Slapdown up</text>
+<path d="M585.0 374.0 L378 514.0 L356 514.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M585.0 374.0 L378 514.0 L356 514.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="585.0" cy="374.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="350.0" y="519.0" font-size="15" font-weight="700" fill="#111827" text-anchor="end">D-pad down</text>
+<text x="350.0" y="536.0" font-size="14" font-weight="400" fill="#0e7490" text-anchor="end">Climber down</text>
+<path d="M770.0 151.0 L902 151.0 L924 151.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M770.0 151.0 L902 151.0 L924 151.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="770.0" cy="151.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="930.0" y="156.0" font-size="15" font-weight="700" fill="#111827" text-anchor="start">RT</text>
+<text x="930.0" y="173.0" font-size="14" font-weight="400" fill="#1c64d1" text-anchor="start">Auto-aim at hub (hold)</text>
+<path d="M790.0 180.0 L902 195.0 L924 195.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M790.0 180.0 L902 195.0 L924 195.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="790.0" cy="180.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="930.0" y="200.0" font-size="15" font-weight="700" fill="#111827" text-anchor="start">RB</text>
+<text x="930.0" y="217.0" font-size="14" font-weight="400" fill="#1c64d1" text-anchor="start">Reset field-forward</text>
+<path d="M806.0 268.0 L902 268.0 L924 268.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M806.0 268.0 L902 268.0 L924 268.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="806.0" cy="268.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="930.0" y="273.0" font-size="15" font-weight="700" fill="#111827" text-anchor="start">B</text>
+<text x="930.0" y="290.0" font-size="14" font-weight="400" fill="#15803d" text-anchor="start">Intake on</text>
+<path d="M730.0 282.0 L902 312.0 L924 312.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M730.0 282.0 L902 312.0 L924 312.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="730.0" cy="282.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="930.0" y="317.0" font-size="15" font-weight="700" fill="#111827" text-anchor="start">X</text>
+<text x="930.0" y="334.0" font-size="14" font-weight="400" fill="#15803d" text-anchor="start">Extake fuel (reverse intake + indexer)</text>
+<path d="M774.0 304.0 L902 356.0 L924 356.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M774.0 304.0 L902 356.0 L924 356.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="774.0" cy="304.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="930.0" y="361.0" font-size="15" font-weight="700" fill="#111827" text-anchor="start">A</text>
+<text x="930.0" y="378.0" font-size="14" font-weight="400" fill="#15803d" text-anchor="start">Intake off</text>
+<path d="M723.0 345.0 L902 400.0 L924 400.0" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-opacity="0.85"/>
+<path d="M723.0 345.0 L902 400.0 L924 400.0" fill="none" stroke="#374151" stroke-width="1.5"/>
+<circle cx="723.0" cy="345.0" r="4.5" fill="#111827" stroke="#ffffff" stroke-width="2"/>
+<text x="930.0" y="405.0" font-size="15" font-weight="700" fill="#dc2626" text-anchor="start">Right stick  - CONFLICT</text>
+<text x="930.0" y="422.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="start">X axis: Rotate</text>
+<text x="930.0" y="439.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="start">X axis: Absolute heading</text>
+<text x="930.0" y="456.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="start">press: Hood down</text>
+<text x="930.0" y="473.0" font-size="14" font-weight="400" fill="#dc2626" text-anchor="start">press: Run feeder + slapdown jiggle (hold)</text>
+<rect x="40" y="564" width="14" height="14" rx="3" fill="#1c64d1"/>
+<text x="60.0" y="576.0" font-size="14" font-weight="400" fill="#111827" text-anchor="start">Drive</text>
+<rect x="125" y="564" width="14" height="14" rx="3" fill="#c2410c"/>
+<text x="145.0" y="576.0" font-size="14" font-weight="400" fill="#111827" text-anchor="start">Shooter</text>
+<rect x="228" y="564" width="14" height="14" rx="3" fill="#15803d"/>
+<text x="248.0" y="576.0" font-size="14" font-weight="400" fill="#111827" text-anchor="start">Intake</text>
+<rect x="322" y="564" width="14" height="14" rx="3" fill="#7c3aed"/>
+<text x="342.0" y="576.0" font-size="14" font-weight="400" fill="#111827" text-anchor="start">Indexer</text>
+<rect x="425" y="564" width="14" height="14" rx="3" fill="#0e7490"/>
+<text x="445.0" y="576.0" font-size="14" font-weight="400" fill="#111827" text-anchor="start">Climber</text>
+<text x="40.0" y="600.0" font-size="14" font-weight="700" fill="#dc2626" text-anchor="start">red = two functions on one input</text>
+<text x="40.0" y="628.0" font-size="14" font-weight="400" fill="#374151" text-anchor="start">Not on a button: Face drive direction (hold), Slow mode (hold), Field yeet: aim + hood up + spin up (hold)</text>
+</svg>

@@ -25,6 +25,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class ControlDiagramTest {
   static final String CONTROLS = "docs/controls";
   static final String BOARD_DIR = "src/main/java/org/jmhsrobotics/frc2026/controlBoard";
+  static final String MASTER = "MASTER_CONTROLLER-LAYOUT.md";
 
   record Result(int exit, String output) {}
 
@@ -53,12 +54,13 @@ public class ControlDiagramTest {
     test("diagrams match the ControlBoard code (check)", ControlDiagramTest::realCheck);
     test("every controller layout is valid", ControlDiagramTest::realLayouts);
     test("every diagram SVG is well-formed XML", ControlDiagramTest::realSvgs);
-    test("MASTER.md links point at real files", ControlDiagramTest::realMasterLinks);
+    test("MASTER links point at real files", ControlDiagramTest::realMasterLinks);
 
     System.out.println("\n== Generator behavior (sandbox) ==");
     test("first run creates v1, rerun creates nothing", ControlDiagramTest::versioning);
     test("binding change is caught by check and makes v2", ControlDiagramTest::bindingChange);
-    test("conflicts, not-wired and unbound functions are flagged", ControlDiagramTest::flags);
+    test("conflicts and unbound functions are flagged", ControlDiagramTest::flags);
+    test("diagrams ignore every file except the keybindings", ControlDiagramTest::onlyKeybindings);
     test("layouts with keybindings are rejected", ControlDiagramTest::layoutGuard);
     test("a button with no anchor is an error", ControlDiagramTest::missingAnchor);
     test("non-Xbox controllers (button(3), pov(90)) work", ControlDiagramTest::joystick);
@@ -146,14 +148,14 @@ public class ControlDiagramTest {
   }
 
   static void realMasterLinks() throws Exception {
-    Path master = repo.resolve(CONTROLS + "/MASTER.md");
+    Path master = repo.resolve(CONTROLS + "/" + MASTER);
     Matcher m = Pattern.compile("\\]\\((diagrams/[^)]+)\\)").matcher(Files.readString(master));
     int links = 0;
     while (m.find()) {
       links++;
       expect(Files.exists(master.getParent().resolve(m.group(1))), "broken link " + m.group(1));
     }
-    expect(links > 0, "MASTER.md has no diagram links");
+    expect(links > 0, MASTER + " has no diagram links");
   }
 
   // ===================== sandbox =====================
@@ -166,7 +168,7 @@ public class ControlDiagramTest {
         Files.readString(sb.resolve(CONTROLS + "/controller-layouts/xbox/v1/layout.svg"));
     expect(sheet.contains("leftBumper()"), "layout.svg missing button calls");
     expect(!sheet.contains("Intake on"), "layout.svg must not contain keybindings");
-    expect(Files.exists(sb.resolve(CONTROLS + "/MASTER.md")), "no MASTER.md");
+    expect(Files.exists(sb.resolve(CONTROLS + "/" + MASTER)), "no " + MASTER);
     Result again = gen(sb, "generate");
     expectOk(again);
     expect(again.output().contains("unchanged"), "rerun should report unchanged");
@@ -186,7 +188,7 @@ public class ControlDiagramTest {
     expect(
         read(sb, "diagrams/test/v1/bindings.md").contains("| B |"), "v1 must keep the old binding");
     expect(read(sb, "diagrams/test/v2/bindings.md").contains("| Y |"), "v2 missing new binding");
-    String master = read(sb, "MASTER.md");
+    String master = read(sb, MASTER);
     expect(master.contains("**Current: v2**"), "MASTER should show v2 as current");
     expect(master.contains("moved shoot to Y"), "MASTER history missing the note");
     expect(master.contains("diagrams/test/v1/diagram.svg"), "MASTER history missing v1");
@@ -199,8 +201,23 @@ public class ControlDiagramTest {
     expect(row(md, "A", "Intake on").endsWith("| **CONFLICT** |"), "intakeOn on A not a CONFLICT");
     expect(row(md, "A", "Outtake").endsWith("| **CONFLICT** |"), "outtake on A not a CONFLICT");
     expect(row(md, "B", "Shoot").endsWith("| ok |"), "shoot on B should be ok");
-    expect(row(md, "X", "Climb").endsWith("| not wired in robot code |"), "climb not 'not wired'");
+    expect(row(md, "X", "Climb").endsWith("| ok |"), "climb should be ok in the diagram");
+    expect(!md.contains("not wired"), "diagrams must not depend on other robot code");
     expect(md.contains("**Not on a button in this config:** Turbo"), "turbo should be unbound");
+  }
+
+  static void onlyKeybindings() throws Exception {
+    Path sb = sandbox();
+    expectOk(gen(sb, "generate"));
+    Path rc = sb.resolve("src/main/java/org/jmhsrobotics/frc2026/RobotContainer.java");
+    write(rc, "class RobotContainer {}\n"); // every function now unused by robot code
+    write(
+        sb.resolve("src/main/java/Other.java"), "class Other { void x() { control.shoot(); } }\n");
+    expectOk(gen(sb, "check"));
+    Result again = gen(sb, "generate");
+    expectOk(again);
+    expect(
+        !Files.exists(sb.resolve(CONTROLS + "/diagrams/test/v2")), "non-keybinding edit made v2");
   }
 
   static void layoutGuard() throws Exception {
@@ -291,18 +308,18 @@ public class ControlDiagramTest {
   static void signOff() throws Exception {
     Path sb = sandbox();
     expectOk(gen(sb, "generate"));
-    expect(read(sb, "MASTER.md").contains("Human check: **not yet checked**"), "v1 not marked");
+    expect(read(sb, MASTER).contains("Human check: **not yet checked**"), "v1 not marked");
     expect(gen(sb, "sign-off", "test").exit() != 0, "sign-off without --by must fail");
     expectOk(gen(sb, "sign-off", "test", "--by", "Test Person", "--note", "drive team ok"));
     expect(
-        read(sb, "MASTER.md").contains("checked by Test Person ("),
-        "MASTER missing the sign-off:\n" + read(sb, "MASTER.md"));
+        read(sb, MASTER).contains("checked by Test Person ("),
+        "MASTER missing the sign-off:\n" + read(sb, MASTER));
     expectOk(gen(sb, "check"));
 
     Path impl = sb.resolve(BOARD_DIR + "/TestControl.java");
     write(impl, Files.readString(impl).replace("return driver.b();", "return driver.y();"));
     expectOk(gen(sb, "generate"));
-    String master = read(sb, "MASTER.md");
+    String master = read(sb, MASTER);
     expect(master.contains("Human check: **not yet checked**"), "v2 should need a new check");
     expect(master.contains("checked by Test Person"), "v1 history lost its sign-off");
   }
@@ -317,6 +334,7 @@ public class ControlDiagramTest {
     expect(html.contains("<h3>xbox/v1</h3>"), "review page missing the layout");
     expect(html.contains("sign-off test --by"), "review page missing sign-off command");
     expect(html.contains("Driver Station USB tab"), "review page missing on-robot checks");
+    expect(html.contains("<code>climb()</code>"), "review page should list climb as unused");
   }
 
   /**

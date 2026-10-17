@@ -3,27 +3,39 @@
 Driver and operator controller diagrams generated from the keybinding code, so they always
 match the robot.
 
-- **Diagrams:** [MASTER.md](MASTER.md), always the current version. Link people here.
-- **What changed:** [RELEASE_NOTES.md](RELEASE_NOTES.md)
+- **Diagrams:** [MASTER_CONTROLLER-LAYOUT.md](MASTER_CONTROLLER-LAYOUT.md), always the current version. Link people here.
+- **What changed:** [RELEASE_NOTES_CONTROLLER-LAYOUT.md](RELEASE_NOTES_CONTROLLER-LAYOUT.md)
 
 To see the images in VS Code, open a `.md` file and press `Cmd+Shift+V` (`Ctrl+Shift+V` on
 Windows). GitHub shows them inline.
 
 ## How it works
 
-`SingleControl.java` (unified) and `DoubleControl.java` (driver + operator) say which button
-runs each robot function. The generator reads them and draws the diagrams. Each change to the
-bindings creates a new version, and old versions are kept.
+The diagrams are built only from the keybinding files in
+`src/main/java/org/jmhsrobotics/frc2026/controlBoard/`:
+
+- `ControlBoard.java`: the list of robot functions (no buttons)
+- `DoubleControl.java`: driver and operator buttons. **This is the one the robot uses**
+  (`new DoubleControl()` in `RobotContainer.java`), so the Dual Controller diagram matches the
+  robot.
+- `SingleControl.java`: unified controller buttons, only used if `RobotContainer.java` is
+  switched to `new SingleControl()`
+
+Edits to other robot code (including `RobotContainer.java`) never change a diagram or trigger
+the GitHub Action, which keeps merge conflicts down. Each change to the bindings creates a new
+version, and old versions are kept.
 
 ```
 docs/controls/
-├── MASTER.md               GENERATED: current diagrams + history. Don't edit.
-├── configs.properties      which Java class and controller picture each config uses
-├── functions.properties    robot function -> label shown on the diagram
-├── controller-sources/     original pictures, never edited
-├── controller-layouts/     <type>/vN/: picture + button positions, no keybindings
-├── diagrams/               GENERATED: <config>/vN/diagram.svg + bindings.md
-└── tools/                  generator + tests
+├── MASTER_CONTROLLER-LAYOUT.md         GENERATED: current diagrams + history. Don't edit.
+├── README_CONTROLLER-LAYOUT.md         this file
+├── RELEASE_NOTES_CONTROLLER-LAYOUT.md  what changed
+├── configs.properties                  which Java class and controller picture each config uses
+├── functions.properties                robot function -> label shown on the diagram
+├── controller-sources/                 original pictures, never edited
+├── controller-layouts/                 <type>/vN/: picture + button positions, no keybindings
+├── diagrams/                           GENERATED: <config>/vN/diagram.svg + bindings.md
+└── tools/                              generator + tests
 ```
 
 Keybindings appear only in `diagrams/`. A layout that contains one is rejected.
@@ -33,7 +45,7 @@ Layouts: `xbox/v1` (in use by all configs), `gamesir-tarantula-2k/v2` (drawing),
 
 ## Changing a keybinding
 
-1. Edit `SingleControl.java` or `DoubleControl.java`.
+1. Edit `DoubleControl.java` (what the robot uses) or `SingleControl.java`.
 2. For a new function, also add a label to `functions.properties`:
    `fn.myFunction=Intake|Text drivers read`.
 3. Push. A GitHub Action regenerates the diagrams and commits them to your branch, so
@@ -70,7 +82,7 @@ so the button positions still line up.
 ./gradlew testControlDiagrams     # or: java docs/controls/tools/ControlDiagramTest.java
 ```
 
-It runs 15 checks in about 20 seconds and exits 1 on failure. The GitHub Action runs it too.
+It runs 16 checks in about 20 seconds and exits 1 on failure. The GitHub Action runs it too.
 
 **Human,** after every new version and before events:
 
@@ -79,14 +91,15 @@ It runs 15 checks in about 20 seconds and exits 1 on failure. The GitHub Action 
    robot.
 3. Sign off: `java docs/controls/tools/ControlDiagramGenerator.java sign-off dual --by "Name"`.
 
-MASTER.md marks unchecked versions **not yet checked**.
+The MASTER file marks unchecked versions **not yet checked**.
 
 ## Reading a diagram
 
 - **Colors** show the mechanism.
 - **Red CONFLICT** means one button runs two things.
-- **Grey *not wired*** means the button is bound in code but does nothing on the robot.
 - **Not on a button** means the function has no button in this config.
+- Buttons bound in code but never used by the robot are listed on the review page, not on the
+  diagram.
 
 ## Commands
 

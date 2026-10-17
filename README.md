@@ -25,7 +25,7 @@ TODO: Ascope Custom Assets configurations
 [Google Drive Programming Folder](https://docs.google.com/document/d/1wnJfbLzpVgwjBBD8k-uFfK8kBwKNOHNH9EUZB00zbIM/edit?tab=t.0)
 
 # Driver and Operator Competition Controls
-[Controller Diagrams (generated from code)](docs/controls/MASTER.md) - how it works: [docs/controls/README.md](docs/controls/README.md)
+[Controller Diagrams (generated from code)](docs/controls/MASTER_CONTROLLER-LAYOUT.md) - how it works: [docs/controls/README_CONTROLLER-LAYOUT.md](docs/controls/README_CONTROLLER-LAYOUT.md)
 
 [Controls Document](https://docs.google.com/document/d/15Jkrab26Lnp2WN2_DIrBzKSFo-tVKhKQ2jnwQdINcyA/edit?tab=t.0)
 [Detailed Control Document](https://docs.google.com/document/d/1xO8T9W-RT8Sr_g6wulEiTy04_EeWa1I-H3vwEWQH71w/edit?usp=sharing)
