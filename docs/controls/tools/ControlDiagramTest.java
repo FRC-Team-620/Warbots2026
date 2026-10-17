@@ -65,6 +65,8 @@ public class ControlDiagramTest {
     test("add-source never overwrites an original", ControlDiagramTest::addSource);
     test("add-layout makes the next version with image size", ControlDiagramTest::addLayout);
     test("generated SVG is well-formed XML", ControlDiagramTest::sandboxSvg);
+    test("sign-off is recorded; a new version needs a new check", ControlDiagramTest::signOff);
+    test("review page lists diagrams, layouts and checklists", ControlDiagramTest::reviewPage);
 
     for (Path sb : sandboxes) deleteTree(sb);
     System.out.println();
@@ -84,7 +86,8 @@ public class ControlDiagramTest {
       System.out.println("  PASS  " + name);
     } catch (Throwable t) {
       failures.add(name + ": " + t.getMessage());
-      System.out.println("  FAIL  " + name + "\n        " + t.getMessage().replace("\n", "\n        "));
+      System.out.println(
+          "  FAIL  " + name + "\n        " + t.getMessage().replace("\n", "\n        "));
     }
   }
 
@@ -127,6 +130,8 @@ public class ControlDiagramTest {
         expect(x >= 0 && x <= w && y >= 0 && y <= h, ref + ": " + k + " is outside the picture");
         expect(v[2].trim().matches("left|right"), ref + ": " + k + " side must be left or right");
       }
+      expect(Files.exists(dir.resolve("layout.svg")), ref + ": no layout.svg, run generate");
+      parseXml(dir.resolve("layout.svg"));
       Result r = gen(repo, "preview-layout", ref);
       expect(r.exit() == 0, ref + ": " + r.output());
     }
@@ -157,6 +162,10 @@ public class ControlDiagramTest {
     Path sb = sandbox();
     expectOk(gen(sb, "generate"));
     expect(Files.exists(sb.resolve(CONTROLS + "/diagrams/test/v1/diagram.svg")), "no v1 diagram");
+    String sheet =
+        Files.readString(sb.resolve(CONTROLS + "/controller-layouts/xbox/v1/layout.svg"));
+    expect(sheet.contains("leftBumper()"), "layout.svg missing button calls");
+    expect(!sheet.contains("Intake on"), "layout.svg must not contain keybindings");
     expect(Files.exists(sb.resolve(CONTROLS + "/MASTER.md")), "no MASTER.md");
     Result again = gen(sb, "generate");
     expectOk(again);
@@ -175,8 +184,7 @@ public class ControlDiagramTest {
     expect(check.output().contains("STALE"), "check should say STALE");
     expectOk(gen(sb, "generate", "--note", "moved shoot to Y"));
     expect(
-        read(sb, "diagrams/test/v1/bindings.md").contains("| B |"),
-        "v1 must keep the old binding");
+        read(sb, "diagrams/test/v1/bindings.md").contains("| B |"), "v1 must keep the old binding");
     expect(read(sb, "diagrams/test/v2/bindings.md").contains("| Y |"), "v2 missing new binding");
     String master = read(sb, "MASTER.md");
     expect(master.contains("**Current: v2**"), "MASTER should show v2 as current");
@@ -280,6 +288,37 @@ public class ControlDiagramTest {
     parseXml(sb.resolve("build/control-layouts/xbox-v1.svg"));
   }
 
+  static void signOff() throws Exception {
+    Path sb = sandbox();
+    expectOk(gen(sb, "generate"));
+    expect(read(sb, "MASTER.md").contains("Human check: **not yet checked**"), "v1 not marked");
+    expect(gen(sb, "sign-off", "test").exit() != 0, "sign-off without --by must fail");
+    expectOk(gen(sb, "sign-off", "test", "--by", "Test Person", "--note", "drive team ok"));
+    expect(
+        read(sb, "MASTER.md").contains("checked by Test Person ("),
+        "MASTER missing the sign-off:\n" + read(sb, "MASTER.md"));
+    expectOk(gen(sb, "check"));
+
+    Path impl = sb.resolve(BOARD_DIR + "/TestControl.java");
+    write(impl, Files.readString(impl).replace("return driver.b();", "return driver.y();"));
+    expectOk(gen(sb, "generate"));
+    String master = read(sb, "MASTER.md");
+    expect(master.contains("Human check: **not yet checked**"), "v2 should need a new check");
+    expect(master.contains("checked by Test Person"), "v1 history lost its sign-off");
+  }
+
+  static void reviewPage() throws Exception {
+    Path sb = sandbox();
+    expectOk(gen(sb, "generate"));
+    expectOk(gen(sb, "review"));
+    String html = Files.readString(sb.resolve("build/control-review/index.html"));
+    expect(html.contains("Test Controller - v1"), "review page missing the diagram");
+    expect(html.contains("../../docs/controls/diagrams/test/v1/diagram.svg"), "bad diagram path");
+    expect(html.contains("<h3>xbox/v1</h3>"), "review page missing the layout");
+    expect(html.contains("sign-off test --by"), "review page missing sign-off command");
+    expect(html.contains("Driver Station USB tab"), "review page missing on-robot checks");
+  }
+
   /**
    * A tiny fake repo: one config on the real xbox/v1 layout. Bindings: A = intakeOn + outtake
    * (conflict), B = shoot, X = climb (never used by RobotContainer), turbo has no button.
@@ -341,13 +380,7 @@ public class ControlDiagramTest {
   }
 
   static String method(String type, String name, String body) {
-    return "  @Override\n  public "
-        + type
-        + " "
-        + name
-        + "() {\n    return "
-        + body
-        + ";\n  }\n\n";
+    return "  @Override\n  public " + type + " " + name + "() {\n    return " + body + ";\n  }\n\n";
   }
 
   // ===================== helpers =====================

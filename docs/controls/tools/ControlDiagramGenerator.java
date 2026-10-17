@@ -30,6 +30,8 @@ import java.util.stream.Stream;
  *   java docs/controls/tools/ControlDiagramGenerator.java add-source &lt;type&gt; &lt;original image&gt;
  *   java docs/controls/tools/ControlDiagramGenerator.java add-layout &lt;type&gt; &lt;image&gt; [--from xbox/v1]
  *   java docs/controls/tools/ControlDiagramGenerator.java preview-layout &lt;type&gt;/v&lt;N&gt;
+ *   java docs/controls/tools/ControlDiagramGenerator.java review
+ *   java docs/controls/tools/ControlDiagramGenerator.java sign-off &lt;config&gt; --by "Name" [--note "..."]
  * </pre>
  *
  * Or through Gradle: {@code ./gradlew controlDiagrams -Pnote="why"}.
@@ -107,11 +109,20 @@ public class ControlDiagramGenerator {
         if (args.length < 2) die("usage: preview-layout <type>/v<N>");
         previewLayout(args[1]);
       }
+      case "review" -> review();
+      case "sign-off" -> {
+        if (args.length < 2) die("usage: sign-off <config> --by \"Name\" [--note \"...\"]");
+        String[] rest = new String[args.length - 1];
+        rest[0] = "sign-off";
+        System.arraycopy(args, 2, rest, 1, args.length - 2);
+        signOff(args[1], parseFlags(rest));
+      }
       default ->
           die(
               "unknown command '"
                   + cmd
-                  + "' (generate | check | add-source | add-layout | preview-layout)");
+                  + "' (generate | check | add-source | add-layout | preview-layout | review"
+                  + " | sign-off)");
     }
   }
 
@@ -129,6 +140,20 @@ public class ControlDiagramGenerator {
 
     Properties configs = load(root.resolve(CONTROLS + "/configs.properties"));
     boolean stale = false;
+    for (String ref : listLayouts()) {
+      Path sheet = root.resolve(LAYOUTS + "/" + ref + "/layout.svg");
+      String svg = layoutSheet(ref);
+      boolean current = Files.exists(sheet) && Files.readString(sheet).equals(svg);
+      if (checkOnly) {
+        if (!current) {
+          System.out.println("STALE  layout " + ref + ": layout.svg out of date");
+          stale = true;
+        }
+      } else if (!current) {
+        Files.writeString(sheet, svg);
+        System.out.println("updated    " + root.relativize(sheet));
+      }
+    }
     for (String cfg : list(configs.getProperty("configs"))) {
       String source = req(configs, cfg + ".source");
       List<String> controllers = list(req(configs, cfg + ".controllers"));
@@ -327,7 +352,19 @@ public class ControlDiagramGenerator {
                   .collect(Collectors.joining(", ")))
           .append("\n");
     }
-    return sb.toString();
+    return sb.toString().stripTrailing() + "\n";
+  }
+
+  static String humanCheck(Properties meta) {
+    String by = meta.getProperty("reviewed.by");
+    if (by == null) return "**not yet checked**";
+    String note = meta.getProperty("reviewed.note", "");
+    return "checked by "
+        + by
+        + " ("
+        + meta.getProperty("reviewed.date")
+        + ")"
+        + (note.isEmpty() ? "" : ": " + note);
   }
 
   static void writeMaster(Properties configs) throws IOException {
@@ -357,6 +394,9 @@ public class ControlDiagramGenerator {
           .append("`) from `")
           .append(meta.getProperty("source"))
           .append("`\n\n")
+          .append("Human check: ")
+          .append(humanCheck(meta))
+          .append("\n\n")
           .append("![")
           .append(cfg)
           .append(" v")
@@ -368,7 +408,8 @@ public class ControlDiagramGenerator {
           .append("/diagram.svg)\n\n")
           .append(Files.readString(dir.resolve("v" + latest + "/bindings.md")))
           .append(
-              "\n### Version history\n\n| Version | Date | Commit | Note |\n|---|---|---|---|\n");
+              "\n### Version history\n\n| Version | Date | Commit | Note | Human check |\n"
+                  + "|---|---|---|---|---|\n");
       for (int v = latest; v >= 1; v--) {
         Path vd = dir.resolve("v" + v);
         if (!Files.exists(vd.resolve("version.properties"))) continue;
@@ -385,6 +426,8 @@ public class ControlDiagramGenerator {
             .append(m.getProperty("commit"))
             .append("` | ")
             .append(m.getProperty("note", "").replace("|", "\\|"))
+            .append(" | ")
+            .append(humanCheck(m).replace("|", "\\|"))
             .append(" |\n");
       }
     }
@@ -511,7 +554,7 @@ public class ControlDiagramGenerator {
         double ay = top + a.y() * scale;
         List<Binding> bs = byInput.get(input);
         double headerY = Math.max(ay + 5, cursor + LINE_H);
-        boolean conflict = bs.stream().anyMatch(b -> conflicts(all, b));
+        boolean conflict = bs.stream().anyMatch(b -> b.function() != null && conflicts(all, b));
 
         // white halo under the leader + dot keeps them readable on busy controller photos
         String leader =
@@ -525,19 +568,34 @@ public class ControlDiagramGenerator {
                     + " stroke-width=\"1.5\"/>%n<circle cx=\"%.1f\" cy=\"%.1f\" r=\"4.5\""
                     + " fill=\"#111827\" stroke=\"#ffffff\" stroke-width=\"2\"/>%n",
                 leader, leader, ax, ay));
-        sb.append(
-            text(
-                textX,
-                headerY,
-                a.name() + (conflict ? "  - CONFLICT" : ""),
-                "15",
-                "700",
-                conflict ? CONFLICT_COLOR : "#111827",
-                anchor,
-                false));
+        boolean oneLine = bs.size() == 1 && bs.get(0).function() == null;
+        if (oneLine) { // layout sheet: "LB  leftBumper()" on one line
+          sb.append(
+              String.format(
+                  "<text x=\"%d\" y=\"%.1f\" font-size=\"15\" text-anchor=\"%s\"><tspan"
+                      + " font-weight=\"700\" fill=\"#111827\">%s</tspan><tspan fill=\"#4b5563\">"
+                      + "  %s</tspan></text>%n",
+                  textX, headerY, anchor, xml(a.name()), xml(bs.get(0).detail())));
+          bs = List.of();
+        } else {
+          sb.append(
+              text(
+                  textX,
+                  headerY,
+                  a.name() + (conflict ? "  - CONFLICT" : ""),
+                  "15",
+                  "700",
+                  conflict ? CONFLICT_COLOR : "#111827",
+                  anchor,
+                  false));
+        }
         double ly = headerY;
         for (Binding b : bs) {
           ly += LINE_H;
+          if (b.function() == null) { // layout sheet: show the Java call, no robot function
+            sb.append(text(textX, ly, b.detail(), "14", "400", "#4b5563", anchor, false));
+            continue;
+          }
           boolean isWired = wired.contains(b.function());
           String label =
               (b.detail().isEmpty() ? "" : b.detail() + ": ")
@@ -651,8 +709,78 @@ public class ControlDiagramGenerator {
     System.out.println("      (check with: preview-layout " + ref + "), then use image=" + ref);
   }
 
+  /**
+   * The committed reference picture for a layout (layout.svg): every button named, with the Java
+   * call that reaches it. No keybindings, no dates, so it only changes when the layout does.
+   */
+  static String layoutSheet(String ref) throws IOException {
+    ControllerImage img = loadImage(ref);
+    Map<String, List<String>> calls = new TreeMap<>();
+    for (String k : img.props().stringPropertyNames()) {
+      if (!k.startsWith("input.")) continue;
+      String[] v = img.props().getProperty(k).split(",", 2);
+      String detail = v.length > 1 && !v[1].isBlank() ? "  (" + v[1].trim() + ")" : "";
+      calls
+          .computeIfAbsent(v[0].trim(), x -> new ArrayList<>())
+          .add(javaCall(k.substring(6)) + detail);
+    }
+    List<Binding> entries = new ArrayList<>();
+    for (String key : img.anchors().keySet()) {
+      List<String> cs = calls.getOrDefault(key, List.of(javaCall(key)));
+      for (String c : cs.stream().sorted().collect(Collectors.toList())) {
+        entries.add(new Binding("layout", null, key, c));
+      }
+    }
+    StringBuilder body = new StringBuilder();
+    int y = panel(body, img, entries, entries, 110) + 30;
+    body.append(
+        text(
+            40,
+            y,
+            "Grey = the Java call that reads this input. Keybindings live in the"
+                + " ControlBoard classes, not here.",
+            "14",
+            "400",
+            "#4b5563",
+            "start",
+            false));
+    int height = y + 30;
+    return String.format(
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 %d"
+                + " %d\" font-family=\"Helvetica, Arial, sans-serif\">%n"
+                + "<rect width=\"100%%\" height=\"100%%\" fill=\"#ffffff\"/>%n",
+            WIDTH, height, WIDTH, height)
+        + text(40, 44, img.props().getProperty("name", ref), "26", "700", "#111827", "start", false)
+        + text(
+            40,
+            70,
+            "Controller layout " + ref + "  \u00b7  button map only, no keybindings",
+            "14",
+            "400",
+            "#6b7280",
+            "start",
+            false)
+        + text(
+            40,
+            90,
+            "Picture: " + img.props().getProperty("source", "(no source= set)"),
+            "13",
+            "400",
+            "#6b7280",
+            "start",
+            false)
+        + body
+        + "</svg>\n";
+  }
+
+  /** Anchor/alias key back to the Java call: a -> a(), button3 -> button(3). */
+  static String javaCall(String key) {
+    Matcher m = Pattern.compile("^(\\D+?)(\\d+)$").matcher(key);
+    return m.matches() ? m.group(1) + "(" + m.group(2) + ")" : key + "()";
+  }
+
   /** Draws a layout with every anchor and a coordinate grid, no keybindings. */
-  static void previewLayout(String ref) throws IOException {
+  static Path previewLayout(String ref) throws IOException {
     ControllerImage img = loadImage(ref);
     int w = (int) Double.parseDouble(img.props().getProperty("width"));
     int h = (int) Double.parseDouble(img.props().getProperty("height"));
@@ -695,6 +823,7 @@ public class ControlDiagramGenerator {
     Files.createDirectories(out.getParent());
     Files.writeString(out, sb.toString());
     System.out.println("preview " + root.relativize(out) + " (open in a browser)");
+    return out;
   }
 
   static String gridLine(int x1, int y1, int x2, int y2, boolean major) {
@@ -716,6 +845,132 @@ public class ControlDiagramGenerator {
     }
     var img = javax.imageio.ImageIO.read(file.toFile());
     return img == null ? null : new int[] {img.getWidth(), img.getHeight()};
+  }
+
+  // ===================== human checks =====================
+
+  static final List<String> DIAGRAM_CHECKS =
+      List.of(
+          "Every label says what the button really does on the robot (ask the drive team)",
+          "No text overlaps, is cut off, or points at the wrong button",
+          "Every red CONFLICT is fixed, or intentional and explained in the version note",
+          "Grey 'not wired' items are expected (e.g. removed mechanisms)",
+          "Nothing in 'Not on a button' is something the drivers need in a match");
+  static final List<String> LAYOUT_CHECKS =
+      List.of(
+          "Every red dot sits on its button",
+          "Each name is on the correct side (left column vs right column)",
+          "Picture is cropped to the controller and easy to read",
+          "Dot names match the controller class the Java uses (Xbox: a, leftBumper, ...)");
+  static final List<String> ROBOT_CHECKS =
+      List.of(
+          "Driver Station USB tab: driver on port 0, operator on port 1 (lock them in order)",
+          "Robot enabled on blocks or in sim: press every labeled button, it does what the"
+              + " diagram says",
+          "Sticks: pushing forward drives forward, left drives left (field-relative)",
+          "Unlabeled buttons do nothing",
+          "The printed diagram on the driver station cart is the current version in MASTER.md");
+
+  /** Builds build/control-review/index.html: current diagrams, layout previews, checklists. */
+  static void review() throws IOException {
+    Path out = root.resolve("build/control-review/index.html");
+    Files.createDirectories(out.getParent());
+    Properties configs = load(root.resolve(CONTROLS + "/configs.properties"));
+    StringBuilder sb = new StringBuilder();
+    sb.append("<!doctype html><html><head><meta charset=\"utf-8\"><title>Controller Review</title>")
+        .append("<style>body{font-family:Helvetica,Arial,sans-serif;max-width:1320px;margin:24px")
+        .append(" auto;padding:0 16px;color:#111827;background:#fff}img{max-width:100%;border:1px")
+        .append(" solid #e5e7eb;border-radius:8px}section{margin:32px 0;padding-top:8px;")
+        .append("border-top:2px solid #e5e7eb}label{display:block;margin:6px 0}code{background:")
+        .append("#f3f4f6;padding:2px 5px;border-radius:4px}.todo{color:#b45309;font-weight:700}")
+        .append(".done{color:#15803d;font-weight:700}</style></head><body>\n")
+        .append("<h1>Controller Diagram Review</h1><p>Generated ")
+        .append(LocalDate.now())
+        .append(". Tick every box, then record it with the <code>sign-off</code> command shown")
+        .append(" under each diagram. The boxes here are not saved.</p>\n");
+
+    for (String cfg : list(configs.getProperty("configs"))) {
+      Path dir = root.resolve(CONTROLS + "/diagrams/" + cfg);
+      int v = latestVersion(dir);
+      sb.append("<section><h2>").append(xml(configs.getProperty(cfg + ".title")));
+      if (v == 0) {
+        sb.append("</h2><p>No diagram yet: run generate.</p></section>\n");
+        continue;
+      }
+      Properties meta = load(dir.resolve("v" + v + "/version.properties"));
+      boolean checked = meta.getProperty("reviewed.by") != null;
+      sb.append(" - v")
+          .append(v)
+          .append("</h2><p class=\"")
+          .append(checked ? "done" : "todo")
+          .append("\">")
+          .append(xml(humanCheck(meta).replace("**", "")))
+          .append("</p>")
+          .append("<img src=\"")
+          .append(rel(out, dir.resolve("v" + v + "/diagram.svg")))
+          .append("\">")
+          .append(checklist(DIAGRAM_CHECKS))
+          .append("<p>Done? <code>java docs/controls/tools/ControlDiagramGenerator.java sign-off ")
+          .append(cfg)
+          .append(" --by \"Your Name\"</code></p></section>\n");
+    }
+
+    sb.append("<section><h2>Controller layouts</h2><p>Blank pictures with button positions.")
+        .append(" Check these when a layout is added or changed.</p>\n");
+    for (String ref : listLayouts()) {
+      Path preview = previewLayout(ref);
+      sb.append("<h3>")
+          .append(ref)
+          .append("</h3><img src=\"")
+          .append(rel(out, preview))
+          .append("\">")
+          .append(checklist(LAYOUT_CHECKS));
+    }
+    sb.append("</section>\n<section><h2>On the robot</h2><p>Do this with the real")
+        .append(" controllers before an event and after any binding change.</p>")
+        .append(checklist(ROBOT_CHECKS))
+        .append("</section></body></html>\n");
+    Files.writeString(out, sb.toString());
+    System.out.println("review page " + root.relativize(out) + " (open in a browser)");
+  }
+
+  static String checklist(List<String> items) {
+    return items.stream()
+        .map(i -> "<label><input type=\"checkbox\"> " + xml(i) + "</label>")
+        .collect(Collectors.joining("", "<div>", "</div>"));
+  }
+
+  static String rel(Path page, Path target) {
+    return page.getParent().relativize(target).toString().replace('\\', '/');
+  }
+
+  static List<String> listLayouts() throws IOException {
+    Path layouts = root.resolve(LAYOUTS);
+    try (Stream<Path> s = Files.walk(layouts)) {
+      return s.filter(p -> Files.exists(p.resolve("anchors.properties")))
+          .map(p -> layouts.relativize(p).toString().replace('\\', '/'))
+          .sorted()
+          .collect(Collectors.toList());
+    }
+  }
+
+  /** Records that a person checked the current version of a config, then updates MASTER.md. */
+  static void signOff(String cfg, Map<String, String> flags) throws IOException {
+    String by = flags.get("by");
+    if (by == null || by.isBlank()) die("say who checked it: --by \"Your Name\"");
+    Path dir = root.resolve(CONTROLS + "/diagrams/" + cfg);
+    int v = latestVersion(dir);
+    if (v == 0) die("no diagrams for config '" + cfg + "'");
+    Path file = dir.resolve("v" + v + "/version.properties");
+    Properties meta = load(file);
+    meta.setProperty("reviewed.by", by.trim());
+    meta.setProperty("reviewed.date", LocalDate.now().toString());
+    meta.setProperty("reviewed.note", flags.getOrDefault("note", ""));
+    try (var w = Files.newBufferedWriter(file)) {
+      meta.store(w, "Generated by ControlDiagramGenerator");
+    }
+    System.out.println("signed off " + cfg + " v" + v + " by " + by.trim());
+    writeMaster(load(root.resolve(CONTROLS + "/configs.properties")));
   }
 
   // ===================== helpers =====================
@@ -837,6 +1092,8 @@ public class ControlDiagramGenerator {
       if (args[i].equals("--force")) flags.put("force", "true");
       else if (args[i].equals("--note") && i + 1 < args.length) flags.put("note", args[++i]);
       else if (args[i].startsWith("--note=")) flags.put("note", args[i].substring(7));
+      else if (args[i].equals("--by") && i + 1 < args.length) flags.put("by", args[++i]);
+      else if (args[i].startsWith("--by=")) flags.put("by", args[i].substring(5));
       else die("unknown option " + args[i]);
     }
     return flags;

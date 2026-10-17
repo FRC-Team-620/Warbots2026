@@ -210,6 +210,8 @@ spotless {
 // Controller diagrams (docs/controls). Usage:
 //   ./gradlew controlDiagrams -Pnote="Swap intake to B"   (new version only if bindings changed; -Pforce to always)
 //   ./gradlew checkControlDiagrams                         (fails if diagrams are out of date)
+//   ./gradlew testControlDiagrams                          (automated tests, see docs/controls/README.md)
+//   ./gradlew reviewControlDiagrams                        (builds build/control-review/index.html for human checks)
 def controlDiagramTool = 'docs/controls/tools/ControlDiagramGenerator.java'
 tasks.register('controlDiagrams', Exec) {
     group = 'documentation'
@@ -235,4 +237,16 @@ tasks.register('checkControlDiagrams', Exec) {
     description = 'Fail if controller diagrams do not match the ControlBoard classes'
     workingDir projectDir
     commandLine "${System.getProperty('java.home')}/bin/java", controlDiagramTool, 'check'
+}
+tasks.register('testControlDiagrams', Exec) {
+    group = 'verification'
+    description = 'Run the controller diagram automated tests'
+    workingDir projectDir
+    commandLine "${System.getProperty('java.home')}/bin/java", 'docs/controls/tools/ControlDiagramTest.java'
+}
+tasks.register('reviewControlDiagrams', Exec) {
+    group = 'documentation'
+    description = 'Build the human review page at build/control-review/index.html'
+    workingDir projectDir
+    commandLine "${System.getProperty('java.home')}/bin/java", controlDiagramTool, 'review'
 }

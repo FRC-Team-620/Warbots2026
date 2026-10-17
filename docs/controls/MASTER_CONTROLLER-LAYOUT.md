@@ -9,6 +9,8 @@
 
 **Current: v1** (2026-10-17, commit `ca47baf`) from `src/main/java/org/jmhsrobotics/frc2026/controlBoard/SingleControl.java`
 
+Human check: **not yet checked**
+
 ![single v1](diagrams/single/v1/diagram.svg)
 
 #### Driver + Operator (port 0, `driver`, image `xbox/v1`)
@@ -41,13 +43,15 @@
 
 ### Version history
 
-| Version | Date | Commit | Note |
-|---|---|---|---|
-| [v1](diagrams/single/v1/diagram.svg) | 2026-10-17 | `ca47baf` | Initial diagrams from current SingleControl/DoubleControl |
+| Version | Date | Commit | Note | Human check |
+|---|---|---|---|---|
+| [v1](diagrams/single/v1/diagram.svg) | 2026-10-17 | `ca47baf` | Initial diagrams from current SingleControl/DoubleControl | **not yet checked** |
 
 ## Dual Controller
 
 **Current: v1** (2026-10-17, commit `ca47baf`) from `src/main/java/org/jmhsrobotics/frc2026/controlBoard/DoubleControl.java`
+
+Human check: **not yet checked**
 
 ![dual v1](diagrams/dual/v1/diagram.svg)
 
@@ -88,6 +92,6 @@
 
 ### Version history
 
-| Version | Date | Commit | Note |
-|---|---|---|---|
-| [v1](diagrams/dual/v1/diagram.svg) | 2026-10-17 | `ca47baf` | Initial diagrams from current SingleControl/DoubleControl |
+| Version | Date | Commit | Note | Human check |
+|---|---|---|---|---|
+| [v1](diagrams/dual/v1/diagram.svg) | 2026-10-17 | `ca47baf` | Initial diagrams from current SingleControl/DoubleControl | **not yet checked** |

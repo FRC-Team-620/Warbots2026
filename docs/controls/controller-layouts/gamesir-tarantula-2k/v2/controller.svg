@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 630" width="960" height="630">
+  <!-- GameSir Tarantula 2K, front view. Drawn from controller-sources/gamesir-tarantula-2k/gamesir-tarantula-2k-front.png
+       in the same coordinates as its cropped layout (controller centerline x=507). No logos. -->
+  <!-- cable -->
+  <rect x="495" y="0" width="24" height="44" rx="4" fill="#c2401f"/>
+  <rect x="487" y="30" width="40" height="22" rx="6" fill="#d9532c" stroke="#a3361a" stroke-width="2"/>
+  <!-- shoulders (bumpers + triggers seen from the front) -->
+  <g fill="#2a2a2a" stroke="#111" stroke-width="2" stroke-linejoin="round">
+    <path d="M104 86 C 130 46, 190 30, 262 32 L 272 62 C 200 58, 150 70, 118 98 Z"/>
+    <path d="M910 86 C 884 46, 824 30, 752 32 L 742 62 C 814 58, 864 70, 896 98 Z"/>
+  </g>
+  <!-- body -->
+  <path fill="#ef5427" stroke="#a3361a" stroke-width="4" stroke-linejoin="round"
+        d="M120 70 C 210 45, 330 42, 507 42 C 684 42, 804 45, 894 70 C 935 85, 950 140, 948 230
+           C 946 330, 945 470, 925 560 C 905 620, 830 640, 790 600 C 760 570, 740 500, 700 455
+           C 640 420, 374 420, 314 455 C 274 500, 254 570, 224 600 C 184 640, 109 620, 89 560
+           C 69 470, 68 330, 66 230 C 64 140, 79 85, 120 70 Z"/>
+  <!-- top plate -->
+  <path fill="#1d1d1d" stroke="#000" stroke-width="2"
+        d="M362 48 L 652 48 L 634 120 Q 630 132 616 132 L 398 132 Q 384 132 380 120 Z"/>
+  <!-- macro buttons (not readable by the Driver Station) -->
+  <g fill="#e2491f" stroke="#a3361a" stroke-width="2">
+    <rect x="287" y="94" width="62" height="24" rx="12" transform="rotate(18 318 106)"/>
+    <rect x="361" y="134" width="62" height="24" rx="12" transform="rotate(18 392 146)"/>
+    <rect x="665" y="94" width="62" height="24" rx="12" transform="rotate(-18 696 106)"/>
+    <rect x="591" y="134" width="62" height="24" rx="12" transform="rotate(-18 622 146)"/>
+  </g>
+  <!-- d-pad well + d-pad -->
+  <circle cx="192" cy="165" r="82" fill="#e24d23" stroke="#c9431f" stroke-width="3"/>
+  <path fill="#1f1f1f" stroke="#000" stroke-width="2" stroke-linejoin="round"
+        d="M171 107 h42 v37 h37 v42 h-37 v37 h-42 v-37 h-37 v-42 h37 Z"/>
+  <g fill="#8a8a8a">
+    <path d="M192 116 l7 10 h-14 Z"/><path d="M192 214 l7 -10 h-14 Z"/>
+    <path d="M143 165 l10 -7 v14 Z"/><path d="M241 165 l-10 -7 v14 Z"/>
+  </g>
+  <!-- face buttons -->
+  <g stroke="#000" stroke-width="2">
+    <circle cx="813" cy="168" r="96" fill="#e24d23" stroke="#c9431f" stroke-width="3"/>
+    <circle cx="813" cy="109" r="29" fill="#1a1a1a"/>
+    <circle cx="752" cy="168" r="29" fill="#1a1a1a"/>
+    <circle cx="876" cy="168" r="29" fill="#1a1a1a"/>
+    <circle cx="813" cy="227" r="29" fill="#1a1a1a"/>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="30" fill="#ffffff" text-anchor="middle">
+    <text x="813" y="120">Y</text><text x="752" y="179">X</text>
+    <text x="876" y="179">B</text><text x="813" y="238">A</text>
+  </g>
+  <!-- center buttons: - M + -->
+  <g fill="#e2491f" stroke="#a3361a" stroke-width="2">
+    <circle cx="452" cy="157" r="14"/><circle cx="507" cy="157" r="14"/><circle cx="559" cy="157" r="14"/>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="16" fill="#7a2410" text-anchor="middle">
+    <text x="452" y="163">−</text><text x="507" y="163">M</text><text x="559" y="163">+</text>
+  </g>
+  <!-- status light -->
+  <ellipse cx="507" cy="205" rx="7" ry="4" fill="#ffd27a"/>
+  <!-- sticks -->
+  <g>
+    <circle cx="346" cy="265" r="80" fill="#e24d23" stroke="#a3361a" stroke-width="3"/>
+    <circle cx="346" cy="265" r="60" fill="#151515"/>
+    <circle cx="346" cy="265" r="44" fill="#2b2b2b" stroke="#000" stroke-width="2"/>
+    <circle cx="346" cy="265" r="32" fill="none" stroke="#3d3d3d" stroke-width="3"/>
+    <circle cx="669" cy="265" r="80" fill="#e24d23" stroke="#a3361a" stroke-width="3"/>
+    <circle cx="669" cy="265" r="60" fill="#151515"/>
+    <circle cx="669" cy="265" r="44" fill="#2b2b2b" stroke="#000" stroke-width="2"/>
+    <circle cx="669" cy="265" r="32" fill="none" stroke="#3d3d3d" stroke-width="3"/>
+  </g>
+  <g font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="18" fill="#9a9a9a" text-anchor="middle">
+    <text x="346" y="271">L</text><text x="669" y="271">R</text>
+  </g>
+  <!-- home button (logo left off) -->
+  <circle cx="507" cy="265" r="32" fill="#e9e9e9" stroke="#8a8a8a" stroke-width="3"/>
+  <circle cx="507" cy="265" r="19" fill="none" stroke="#b5b5b5" stroke-width="3"/>
+  <!-- headset jack -->
+  <circle cx="507" cy="408" r="7" fill="#7a2410"/>
+</svg>

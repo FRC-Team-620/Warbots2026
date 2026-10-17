@@ -35,9 +35,13 @@ jobs:
           NOTE: ${{ github.event.head_commit.message }}
         run: java docs/controls/tools/ControlDiagramGenerator.java generate --note "$(printf '%s' "$NOTE" | head -n 1)"
 
+      # After generating, so "diagrams match the code" checks the fresh output
+      - name: Test the diagram generator
+        run: java docs/controls/tools/ControlDiagramTest.java
+
       - name: Commit updated diagrams
         run: |
-          git add docs/controls/diagrams docs/controls/MASTER.md
+          git add docs/controls/diagrams docs/controls/MASTER.md docs/controls/controller-layouts
           if git diff --cached --quiet; then
             echo "Diagrams already up to date"
             exit 0
