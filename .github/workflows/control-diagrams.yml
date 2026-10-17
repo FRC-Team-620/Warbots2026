@@ -1,0 +1,48 @@
+name: Controller Diagrams
+
+# Regenerates docs/controls diagrams + MASTER.md whenever keybindings change, and commits the
+# result back to the same branch. Commits made with GITHUB_TOKEN do not re-trigger workflows.
+on:
+  push:
+    paths:
+      - 'src/main/java/org/jmhsrobotics/frc2026/controlBoard/**'
+      - 'src/main/java/org/jmhsrobotics/frc2026/RobotContainer.java'
+      - 'docs/controls/*.properties'
+      - 'docs/controls/controller-images/**'
+      - 'docs/controls/tools/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: control-diagrams-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Generate diagrams
+        env:
+          NOTE: ${{ github.event.head_commit.message }}
+        run: java docs/controls/tools/ControlDiagramGenerator.java generate --note "$(printf '%s' "$NOTE" | head -n 1)"
+
+      - name: Commit updated diagrams
+        run: |
+          git add docs/controls/diagrams docs/controls/MASTER.md
+          if git diff --cached --quiet; then
+            echo "Diagrams already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update controller diagrams"
+          git push

@@ -206,3 +206,33 @@ spotless {
         endWithNewline()
     }
 }
+
+// Controller diagrams (docs/controls). Usage:
+//   ./gradlew controlDiagrams -Pnote="Swap intake to B"   (new version only if bindings changed; -Pforce to always)
+//   ./gradlew checkControlDiagrams                         (fails if diagrams are out of date)
+def controlDiagramTool = 'docs/controls/tools/ControlDiagramGenerator.java'
+tasks.register('controlDiagrams', Exec) {
+    group = 'documentation'
+    description = 'Generate versioned controller diagrams and MASTER.md from the ControlBoard classes'
+    workingDir projectDir
+    def toolArgs = ['generate']
+    if (project.hasProperty('note')) {
+        toolArgs += [
+            '--note',
+            project.property('note')
+        ]
+    }
+    if (project.hasProperty('force')) {
+        toolArgs += ['--force']
+    }
+    commandLine([
+        "${System.getProperty('java.home')}/bin/java",
+        controlDiagramTool
+    ] + toolArgs)
+}
+tasks.register('checkControlDiagrams', Exec) {
+    group = 'verification'
+    description = 'Fail if controller diagrams do not match the ControlBoard classes'
+    workingDir projectDir
+    commandLine "${System.getProperty('java.home')}/bin/java", controlDiagramTool, 'check'
+}
