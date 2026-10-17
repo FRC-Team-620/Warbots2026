@@ -22,15 +22,24 @@ MASTER.md                      the one published page
 
 ## Folder layout
 
+Pictures go one way only, and keybindings are added in the last step:
+
+```
+controller-sources/  ──crop/clean──▶  controller-layouts/  ──+ keybindings──▶  diagrams/
+ (original, as-is)                     (blank + button spots)                  (generated)
+```
+
 ```
 docs/controls/
 ├── MASTER.md                    GENERATED: published diagrams + version history. Don't edit.
 ├── configs.properties           which ControlBoard class -> which config, and which image each controller uses
 ├── functions.properties         robot function -> label + color group shown on the diagram
-├── controller-images/           base controller pictures, versioned per controller type
-│   └── <type>/vN/
+├── controller-sources/          ORIGINAL pictures, exactly as downloaded/photographed. Never edited,
+│   └── <type>/<file>             never labeled, never versioned over. No keybindings.
+├── controller-layouts/          BLANK layouts: picture (cropped/cleaned from a source) + button positions.
+│   └── <type>/vN/               No keybindings or robot functions (the generator rejects them).
 │       ├── controller.svg|png|jpg
-│       └── anchors.properties   where each button is on the picture
+│       └── anchors.properties   where each button is on the picture + which source it came from
 ├── diagrams/                    GENERATED: one folder per config, one subfolder per version
 │   └── <config>/vN/
 │       ├── diagram.svg
@@ -56,23 +65,37 @@ works with any JDK 16+.
 **Added a function to ControlBoard:** add a `fn.<method>=<group>|<label>` line to
 `functions.properties` (it still works without one, but the diagram shows the raw method name).
 
-**Saving a new controller picture (new controller type, or a better image):**
+**Adding a controller picture (new controller type, or a better image):**
 
 ```bash
-java docs/controls/tools/ControlDiagramGenerator.java add-image ps5 ~/Downloads/ps5.png --from xbox/v1
+T=docs/controls/tools/ControlDiagramGenerator.java
+# 1. Archive the original, untouched
+java $T add-source ps5 ~/Downloads/ps5-front.png
+# 2. (optional) crop a COPY to just the controller, e.g. on a Mac:
+#    sips -c <height> <width> --cropOffset <top> <left> <original> --out /tmp/ps5.png
+# 3. Make a blank layout from it (copies a button list to start from, reads the image size)
+java $T add-layout ps5 /tmp/ps5.png --from xbox/v1
+# 4. Check the button spots: draws every anchor + a coordinate grid, no keybindings
+java $T preview-layout ps5/v1          # -> build/control-layouts/ps5-v1.svg, open in a browser
 ```
 
-This copies it to `controller-images/ps5/v1/` (next run: `v2`), reads its size, and copies the
-anchor list to start from. Then:
+Then, in the new `controller-layouts/<type>/vN/anchors.properties`:
 
-1. Open `anchors.properties` and move each `anchor.<key>=x,y,side,name` onto its button
-   (pixel coordinates in the picture; `side` = which label column).
-2. Anchor keys are the controller method names the Java calls, so they change with the
+1. Set `source=` to the original's path in `controller-sources/`.
+2. Move each `anchor.<key>=x,y,side,name` onto its button (pixel coordinates in the layout
+   picture; `side` = which label column). Re-run `preview-layout` until the dots line up.
+3. Anchor keys are the controller method names the Java calls, so they change with the
    controller class: Xbox `a`, `leftBumper`; PS5 `cross`, `L1`; `CommandJoystick`
    `button3`, `pov90`. Use `input.<call>=<anchor>,<detail>` when several calls share one spot
-   (stick X/Y axes and stick press).
-3. Point a controller at it in `configs.properties`, e.g. `dual.operator.image=ps5/v1`, and
+   (stick X/Y axes and stick press). Xbox-style pads in XInput mode (like the GameSir
+   Tarantula 2K) use the Xbox names.
+4. Point a controller at it in `configs.properties`, e.g. `dual.operator.image=ps5/v1`, and
    generate. Driver and operator can use different controller types.
+
+Layouts only hold button positions. Anything else in `anchors.properties` (a robot function,
+a keybinding) stops the generator with an error.
+
+Available layouts: `xbox/v1` (drawing), `gamesir-tarantula-2k/v1` (photo).
 
 Only save images you have the rights to use (your own photos, or ones with a free license).
 

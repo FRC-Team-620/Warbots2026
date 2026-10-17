@@ -27,13 +27,22 @@ import java.util.stream.Stream;
  * <pre>
  *   java docs/controls/tools/ControlDiagramGenerator.java generate [--note "why"] [--force]
  *   java docs/controls/tools/ControlDiagramGenerator.java check
- *   java docs/controls/tools/ControlDiagramGenerator.java add-image &lt;type&gt; &lt;image file&gt; [--from xbox/v1]
+ *   java docs/controls/tools/ControlDiagramGenerator.java add-source &lt;type&gt; &lt;original image&gt;
+ *   java docs/controls/tools/ControlDiagramGenerator.java add-layout &lt;type&gt; &lt;image&gt; [--from xbox/v1]
+ *   java docs/controls/tools/ControlDiagramGenerator.java preview-layout &lt;type&gt;/v&lt;N&gt;
  * </pre>
  *
  * Or through Gradle: {@code ./gradlew controlDiagrams -Pnote="why"}.
  */
 public class ControlDiagramGenerator {
   static final String CONTROLS = "docs/controls";
+  static final String SOURCES = CONTROLS + "/controller-sources";
+  static final String LAYOUTS = CONTROLS + "/controller-layouts";
+
+  /** Keys allowed in a layout's anchors.properties: button positions only, never keybindings. */
+  static final Pattern LAYOUT_KEY =
+      Pattern.compile("name|image|width|height|ignore|source|anchor\\.\\w+|input\\.\\w+");
+
   static final String CONTROL_BOARD =
       "src/main/java/org/jmhsrobotics/frc2026/controlBoard/ControlBoard.java";
   static final String OTHER_COLOR = "#6b7280";
@@ -85,12 +94,24 @@ public class ControlDiagramGenerator {
     String cmd = args.length > 0 ? args[0] : "generate";
     switch (cmd) {
       case "generate", "check" -> generate(cmd.equals("check"), parseFlags(args));
-      case "add-image" -> {
-        if (args.length < 3) die("usage: add-image <type> <image file> [--from <type>/v<N>]");
-        String from = args.length >= 5 && args[3].equals("--from") ? args[4] : null;
-        addImage(args[1], Path.of(args[2]), from);
+      case "add-source" -> {
+        if (args.length < 3) die("usage: add-source <type> <original image>");
+        addSource(args[1], Path.of(args[2]));
       }
-      default -> die("unknown command '" + cmd + "' (generate | check | add-image)");
+      case "add-layout" -> {
+        if (args.length < 3) die("usage: add-layout <type> <image> [--from <type>/v<N>]");
+        String from = args.length >= 5 && args[3].equals("--from") ? args[4] : null;
+        addLayout(args[1], Path.of(args[2]), from);
+      }
+      case "preview-layout" -> {
+        if (args.length < 2) die("usage: preview-layout <type>/v<N>");
+        previewLayout(args[1]);
+      }
+      default ->
+          die(
+              "unknown command '"
+                  + cmd
+                  + "' (generate | check | add-source | add-layout | preview-layout)");
     }
   }
 
@@ -492,12 +513,18 @@ public class ControlDiagramGenerator {
         double headerY = Math.max(ay + 5, cursor + LINE_H);
         boolean conflict = bs.stream().anyMatch(b -> conflicts(all, b));
 
+        // white halo under the leader + dot keeps them readable on busy controller photos
+        String leader =
+            String.format(
+                "M%.1f %.1f L%d %.1f L%d %.1f",
+                ax, ay, elbowX, headerY - 5, textX + (left ? 6 : -6), headerY - 5);
         sb.append(
             String.format(
-                "<path d=\"M%.1f %.1f L%d %.1f L%d %.1f\" fill=\"none\" stroke=\"#4b5563\""
-                    + " stroke-width=\"1.5\"/>%n<circle cx=\"%.1f\" cy=\"%.1f\" r=\"4\""
-                    + " fill=\"#111827\"/>%n",
-                ax, ay, elbowX, headerY - 5, textX + (left ? 6 : -6), headerY - 5, ax, ay));
+                "<path d=\"%s\" fill=\"none\" stroke=\"#ffffff\" stroke-width=\"4.5\""
+                    + " stroke-opacity=\"0.85\"/>%n<path d=\"%s\" fill=\"none\" stroke=\"#374151\""
+                    + " stroke-width=\"1.5\"/>%n<circle cx=\"%.1f\" cy=\"%.1f\" r=\"4.5\""
+                    + " fill=\"#111827\" stroke=\"#ffffff\" stroke-width=\"2\"/>%n",
+                leader, leader, ax, ay));
         sb.append(
             text(
                 textX,
@@ -570,16 +597,29 @@ public class ControlDiagramGenerator {
         x, y, size, weight, fill, anchor, italic ? " font-style=\"italic\"" : "", xml(s));
   }
 
-  // ===================== add-image =====================
+  // ===================== controller pictures =====================
+
+  /** Archives an original controller picture, untouched, in controller-sources/<type>/. */
+  static void addSource(String type, Path image) throws IOException {
+    if (!Files.exists(image)) die("no such file: " + image);
+    Path dest = root.resolve(SOURCES + "/" + type + "/" + image.getFileName());
+    if (Files.exists(dest))
+      die(root.relativize(dest) + " already exists; sources are never replaced");
+    Files.createDirectories(dest.getParent());
+    Files.copy(image, dest);
+    System.out.println("saved source " + root.relativize(dest));
+    System.out.println(
+        "NEXT: crop/clean a copy if needed, then: add-layout " + type + " <image> --from xbox/v1");
+  }
 
   /**
-   * Saves a controller picture as controller-images/<type>/v(N+1). Anchors are seeded from `from`
-   * (e.g. "xbox/v1"), else the type's previous version, else xbox/v1; width/height are read from
-   * the image.
+   * Saves a blank controller picture as controller-layouts/<type>/v(N+1). Anchors are seeded from
+   * `from` (e.g. "xbox/v1"), else the type's previous version, else xbox/v1; width/height are read
+   * from the image.
    */
-  static void addImage(String type, Path image, String from) throws IOException {
+  static void addLayout(String type, Path image, String from) throws IOException {
     if (!Files.exists(image)) die("no such file: " + image);
-    Path typeDir = root.resolve(CONTROLS + "/controller-images/" + type);
+    Path typeDir = root.resolve(LAYOUTS + "/" + type);
     int latest = latestVersion(typeDir);
     Path out = typeDir.resolve("v" + (latest + 1));
     Files.createDirectories(out);
@@ -588,10 +628,12 @@ public class ControlDiagramGenerator {
     Files.copy(image, dest, StandardCopyOption.REPLACE_EXISTING);
 
     String seedRef = from != null ? from : latest > 0 ? type + "/v" + latest : "xbox/v1";
-    Path seed = root.resolve(CONTROLS + "/controller-images/" + seedRef + "/anchors.properties");
+    Path seed = root.resolve(LAYOUTS + "/" + seedRef + "/anchors.properties");
     if (!Files.exists(seed)) die("no anchors to copy at " + root.relativize(seed));
     String anchors =
-        Files.readString(seed).replaceAll("(?m)^image=.*$", "image=" + dest.getFileName());
+        Files.readString(seed)
+            .replaceAll("(?m)^image=.*$", "image=" + dest.getFileName())
+            .replaceAll("(?m)^source=.*\\n?", "");
     int[] size = imageSize(dest);
     if (size != null) {
       anchors =
@@ -600,17 +642,66 @@ public class ControlDiagramGenerator {
               .replaceAll("(?m)^height=.*$", "height=" + size[1]);
     }
     Files.writeString(out.resolve("anchors.properties"), anchors);
-    System.out.println("saved " + root.relativize(dest) + " (anchors copied from " + seedRef + ")");
+    String ref = type + "/v" + (latest + 1);
     System.out.println(
-        "NEXT: edit "
-            + root.relativize(out.resolve("anchors.properties"))
-            + " so each anchor sits on its button,");
+        "saved layout " + root.relativize(dest) + " (anchors copied from " + seedRef + ")");
     System.out.println(
-        "      then set <config>.<controller>.image="
-            + type
-            + "/v"
-            + (latest + 1)
-            + " in configs.properties and run generate.");
+        "NEXT: set source= to the original in controller-sources, move each anchor onto its"
+            + " button");
+    System.out.println("      (check with: preview-layout " + ref + "), then use image=" + ref);
+  }
+
+  /** Draws a layout with every anchor and a coordinate grid, no keybindings. */
+  static void previewLayout(String ref) throws IOException {
+    ControllerImage img = loadImage(ref);
+    int w = (int) Double.parseDouble(img.props().getProperty("width"));
+    int h = (int) Double.parseDouble(img.props().getProperty("height"));
+    StringBuilder sb = new StringBuilder();
+    sb.append(
+        String.format(
+            "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 %d"
+                + " %d\" font-family=\"Helvetica, Arial, sans-serif\">%n"
+                + "<rect width=\"100%%\" height=\"100%%\" fill=\"#ffffff\"/>%n",
+            w, h, w, h));
+    sb.append(embedImage(img, 0, 0, w, h));
+    int step = Math.max(w, h) > 800 ? 50 : 25;
+    for (int x = step; x < w; x += step) {
+      sb.append(gridLine(x, 0, x, h, x % (step * 4) == 0));
+      if (x % (step * 2) == 0)
+        sb.append(text(x + 2, 12, "" + x, "11", "400", "#2563eb", "start", false));
+    }
+    for (int y = step; y < h; y += step) {
+      sb.append(gridLine(0, y, w, y, y % (step * 4) == 0));
+      if (y % (step * 2) == 0)
+        sb.append(text(2, y - 2, "" + y, "11", "400", "#2563eb", "start", false));
+    }
+    for (var e : img.anchors().entrySet()) {
+      Anchor a = e.getValue();
+      sb.append(
+          String.format(
+              "<circle cx=\"%.1f\" cy=\"%.1f\" r=\"6\" fill=\"#dc2626\" stroke=\"#ffffff\""
+                  + " stroke-width=\"2\"/>%n",
+              a.x(), a.y()));
+      double tx = a.left() ? a.x() - 10 : a.x() + 10;
+      sb.append(
+          String.format(
+              "<text x=\"%.1f\" y=\"%.1f\" font-size=\"14\" font-weight=\"700\" fill=\"#111827\""
+                  + " stroke=\"#ffffff\" stroke-width=\"3\" paint-order=\"stroke\""
+                  + " text-anchor=\"%s\">%s</text>%n",
+              tx, a.y() + 5, a.left() ? "end" : "start", xml(e.getKey())));
+    }
+    sb.append("</svg>\n");
+    Path out = root.resolve("build/control-layouts/" + ref.replace('/', '-') + ".svg");
+    Files.createDirectories(out.getParent());
+    Files.writeString(out, sb.toString());
+    System.out.println("preview " + root.relativize(out) + " (open in a browser)");
+  }
+
+  static String gridLine(int x1, int y1, int x2, int y2, boolean major) {
+    return String.format(
+        "<line x1=\"%d\" y1=\"%d\" x2=\"%d\" y2=\"%d\" stroke=\"#2563eb\" stroke-opacity=\"%s\""
+            + " stroke-width=\"1\"/>%n",
+        x1, y1, x2, y2, major ? "0.45" : "0.18");
   }
 
   /** {width, height} of a png/jpg, or from an svg's viewBox; null if unknown. */
@@ -630,8 +721,21 @@ public class ControlDiagramGenerator {
   // ===================== helpers =====================
 
   static ControllerImage loadImage(String ref) throws IOException {
-    Path dir = root.resolve(CONTROLS + "/controller-images/" + ref);
+    Path dir = root.resolve(LAYOUTS + "/" + ref);
+    if (!Files.exists(dir.resolve("anchors.properties"))) {
+      die("no layout at " + root.relativize(dir) + " (expected anchors.properties)");
+    }
     Properties p = load(dir.resolve("anchors.properties"));
+    for (String k : p.stringPropertyNames()) {
+      if (!LAYOUT_KEY.matcher(k).matches()) {
+        die(
+            root.relativize(dir)
+                + "/anchors.properties has '"
+                + k
+                + "': layouts hold button positions only. Keybindings belong in the ControlBoard"
+                + " classes, labels in functions.properties.");
+      }
+    }
     Map<String, Anchor> anchors = new TreeMap<>();
     for (String k : p.stringPropertyNames()) {
       if (!k.startsWith("anchor.")) continue;

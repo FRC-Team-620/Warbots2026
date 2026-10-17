@@ -8,7 +8,7 @@ on:
       - 'src/main/java/org/jmhsrobotics/frc2026/controlBoard/**'
       - 'src/main/java/org/jmhsrobotics/frc2026/RobotContainer.java'
       - 'docs/controls/*.properties'
-      - 'docs/controls/controller-images/**'
+      - 'docs/controls/controller-layouts/**'
       - 'docs/controls/tools/**'
   workflow_dispatch:
 
